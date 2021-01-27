@@ -1,18 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import Login from './src/screens/altentication/Login';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Login/>
-    </View>
-  );
-}
+import Router from './src/Router';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-  }
-});
+export default props => <Router/>
