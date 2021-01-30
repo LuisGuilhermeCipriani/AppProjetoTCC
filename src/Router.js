@@ -1,19 +1,25 @@
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Login from './screens/authentication/Login';
-import Index from './Index';
+import Menu from './screens/menu/Menu'
+import HomeStack from './routes/HomeStack';
+import SelectionStack from './routes/SelectionStack';
 
-const menuRouts = {
+const menuRoutes = {
     Home: {
-        screen: Index
+        screen: HomeStack
+    },
+    Selection: {
+        screen: SelectionStack
     }
 }
 
-const homeNavigator = createDrawerNavigator(menuRouts, homeConfig)
-
 const homeConfig = {
-    initialRouteName: 'Home'
+    initialRouteName: 'Home',
+    contentComponent: Menu
 }
+
+const homeNavigator = createDrawerNavigator(menuRoutes, homeConfig)
 
 const mainRoutes = {
     Auth: {

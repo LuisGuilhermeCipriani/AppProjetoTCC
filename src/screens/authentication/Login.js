@@ -8,6 +8,7 @@ export default class Login extends Component {
     }
     
     render() {
+        const {navigation} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -19,7 +20,7 @@ export default class Login extends Component {
                     <TextInput style={styles.inputText} placeholder='Senha' underlineColorAndroid='#c3c3c3'/>
                 </View>
                 <View style={styles.styleButton}>
-                    <TouchableOpacity style={styles.button} onPress = {()=>{this.props.navigation.navigate('Main')}}>
+                    <TouchableOpacity style={styles.button} onPress = {()=>{navigation.navigate('Main')}}>
                         <Text style={styles.textButton}>Entrar</Text>
                     </TouchableOpacity>
                     <View style={styles.fieldButton2}>
