@@ -35,7 +35,6 @@ export default class Quiz extends Component {
             <View>
                 <Text style={styles.countQuestion}>Questão {index + 1} de {list.length}</Text>
                 <Text style={styles.question}>{index + 1} - {list[index].question}</Text>
-                <Text>{list[index].answer}</Text>
             </View>
         </View>
     }
@@ -58,11 +57,11 @@ export default class Quiz extends Component {
 
     render() {
         const options = [
-            { label: '1', value: 1 },
-            { label: '2', value: 2 },
-            { label: '3', value: 3 },
-            { label: '4', value: 4 },
-            { label: '5', value: 5 },
+            { label: 'Excelente', value: 5 },
+            { label: 'Bom', value: 4 },
+            { label: 'Regular', value: 3 },
+            { label: 'Insatisfatório', value: 2 },
+            { label: 'Inaceitável', value: 1 },
         ];
 
         return (
