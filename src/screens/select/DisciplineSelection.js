@@ -7,7 +7,7 @@ export default class DisciplineSelection extends Component{
             <View style={styles.container}>
                 <ScrollView style={styles.scroll}>
                     <View style={styles.scrollView}>
-                        <TouchableOpacity style={styles.disciplineButton}>
+                        <TouchableOpacity style={styles.disciplineButton} onPress={()=>{this.props.navigation.navigate('QuizDiscipline')}}>
                             <Text style={styles.textDiscipline}>Banco de Dados</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.disciplineButton}>
