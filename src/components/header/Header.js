@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-export default props = ({ title, navigation }) => {
+export default props = ({ title, navigation, menuIcon}) => {
 
     const openMenu = () => {
         navigation.openDrawer();
@@ -10,13 +10,13 @@ export default props = ({ title, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity onPress={openMenu}>
+            {menuIcon ? <TouchableOpacity onPress={openMenu}>
                 <Icon name='menu' color='#ffffff' size={30}/>
-            </TouchableOpacity>
+            </TouchableOpacity> : <View/>}
             <View>
                 <Text style={styles.text}>{title}</Text>
             </View>
-            <View></View>
+            <View/>
         </View>
     );
 }

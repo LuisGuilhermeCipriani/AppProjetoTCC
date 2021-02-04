@@ -7,7 +7,7 @@ import Index from '../Index';
 const screens = {
     HomeScreen: {
         screen: Index,
-        navigationOption: ({navigation})=>{
+        navigationOptions: ({navigation})=>{
             return {
                 headerTitle: ()=> <Header title='Início' navigation={navigation}/>
             }

@@ -6,7 +6,7 @@ export default class Quiz extends Component {
     state = {
         list: [
             {
-                question: 'O professor apresentou o plano de curso?',
+                question: 'O professor disponibilizou o plano de curso da disciplina na primeira semana de aula?',
                 answer: 'Sim'
             },
             {
@@ -14,19 +14,20 @@ export default class Quiz extends Component {
                 answer: 'Sim'
             },
             {
-                question: 'O professor cumpriu com o cronograma da disciplina?',
+                question: 'O professor é assíduo às aulas?',
                 answer: 'Não'
             },
             {
-                question: 'O professor é assíduo?',
+                question: 'O professor usa todo o tempo de aula?',
                 answer: 'Não'
             },
             {
-                question: 'O desempenho na disciplina foi suficiente para o aprendizado?',
+                question: 'O professor está disponível no horário de atendimento?',
                 answer: 'Sim'
             }
         ],
-        index: 0
+        index: 0,
+        isSelected: false,
     }
 
     renderScreens = () => {
@@ -71,7 +72,7 @@ export default class Quiz extends Component {
                     radio_props={options}
                     onPress={(value) => { }}
                     formHorizontal={false}
-                    initial={-1}
+                    initial={false}
                     labelStyle={{ marginRight: 10, marginBottom: 30 }}
                 />
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>

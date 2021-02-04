@@ -14,16 +14,6 @@ export default class MenuButton extends Component{
     }
 }
 
-/*export default props = () => {
-    return(
-        <TouchableOpacity style={styles.container} onPress = {props.onPress}>
-            <Icon style={styles.icon} name={props.nameIcon} size={25}/>
-            <Text style={styles.text}>{props.nameButton}</Text>
-        </TouchableOpacity>
-    )
-}*/
-
-
 const styles = StyleSheet.create({
     icon: {
         height: 25,

@@ -40,18 +40,18 @@ export default class DisciplineSelection extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#8A2BE2',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
     },
     disciplineButton: {
-        backgroundColor: '#9370DB',
+        backgroundColor: '#969393',
         height: 50,
         width: '70%',
         borderRadius: 20,
         borderWidth: 3,
-        borderColor: '#EE82EE',
+        borderColor: '#ffad29',
         paddingTop: 15,
         marginTop: 30,
     },

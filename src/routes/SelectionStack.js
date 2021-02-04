@@ -8,17 +8,17 @@ import Quiz from '../screens/quiz/Quiz';
 const screens = {
     SelectionScreen: {
         screen: DisciplineSelection,
-        navigationOption: ({navigation})=>{
+        navigationOptions: ({navigation})=>{
             return {
-                headerTitle: ()=> <Header title='Seleção de Disciplinas' navigation={navigation}/>
+                headerTitle: ()=> <Header title='Seleção de Disciplinas' navigation={navigation} menuIcon={true}/>
             }
         }
     },
     QuizDiscipline: {
         screen: Quiz,
-        navigationOption: ({navigation})=>{
+        navigationOptions: ({navigation})=>{
             return {
-                headerTitle: ()=> <Header title='Questionário' navigation={navigation}/>
+                headerTitle: ()=> <Header title='Questionário' navigation={navigation} menuIcon={false}/>
             }
         }
     }
