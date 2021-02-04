@@ -4,6 +4,7 @@ import Header from '../components/header/Header';
 
 import DisciplineSelection from '../screens/select/DisciplineSelection';
 import Quiz from '../screens/quiz/Quiz';
+import Comment from '../screens/quiz/Comment';
 
 const screens = {
     SelectionScreen: {
@@ -21,12 +22,20 @@ const screens = {
                 headerTitle: ()=> <Header title='Questionário' navigation={navigation} menuIcon={false}/>
             }
         }
+    },
+    Comments: {
+        screen: Comment,
+        navigationOptions: ({navigation})=>{
+            return {
+                headerTitle: ()=> <Header title='Comentários' navigation={navigation} menuIcon={false}/>
+            }
+        }
     }
 }
 
 const screensconfig = {
     defaultNavigationOptions: {
-        headerTintColor: '#ffff00',
+        headerTintColor: '#ffffff',
     headerStyle: {backgroundColor: '#465674', height: 60}}
 }
 

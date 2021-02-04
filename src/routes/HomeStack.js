@@ -9,7 +9,7 @@ const screens = {
         screen: Index,
         navigationOptions: ({navigation})=>{
             return {
-                headerTitle: ()=> <Header title='Início' navigation={navigation}/>
+                headerTitle: ()=> <Header title='Início' navigation={navigation} menuIcon={true}/>
             }
         }
     }
@@ -17,7 +17,7 @@ const screens = {
 
 const screensconfig = {
     defaultNavigationOptions: {
-        headerTintColor: '#ffff00',
+        headerTintColor: '#ffffff',
     headerStyle: {backgroundColor: '#465674', height: 60}}
 }
 

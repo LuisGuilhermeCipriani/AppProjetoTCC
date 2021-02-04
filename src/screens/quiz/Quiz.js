@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Quiz extends Component {
     state = {
@@ -64,23 +66,47 @@ export default class Quiz extends Component {
             { label: 'Insatisfatório', value: 2 },
             { label: 'Inaceitável', value: 1 },
         ];
-
+        const { navigation } = this.props
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
                 {this.renderScreens()}
-                <RadioForm
-                    radio_props={options}
-                    onPress={(value) => { }}
-                    formHorizontal={false}
-                    initial={false}
-                    labelStyle={{ marginRight: 10, marginBottom: 30 }}
-                />
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                    <TouchableOpacity style={styles.button2} onPress={() => { this.boundMinimumLimit() }}>
-                        <Text style={styles.textButton}>Voltar</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
+                        <Icon name='chevron-left' size={25} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => { this.boundMaximumLimit() }}>
-                        <Text style={styles.textButton}>Avançar</Text>
+                    <RadioForm
+                        radio_props={options}
+                        onPress={(value) => { }}
+                        formHorizontal={false}
+                        initial={false}
+                        labelStyle={{ marginRight: 10, marginBottom: 30 }}
+                    />
+                    <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
+                        <Icon name='chevron-right' size={25} />
+                    </TouchableOpacity>
+                </View>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
+                    <TouchableOpacity style={styles.commentButton} onPress={() => {
+                        navigation.navigate('Comments')
+                    }}>
+                        <Text style={styles.textButton}>Comentar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => {
+                        Alert.alert('', 'Salvo com Sucesso!',
+                            [
+                                { text: 'Ok', onPress: () => this.props.navigation.goBack() },
+                            ])
+                    }}>
+                        <Text style={styles.textButton}>Salvar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.sendButton} onPress={() => {
+                        Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
+                            [
+                                { text: 'Sim', onPress: () => this.props.navigation.goBack() },
+                                { text: 'Não' },
+                            ])
+                    }}>
+                        <Text style={styles.textButton}>Enviar</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -89,23 +115,43 @@ export default class Quiz extends Component {
 }
 
 const styles = StyleSheet.create({
-    button: {
-        backgroundColor: '#836FFF',
-        width: 80,
-        height: 30,
+    forwardButton: {
         alignItems: 'center',
         marginRight: 20,
+        marginBottom: 40,
     },
-    button2: {
-        backgroundColor: '#836FFF',
+    backButton: {
+        alignItems: 'center',
+        marginLeft: 20,
+        marginBottom: 40,
+    },
+    commentButton: {
+        backgroundColor: '#dbd546',
         width: 80,
         height: 30,
         alignItems: 'center',
         marginLeft: 20,
     },
+    saveButton: {
+        backgroundColor: '#42c246',
+        width: 80,
+        height: 30,
+        alignItems: 'center',
+        marginLeft: 80,
+    },
+    sendButton: {
+        backgroundColor: '#6975c2',
+        width: 80,
+        height: 30,
+        alignItems: 'center',
+        marginRight: 30,
+    },
     textButton: {
         color: '#ffffff',
         padding: 5,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
     },
     countQuestion: {
         fontSize: 20,
