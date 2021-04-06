@@ -4,6 +4,7 @@ import Login from './screens/authentication/Login';
 import Menu from './screens/menu/Menu'
 import HomeStack from './routes/HomeStack';
 import SelectionStack from './routes/SelectionStack';
+import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
 const menuRoutes = {
     Home: {

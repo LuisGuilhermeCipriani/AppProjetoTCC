@@ -20,7 +20,7 @@ export default class Menu extends Component{
                 <MenuButton nameIcon='line-chart' nameButton='Consultar Desempenho' onPress={()=>{
                     navigation.navigate(''); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={()=>{
-                    navigation.navigate(''); navigation.closeDrawer()}}/>
+                    navigation.navigate('Auth'); navigation.closeDrawer()}}/>
             </View>
         )
     }

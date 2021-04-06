@@ -8,10 +8,10 @@ export default class DisciplineSelection extends Component{
                 <ScrollView style={styles.scroll}>
                     <View style={styles.scrollView}>
                         <TouchableOpacity style={styles.disciplineButton} onPress={()=>{this.props.navigation.navigate('QuizDiscipline')}}>
-                            <Text style={styles.textDiscipline}>Banco de Dados</Text>
+                            <Text style={styles.textDiscipline}>Interação Humano-Computador</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Interação Humano-Computador</Text>
+                            <Text style={styles.textDiscipline}>Banco de Dados</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.disciplineButton}>
                             <Text style={styles.textDiscipline}>Cálculo de Probabilidades</Text>
@@ -26,10 +26,10 @@ export default class DisciplineSelection extends Component{
                             <Text style={styles.textDiscipline}>Teoria dos Grafos</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Empreendimentos em Informática</Text>
+                            <Text style={styles.textDiscipline}>Cálculo III</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Teoria dos Grafos</Text>
+                            <Text style={styles.textDiscipline}>Inteligência Artificial</Text>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
