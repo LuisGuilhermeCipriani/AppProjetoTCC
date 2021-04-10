@@ -1,14 +1,43 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import Api from '../../services/Api';
 
 export default class Login extends Component {
     constructor(props){
-        super(props)
+        super(props);
+        state = {
+            cpf: '',
+            password: ''
+        }
+    }
+
+    signIn = async () => {
+        try{
+            const { cpf, password } = this.state;
+            const response = await Api.post('/auth/authenticate', {
+                cpf,
+                password
+            });
+
+            const { user } = response.data;
+
+            if(user !== null){
+                await AsyncStorage.multiSet([
+                    ['@APP:user', JSON.stringify(user)]
+                ]);
+
+                this.props.navigation.navigate('Main');
+            }
+            
+        }catch(res){
+            Alert.alert('Atenção! ', 'Dados incorretos');
+            console.log(res)
+        }
     }
     
     render() {
-        const {navigation} = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
@@ -16,11 +45,13 @@ export default class Login extends Component {
                     <Text style={styles.textHeader2}>Sistema de apoio à análise das avaliações discentes dos cursos de graduação da UFJF</Text>
                 </View>
                 <View style={styles.containerInput}>
-                    <TextInput style={styles.inputText} placeholder='CPF' underlineColorAndroid='#c3c3c3'/>
-                    <TextInput style={styles.inputText} placeholder='Senha' underlineColorAndroid='#c3c3c3'/>
+                    <TextInput style={styles.inputText} onChangeText={ cpf => this.setState({cpf}) } placeholder='CPF' 
+                        underlineColorAndroid='#c3c3c3'/>
+                    <TextInput style={styles.inputText} onChangeText={ password => this.setState({password}) } placeholder='Senha' 
+                        underlineColorAndroid='#c3c3c3'/>
                 </View>
                 <View style={styles.styleButton}>
-                    <TouchableOpacity style={styles.button} onPress = {()=>{navigation.navigate('Main')}}>
+                    <TouchableOpacity style={styles.button} onPress = {()=>{this.signIn()}}>
                         <Text style={styles.textButton}>Entrar</Text>
                     </TouchableOpacity>
                     <View style={styles.fieldButton2}>

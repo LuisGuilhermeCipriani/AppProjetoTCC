@@ -18,7 +18,7 @@ export default class Menu extends Component{
                 <MenuButton nameIcon='search' nameButton='Consultar Disciplinas' onPress={()=>{
                     navigation.navigate(''); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='line-chart' nameButton='Consultar Desempenho' onPress={()=>{
-                    navigation.navigate(''); navigation.closeDrawer()}}/>
+                    navigation.navigate('Chart'); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={()=>{
                     navigation.navigate('Auth'); navigation.closeDrawer()}}/>
             </View>
