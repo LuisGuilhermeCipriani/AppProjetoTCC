@@ -1,36 +1,58 @@
 import React, {Component} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import api from '../../services/Api';
+
+import Api from '../../services/Api';
 
 export default class DisciplineSelection extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            disciplines: []
+        }
+    }
+
+    async componentDidMount() {
+        this.getDisciplines();
+    }
+
+    getDisciplines = async () => {
+        try {
+            const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
+            const v = []
+            const {disciplineUser} = await (await Api.get('/DisciplineUser/' + _id)).data;
+            const disciplines = disciplineUser.map(async object => {
+                const discipline = await api.get('/discipline/' + object.idDiscipline).then(t => {return t.data})
+                //console.log(discipline)
+                v.push(discipline)
+                return discipline          
+            })
+           console.log(v[0])
+            this.setState( disciplines );
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     render(){
+        const { disciplines } = this.state;
+        console.log(disciplines.length)
         return(
             <View style={styles.container}>
                 <ScrollView style={styles.scroll}>
                     <View style={styles.scrollView}>
-                        <TouchableOpacity style={styles.disciplineButton} onPress={()=>{this.props.navigation.navigate('QuizDiscipline')}}>
-                            <Text style={styles.textDiscipline}>Interação Humano-Computador</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Banco de Dados</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Cálculo de Probabilidades</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Estrutura de Dados</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Empreendimentos em Informática</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Teoria dos Grafos</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Cálculo III</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.disciplineButton}>
-                            <Text style={styles.textDiscipline}>Inteligência Artificial</Text>
-                        </TouchableOpacity>
+                    
+                        {disciplines !== null &&
+                            disciplines.map(discipline => {
+                                const { name, code, _id } = discipline;
+                                return <TouchableOpacity key={ _id } style={styles.disciplineButton} 
+                                    onPress={()=>{this.props.navigation.navigate('QuizDiscipline')}}>
+                                    <Text style={styles.textDiscipline}>
+                                        { name } - { code }
+                                    </Text>
+                                </TouchableOpacity>
+                            })
+                        }
                     </View>
                 </ScrollView>
             </View>
@@ -56,7 +78,7 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     textDiscipline: {
-        color: '#ffffff',
+        color: '#000',
         textAlign: 'center',
         fontSize: 15,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',

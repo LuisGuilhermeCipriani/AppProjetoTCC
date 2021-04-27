@@ -35,7 +35,7 @@ export default class Index extends Component{
 
 const styles = StyleSheet.create({
     field1: {
-        backgroundColor: '#ffad29',
+        backgroundColor: '#941e1e',
         width: '55%',
         height: 150,
         marginRight: 5,
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field2: {
-        backgroundColor: '#6d40c7',
+        backgroundColor: '#d84141',
         width: '35%',
         height: 150,
         marginLeft: 5,
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field3: {
-        backgroundColor: '#4077c9',
+        backgroundColor: '#d84141',
         width: '35%',
         height: 150,
         marginRight: 5,
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field4: {
-        backgroundColor: '#1fc23d',
+        backgroundColor: '#941e1e',
         width: '55%',
         height: 150,
         marginLeft: 5,

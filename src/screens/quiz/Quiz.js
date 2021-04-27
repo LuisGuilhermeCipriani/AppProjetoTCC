@@ -1,49 +1,96 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
-
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Api from '../../services/Api';
+
 export default class Quiz extends Component {
-    state = {
-        list: [
-            {
-                question: 'O professor disponibilizou o plano de curso da disciplina na primeira semana de aula?',
-                answer: 'Sim'
-            },
-            {
-                question: 'O professor é pontual?',
-                answer: 'Sim'
-            },
-            {
-                question: 'O professor é assíduo às aulas?',
-                answer: 'Não'
-            },
-            {
-                question: 'O professor usa todo o tempo de aula?',
-                answer: 'Não'
-            },
-            {
-                question: 'O professor está disponível no horário de atendimento?',
-                answer: 'Sim'
-            }
-        ],
-        index: 0,
-        isSelected: false,
+    constructor(props) {
+        super(props);
+        this.state = {
+            questions: [],
+            answers: [],
+            quiz: {},
+            question_answer: [],
+            question: '',
+            answer: '',
+            index: 0,
+            isSelected: false
+        }
+    }
+
+    async componentDidMount() {
+        this.getQuestions();
+        this.getAnswers();
+    }
+
+    getQuestions = async () => {
+        try {
+            const response = await Api.get('/question/findAll');
+
+            const { questions } = response.data;
+
+            this.setState({ questions });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    getAnswers = async () => {
+        try {
+            const response = await Api.get('/answer/findAll');
+
+            const { answers } = response.data;
+
+            this.setState({ answers });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    saveState = async () => {
+        const { question_answer, questions, answers, answer, index } = this.state;
+        const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
+        question_answer.push({
+            idQuestion: questions[index]._id,
+            idAnswer: answers[answer]._id,
+            idDiscipline: '607231ac921d1c391cbcaac8',
+            idUser: _id
+        });
+        this.setState({ question_answer });
+    }
+
+    registerQuiz = async () => {
+        try {
+            const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
+            const { question_answer } = this.state;
+
+            const response = await Api.post('/quiz/register', {
+                idUser: _id,
+                idDiscipline: '607231ac921d1c391cbcaac8',
+                question_answer
+            }).then(() => {
+                console.log('Salvo com sucesso!')
+              })
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     renderScreens = () => {
-        const { list, index } = this.state;
+        const { index, questions } = this.state;
+
         return <View style={{ alignItems: 'center' }}>
             <View>
-                <Text style={styles.countQuestion}>Questão {index + 1} de {list.length}</Text>
-                <Text style={styles.question}>{index + 1} - {list[index].question}</Text>
+                <Text style={styles.countQuestion}>Questão {index + 1} de {questions.length}</Text>
+                <Text style={styles.question}>{index + 1} - {questions[index].title}</Text>
             </View>
         </View>
     }
 
     boundMinimumLimit = () => {
-        let { list, index } = this.state;
+        let { index } = this.state;
         if (index > 0) {
             index = index - 1;
             this.setState({ index: index });
@@ -51,32 +98,33 @@ export default class Quiz extends Component {
     }
 
     boundMaximumLimit = () => {
-        let { list, index } = this.state;
-        if (index < list.length - 1) {
+        let { questions, index } = this.state;
+        this.saveState();
+        if (index < questions.length - 1) {
+            this.saveState();
             index = index + 1;
             this.setState({ index: index });
         }
     }
 
     render() {
-        const options = [
-            { label: 'Excelente', value: 5 },
-            { label: 'Bom', value: 4 },
-            { label: 'Regular', value: 3 },
-            { label: 'Insatisfatório', value: 2 },
-            { label: 'Inaceitável', value: 1 },
-        ];
-        const { navigation } = this.props
+        const { navigation } = this.props;
+        const { questions, answers } = this.state;
+        const options = answers.map((answer, index) => {
+            return { label: answer.title, value: index + 1 }
+        }
+        );
+
         return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
-                {this.renderScreens()}
+                {(questions.length > 0 && answers.length > 0) && this.renderScreens()}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                     <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
                         <Icon name='chevron-left' size={25} />
                     </TouchableOpacity>
                     <RadioForm
                         radio_props={options}
-                        onPress={(value) => { }}
+                        onPress={(answer) => { this.setState({ answer }) }}
                         formHorizontal={false}
                         initial={false}
                         labelStyle={{ marginRight: 10, marginBottom: 30 }}
@@ -91,12 +139,7 @@ export default class Quiz extends Component {
                     }}>
                         <Text style={styles.textButton}>Comentar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.saveButton} onPress={() => {
-                        Alert.alert('', 'Salvo com Sucesso!',
-                            [
-                                { text: 'Ok', onPress: () => this.props.navigation.goBack() },
-                            ])
-                    }}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.registerQuiz()}>
                         <Text style={styles.textButton}>Salvar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.sendButton} onPress={() => {

@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     icon: {
         height: 25,
         width: 25,
-        color: '#345555',
+        color: '#d42b2b',
     },
     text: {
         fontSize: 16,
