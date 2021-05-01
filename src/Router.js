@@ -1,11 +1,11 @@
 import { createDrawerNavigator } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Login from './screens/authentication/Login';
-import Menu from './screens/menu/Menu'
+import Menu from './screens/menu/Menu';
 import HomeStack from './routes/HomeStack';
 import SelectionStack from './routes/SelectionStack';
 import BarChart from './routes/BarChart';
-import { setStatusBarBackgroundColor } from 'expo-status-bar';
+import DisciplineStack from './routes/DisciplineStack';
 
 const menuRoutes = {
     Home: {
@@ -13,6 +13,9 @@ const menuRoutes = {
     },
     Selection: {
         screen: SelectionStack
+    },
+    Discipline: {
+        screen: DisciplineStack
     },
     Chart: {
         screen: BarChart

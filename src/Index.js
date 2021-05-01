@@ -13,7 +13,9 @@ export default class Index extends Component{
                         <Icon name='square-o' color='#ffffff' size={40}/>
                         <Text style={styles.text}>Responder {"\n"}Questionário</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.field2}>
+                    <TouchableOpacity style={styles.field2} onPress={()=>{
+                        navigation.navigate('Discipline')
+                    }}>
                         <Icon name='search' color='#ffffff' size={40}/>
                         <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
                     </TouchableOpacity>

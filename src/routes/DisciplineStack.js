@@ -2,14 +2,14 @@ import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import Header from '../components/header/Header';
 
-import Index from '../Index';
+import SearchDisciplines from '../screens/searchDisciplines/SearchDisciplines';
 
 const screens = {
-    HomeScreen: {
-        screen: Index,
+    SearchDisciplines: {
+        screen: SearchDisciplines,
         navigationOptions: ({navigation})=>{
             return {
-                headerTitle: ()=> <Header title='Início' navigation={navigation} menuIcon={true}/>
+                headerTitle: ()=> <Header title='Disciplinas Matriculadas' navigation={navigation} menuIcon={true}/>
             }
         }
     },
