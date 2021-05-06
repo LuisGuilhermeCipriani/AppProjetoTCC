@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 export default class Comment extends Component {
 
@@ -28,6 +30,7 @@ export default class Comment extends Component {
                     <TouchableOpacity style={styles.cancelButton} onPress={() => { 
                         this.props.navigation.goBack() 
                         }}>
+                        <Icon name='remove' style={styles.icon}/>
                         <Text style={styles.textButton}>Cancelar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.saveButton} onPress={() => { 
@@ -37,6 +40,7 @@ export default class Comment extends Component {
                             { text: 'Não' },
                         ])
                         }}>
+                        <Icon name='check' style={styles.icon}/>
                         <Text style={styles.textButton} >Salvar</Text>
                     </TouchableOpacity>
                 </View>
@@ -62,7 +66,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 4,
         marginTop: 20,
         height: 400,
-        borderColor: '#ffad29',
+        borderColor: '#d3302f',
         backgroundColor: '#ffffff',
     },
     text: {
@@ -77,21 +81,41 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     cancelButton: {
-        backgroundColor: '#c96055',
-        width: 80,
-        height: 30,
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginRight: 20,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15
     },
     saveButton: {
-        backgroundColor: '#42c246',
-        width: 80,
-        height: 30,
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginLeft: 20,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15
     },
     textButton: {
         color: '#ffffff',
-        padding: 5,
+        padding: 0,
+        fontSize: 15,
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
     },
+    icon: {
+        color: '#ffffff',
+        paddingBottom: 5,
+        paddingTop: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        fontSize: 20
+    }
 })

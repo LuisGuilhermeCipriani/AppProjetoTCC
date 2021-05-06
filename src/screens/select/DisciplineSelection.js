@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
-import api from '../../services/Api';
+import { Card, ListItem, Button, Icon } from 'react-native-elements';
+
 
 import Api from '../../services/Api';
 
@@ -8,7 +9,7 @@ export default class DisciplineSelection extends Component{
     constructor(props){
         super(props);
         this.state = {
-            disciplines: []
+            disciplineUser: []
         }
     }
 
@@ -19,41 +20,36 @@ export default class DisciplineSelection extends Component{
     getDisciplines = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const v = []
-            const {disciplineUser} = await (await Api.get('/DisciplineUser/' + _id)).data;
-            const disciplines = disciplineUser.map(async object => {
-                const discipline = await api.get('/discipline/' + object.idDiscipline).then(t => {return t.data})
-                //console.log(discipline)
-                v.push(discipline)
-                return discipline          
-            })
-           console.log(v[0])
-            this.setState( disciplines );
+            const {disciplineUser} = (await Api.post('/DisciplineUser/findByIdUser',{idUser: _id})).data;
+            const {quizzes} = (await Api.post('/quiz/findAll', {idUser: _id, status: "S"})).data;
+
+            if(quizzes !== null) {
+               this.setState({ disciplineUser });
+            }
         } catch (err) {
             console.log(err);
         }
     }
 
     render(){
-        const { disciplines } = this.state;
-        console.log(disciplines.length)
+        const { disciplineUser } = this.state;
         return(
-            <View style={styles.container}>
-                <ScrollView style={styles.scroll}>
-                    <View style={styles.scrollView}>
-                    
-                        {disciplines !== null &&
-                            disciplines.map(discipline => {
-                                const { name, code, _id } = discipline;
-                                return <TouchableOpacity key={ _id } style={styles.disciplineButton} 
-                                    onPress={()=>{this.props.navigation.navigate('QuizDiscipline')}}>
-                                    <Text style={styles.textDiscipline}>
-                                        { name } - { code }
-                                    </Text>
-                                </TouchableOpacity>
-                            })
-                        }
-                    </View>
+                <View style={styles.container}>
+                <ScrollView style={styles.scroll} >
+                        {disciplineUser !== null &&
+                            disciplineUser.map(disciplineUser => {
+                                const idDisciplineUser = disciplineUser._id;
+                                const { title, code, _id } = disciplineUser.idDiscipline;
+                                return (
+                                    <TouchableOpacity key={_id} onPress={()=>{this.props.navigation.navigate('QuizDiscipline', { idDisciplineUser })}}>
+                                <Card containerStyle={{borderBottomWidth: 4, borderBottomColor: '#595959'
+                            }}>
+                            <Text style={styles.nameDiscipline}>{ title } - { code }</Text>
+                        </Card>
+                        </TouchableOpacity>
+                                );
+                        })
+                    }
                 </ScrollView>
             </View>
         )
@@ -62,7 +58,7 @@ export default class DisciplineSelection extends Component{
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#ffffff',
+        backgroundColor: '#bfbfbf',
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -91,5 +87,10 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         alignItems: 'center',
+    },
+    nameDiscipline: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginBottom: 10
     }
 })

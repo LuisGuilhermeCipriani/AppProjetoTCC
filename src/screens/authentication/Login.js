@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Api from '../../services/Api';
 
 export default class Login extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         state = {
             cpf: '',
@@ -14,7 +14,7 @@ export default class Login extends Component {
     }
 
     signIn = async () => {
-        try{
+        try {
             const { cpf, password } = this.state;
             const response = await Api.post('/auth/authenticate', {
                 cpf,
@@ -23,42 +23,48 @@ export default class Login extends Component {
 
             const { user } = response.data;
 
-            if(user !== null){
+            if (user !== null) {
                 await AsyncStorage.multiSet([
                     ['@APP:user', JSON.stringify(user)]
                 ]);
 
                 this.props.navigation.navigate('Main');
             }
-            
-        }catch(res){
+
+        } catch (res) {
             Alert.alert('Atenção! ', 'Dados incorretos');
             console.log(res)
         }
     }
-    
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <Text style={styles.textHeader}>UFJF</Text>
-                    <Text style={styles.textHeader2}>Sistema de apoio à análise das avaliações discentes dos cursos de graduação da UFJF</Text>
+                    <View style={styles.containerHeader}>
+                        <View style={styles.logo}>
+                            <Text style={styles.textLogo}>UFJF</Text>
+                        </View>
+                        <Text style={styles.textHeader}>Sistema de apoio à análise de avaliações</Text>
+                    </View>
                 </View>
-                <View style={styles.containerInput}>
-                    <TextInput style={styles.inputText} onChangeText={ cpf => this.setState({cpf}) } placeholder='CPF' 
-                        underlineColorAndroid='#c3c3c3'/>
-                    <TextInput style={styles.inputText} onChangeText={ password => this.setState({password}) } placeholder='Senha' 
-                        underlineColorAndroid='#c3c3c3'/>
-                </View>
-                <View style={styles.styleButton}>
-                    <TouchableOpacity style={styles.button} onPress = {()=>{this.signIn()}}>
-                        <Text style={styles.textButton}>Entrar</Text>
-                    </TouchableOpacity>
-                    <View style={styles.fieldButton2}>
-                        <TouchableOpacity style={styles.button2}>
-                            <Icon name='help-circle' size={30} color='#ffffff'/>
+                <View style={styles.body}>
+                    <View style={styles.containerBody}>
+                        <View style={styles.contentBody}>
+                            <TextInput style={styles.inputText} onChangeText={cpf => this.setState({ cpf })} placeholder='CPF'
+                                underlineColorAndroid='#c3c3c3' />
+                            <TextInput secureTextEntry={true} style={styles.inputText} onChangeText={password => this.setState({ password })} placeholder='Senha'
+                                underlineColorAndroid='#c3c3c3' />
+                        </View>
+                        <TouchableOpacity style={styles.enterButton} onPress={() => { this.signIn() }}>
+                            <Text style={styles.textButton}>Entrar</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+                <View style={styles.footer}>
+                    <TouchableOpacity style={styles.infoButton}>
+                        <Icon name='help-circle' size={30} color='#ffffff' />
+                    </TouchableOpacity>
                 </View>
             </View>
         )
@@ -68,71 +74,81 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        width: '100%'
+        backgroundColor: '#bfbfbf'
     },
-    header: {
-        flex: 1,
-        width: '90%',
-        height: 100,
-        marginTop: 50,
-        backgroundColor: '#d3302f',
-        borderRadius: 10
-
+    containerHeader: {
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     textHeader: {
-        color: 'white',
-        textAlign: 'center',
-        fontSize: 40,
-        marginTop: 20,
-        marginBottom: 20,
-    },
-    textHeader2: {
-        color: 'white',
+        color: '#000000',
         textAlign: 'center',
         fontSize: 20,
-        textShadowColor: 'black',
-        textShadowOffset: {width:-1,height:1},
-        textShadowRadius: 20,
+        fontWeight: 'bold',
+        marginTop: 25
     },
     inputText: {
-        padding: 10,
-        fontSize: 20
+        padding: 5,
+        fontSize: 20,
+        borderWidth: 2
     },
-    containerInput: {
-        flex: 1,
-        justifyContent: 'center',
-        width: '90%',
-        maxHeight: '20%',
-        marginTop: 10
+    textButton: {
+        color: '#ffffff',
+        fontSize: 20,
     },
-    button: {
+    enterButton: {
         padding: 10,
         backgroundColor: '#d3302f',
-        marginTop: 15
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 20
     },
-    button2: {
+    infoButton: {
         alignItems: 'center',
         justifyContent: 'center',
         width: 50,
         height: 50,
         borderRadius: 50,
-        backgroundColor: '#d3302f'
+        backgroundColor: '#d3302f',
     },
-    styleButton: {
-        flex: 1,
+    header: {
         alignItems: 'center',
-        justifyContent: 'space-between',
-        width: '90%'
-    },
-    textButton: {
-        color: '#ffffff',
-        fontSize: 18
-    },
-    fieldButton2: {
-        flexDirection: 'row',
         justifyContent: 'flex-end',
-        width: '100%',
-        marginBottom: 30
+        height: '35%',
+    },
+    body: {
+        height: '55%',
+        padding: 30
+    },
+    footer: {
+        height: '10%',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'flex-end',
+        paddingRight: 40
+    },
+    logo: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 130,
+        height: 130,
+        borderRadius: 100,
+        backgroundColor: '#d3302f',
+    },
+    textLogo: {
+        color: '#ffffff',
+        fontSize: 40
+    },
+    containerBody: {
+        backgroundColor: '#ffffff',
+        height: '80%',
+        borderWidth: 2,
+        justifyContent: 'space-around',
+        padding: 20
+    },
+    contentBody: {
+        height: '40%',
+        justifyContent: 'space-between'
     }
 });

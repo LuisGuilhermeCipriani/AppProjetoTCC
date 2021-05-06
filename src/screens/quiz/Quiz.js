@@ -16,8 +16,9 @@ export default class Quiz extends Component {
             question: '',
             answer: '',
             index: 0,
-            isSelected: false
-        }
+            isSelected: false,
+        };
+        this.id = this.props.navigation.getParam('idDisciplineUser');
     }
 
     async componentDidMount() {
@@ -51,31 +52,32 @@ export default class Quiz extends Component {
 
     saveState = async () => {
         const { question_answer, questions, answers, answer, index } = this.state;
-        const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
         question_answer.push({
             idQuestion: questions[index]._id,
-            idAnswer: answers[answer]._id,
-            idDiscipline: '607231ac921d1c391cbcaac8',
-            idUser: _id
+            idAnswer: answers[answer]._id
         });
         this.setState({ question_answer });
     }
 
     registerQuiz = async () => {
         try {
-            const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { question_answer } = this.state;
 
             const response = await Api.post('/quiz/register', {
-                idUser: _id,
-                idDiscipline: '607231ac921d1c391cbcaac8',
-                question_answer
+                disciplineUser: this.id,
+                status: 'S',
+                questionAnswer: question_answer
             }).then(() => {
                 console.log('Salvo com sucesso!')
               })
         } catch (err) {
             console.log(err);
         }
+    }
+
+    teste = () => {
+        this.boundMaximumLimit();
+        this.saveState();
     }
 
     renderScreens = () => {
@@ -99,9 +101,7 @@ export default class Quiz extends Component {
 
     boundMaximumLimit = () => {
         let { questions, index } = this.state;
-        this.saveState();
         if (index < questions.length - 1) {
-            this.saveState();
             index = index + 1;
             this.setState({ index: index });
         }
@@ -128,6 +128,9 @@ export default class Quiz extends Component {
                         formHorizontal={false}
                         initial={false}
                         labelStyle={{ marginRight: 10, marginBottom: 30 }}
+                        animation={false}
+                        buttonColor={'#cc0000'}
+                        selectedButtonColor = '#808080'
                     />
                     <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
                         <Icon name='chevron-right' size={25} />
@@ -137,18 +140,21 @@ export default class Quiz extends Component {
                     <TouchableOpacity style={styles.commentButton} onPress={() => {
                         navigation.navigate('Comments')
                     }}>
+                        <Icon name='comment' style={styles.icon}/>
                         <Text style={styles.textButton}>Comentar</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.registerQuiz()}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.teste()}>
+                        <Icon name='save' style={styles.icon}/>
                         <Text style={styles.textButton}>Salvar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.sendButton} onPress={() => {
                         Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
                             [
-                                { text: 'Sim', onPress: () => this.props.navigation.goBack() },
+                                { text: 'Sim', onPress: () => this.registerQuiz() },
                                 { text: 'Não' },
                             ])
                     }}>
+                        <Icon name='send' style={styles.icon}/>
                         <Text style={styles.textButton}>Enviar</Text>
                     </TouchableOpacity>
                 </View>
@@ -169,29 +175,44 @@ const styles = StyleSheet.create({
         marginBottom: 40,
     },
     commentButton: {
-        backgroundColor: '#dbd546',
-        width: 80,
-        height: 30,
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginLeft: 20,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15,
+        marginLeft: 10
     },
     saveButton: {
-        backgroundColor: '#42c246',
-        width: 80,
-        height: 30,
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginLeft: 80,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15
     },
     sendButton: {
-        backgroundColor: '#6975c2',
-        width: 80,
-        height: 30,
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginRight: 30,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderRadius: 5,
+        paddingTop: 5,
+        paddingBottom: 5,
+        paddingLeft: 15,
+        paddingRight: 15,
+        marginRight: 10
     },
     textButton: {
         color: '#ffffff',
-        padding: 5,
+        padding: 0,
+        fontSize: 15,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 5,
@@ -206,5 +227,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginHorizontal: 15,
         fontWeight: 'bold',
+    },
+    icon: {
+        color: '#ffffff',
+        paddingBottom: 5,
+        paddingTop: 5,
+        paddingLeft: 10,
+        paddingRight: 10,
+        fontSize: 20
     }
 })
