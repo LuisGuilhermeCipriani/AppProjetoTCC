@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage, ScrollView  } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import Header from '../../components/header/Header';
 
 import Api from '../../services/Api';
 
@@ -38,21 +39,29 @@ export default class SearchDisciplines extends Component {
 
         const { disciplineUser, users } = this.state;
         return (
-            <ScrollView>
-                {
-                    disciplineUser !== null && disciplineUser.map(disciplineUserObject => {
-                        const { idDiscipline } = disciplineUserObject;
-                        const { title, code, _id } = idDiscipline;
-                        return (
-                            <Card key={_id} containerStyle={{borderBottomWidth: 2, borderBottomColor: '#ccc'
+            <View>
+                <Header
+                    title='Seleçãa de Disciplinas'
+                    menuIcon='menu'
+                    navigation={this.props.navigation}
+                />
+                <ScrollView>
+                    {
+                        disciplineUser !== null && disciplineUser.map(disciplineUserObject => {
+                            const { idDiscipline } = disciplineUserObject;
+                            const { title, code, _id } = idDiscipline;
+                            return (
+                                <Card key={_id} containerStyle={{
+                                    borderBottomWidth: 2, borderBottomColor: '#ccc'
                                 }}>
-                                <Text style={styles.nameDiscipline}>{title}</Text>
-                                <Text>{code}</Text>
-                            </Card>
-                        );
-                    })
-                }
-            </ScrollView>
+                                    <Text style={styles.nameDiscipline}>{title}</Text>
+                                    <Text>{code}</Text>
+                                </Card>
+                            );
+                        })
+                    }
+                </ScrollView>
+            </View>
         )
 
     }

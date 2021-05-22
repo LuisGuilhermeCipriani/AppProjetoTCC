@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+import Header from '../../components/header/Header';
 import Api from '../../services/Api';
 
 export default class Quiz extends Component {
@@ -69,7 +70,7 @@ export default class Quiz extends Component {
                 questionAnswer: question_answer
             }).then(() => {
                 console.log('Salvo com sucesso!')
-              })
+            })
         } catch (err) {
             console.log(err);
         }
@@ -91,6 +92,28 @@ export default class Quiz extends Component {
         </View>
     }
 
+    renderScreen1 = () => {
+        const { index, questions } = this.state;
+
+        return <View>
+            <View>
+                <Text style={styles.countQuestion}>Questão {index + 1} de {questions.length}</Text>
+            </View>
+        </View>
+    }
+
+    renderScreen2 = () => {
+        const { index, questions } = this.state;
+
+        return <View style={{ alignItems: 'center' }}>
+            <View>
+                <Text style={styles.question}>{questions[index].title}</Text>
+            </View>
+        </View>
+    }
+
+
+
     boundMinimumLimit = () => {
         let { index } = this.state;
         if (index > 0) {
@@ -109,13 +132,13 @@ export default class Quiz extends Component {
 
     render() {
         const { navigation } = this.props;
-        const { questions, answers } = this.state;
+        const { questions, answers, index } = this.state;
         const options = answers.map((answer, index) => {
-            return { label: answer.title, value: index + 1 }
+            return { label: index + 1 + ' - ' + answer.title, value: index + 1 }
         }
         );
 
-        return (
+        /*return (
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
                 {(questions.length > 0 && answers.length > 0) && this.renderScreens()}
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -159,20 +182,103 @@ export default class Quiz extends Component {
                     </TouchableOpacity>
                 </View>
             </View>
+        )*/
+
+        return (
+            <View style={styles.container}>
+                <Header
+                    title='Questionário'
+                    menuIcon='menu'
+                    navigation={navigation}
+                />
+                <View>
+                    {(questions.length > 0 && answers.length > 0) && this.renderScreen1()}
+                </View>
+                <View style={styles.containerBody}>
+                    <View>
+                        {(questions.length > 0 && answers.length > 0) && this.renderScreen2()}
+                        <RadioForm style={{ paddingLeft: 30 }}
+                            radio_props={options}
+                            onPress={(answer) => { this.setState({ answer }) }}
+                            formHorizontal={false}
+                            initial={false}
+                            labelStyle={{ marginRight: 10, marginBottom: 10, fontSize: 20, paddingTop: 8 }}
+                            animation={false}
+                            buttonColor={'#cc0000'}
+                            selectedButtonColor='#808080'
+                        />
+                    </View>
+
+                </View>
+                <View style={styles.buttonsField}>
+                    {
+                        index !== 0 &&
+                        <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
+                            <Icon name='chevron-left' style={styles.icon} />
+                            <Text style={styles.textButton}>Anterior</Text>
+                        </TouchableOpacity>
+                    }
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.teste()}>
+                        <Icon name='save' style={styles.icon} />
+                        <Text style={styles.textButton}>Salvar</Text>
+                    </TouchableOpacity>
+                    {
+                        questions.length !== index + 1 ?
+                        <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
+                            <Icon name='chevron-right' style={styles.icon} />
+                            <Text style={styles.textButton}>Próximo</Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity style={styles.sendButton} onPress={() => {
+                            Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
+                                [
+                                    { text: 'Sim', onPress: () => this.registerQuiz() },
+                                    { text: 'Não' },
+                                ])
+                        }}>
+                            <Icon name='send' style={styles.icon2} />
+                            <Text style={styles.textButton2}>Enviar</Text>
+                        </TouchableOpacity>
+                    }
+                </View>
+            </View>
         )
     }
 }
 
 const styles = StyleSheet.create({
-    forwardButton: {
+    container: {
         alignItems: 'center',
-        marginRight: 20,
-        marginBottom: 40,
+        backgroundColor: '#bfbfbf',
+        height: '100%',
+        flex: 1,
+        flexDirection: 'column'
+    },
+    buttonsField: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        width: '90%',
+        height: '10%',
+        alignItems: 'center',
+        marginTop: 10
+    },
+    forwardButton: {
+        backgroundColor: '#d3302f',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderRadius: 5,
+        elevation: 5,
+        width: '30%'
     },
     backButton: {
+        backgroundColor: '#d3302f',
         alignItems: 'center',
-        marginLeft: 20,
-        marginBottom: 40,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderRadius: 5,
+        elevation: 5,
+        width: '30%'
     },
     commentButton: {
         backgroundColor: '#d3302f',
@@ -187,53 +293,74 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     saveButton: {
-        backgroundColor: '#d3302f',
+        backgroundColor: '#206020',
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         borderRadius: 5,
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 15,
-        paddingRight: 15
+        elevation: 5,
+        width: '30%'
     },
     sendButton: {
-        backgroundColor: '#d3302f',
+        backgroundColor: '#d2d22d',
         alignItems: 'center',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         borderRadius: 5,
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 15,
-        paddingRight: 15,
-        marginRight: 10
+        elevation: 5,
+        width: '30%'
     },
     textButton: {
         color: '#ffffff',
-        padding: 0,
+        padding: 10,
         fontSize: 15,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 5,
     },
+    textButton2: {
+        color: '#000000',
+        padding: 10,
+        fontSize: 15,
+        fontWeight: 'bold'
+    },
     countQuestion: {
         fontSize: 20,
         textAlign: 'center',
-        marginBottom: 40,
+        fontWeight: 'bold',
+        padding: 10
     },
     question: {
         fontSize: 20,
-        textAlign: 'center',
-        marginHorizontal: 15,
         fontWeight: 'bold',
+        textAlign: 'justify',
+        padding: 20,
+        paddingBottom: 30
     },
     icon: {
         color: '#ffffff',
-        paddingBottom: 5,
-        paddingTop: 5,
-        paddingLeft: 10,
-        paddingRight: 10,
-        fontSize: 20
-    }
+        fontSize: 20,
+        paddingLeft: 10
+    },
+    icon2: {
+        color: '#000000',
+        fontSize: 20,
+        paddingLeft: 10
+    },
+    containerBody: {
+        backgroundColor: '#ffffff',
+        height: '65%',
+        width: '90%',
+        borderRadius: 10,
+    },
+    scrollView: {
+        borderLeftWidth: 4,
+        borderRightWidth: 4,
+        borderTopWidth: 4,
+        borderBottomWidth: 4,
+        marginTop: 20,
+        height: 400,
+        borderColor: '#d3302f',
+        backgroundColor: '#ffffff',
+    },
 })

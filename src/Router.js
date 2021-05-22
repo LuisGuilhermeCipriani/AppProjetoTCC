@@ -4,7 +4,6 @@ import Login from './screens/authentication/Login';
 import Menu from './screens/menu/Menu';
 import HomeStack from './routes/HomeStack';
 import SelectionStack from './routes/SelectionStack';
-import BarChart from './routes/BarChart';
 import DisciplineStack from './routes/DisciplineStack';
 import ChartStack from './routes/ChartStack';
 
@@ -36,11 +35,11 @@ const mainRoutes = {
     },
     Main: {
         screen: homeNavigator
-    }
+    },
 }
 
 const mainConfig = {
-    initialRouteName: 'Auth'
+    initialRouteName: 'Auth',
 }
 
 const MainNavigator = createSwitchNavigator(mainRoutes, mainConfig)

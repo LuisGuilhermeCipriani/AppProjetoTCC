@@ -1,36 +1,46 @@
-import React, {Component} from 'react';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export default class Index extends Component{
-    render(){
-        const {navigation} = this.props
-        return(
-            <View style={{width: '100%', flex:1, alignItems: 'center', justifyContent: 'center'}}>
-                <View style={{alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'row' }}>
-                    <TouchableOpacity style={styles.field1} onPress={()=>{
-                    navigation.navigate('Selection')}}>
-                        <Icon name='square-o' color='#ffffff' size={40}/>
-                        <Text style={styles.text}>Responder {"\n"}Questionário</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.field2} onPress={()=>{
-                        navigation.navigate('Discipline')
-                    }}>
-                        <Icon name='search' color='#ffffff' size={40}/>
-                        <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={{alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
-                    <TouchableOpacity style={styles.field3} onPress={()=>{
-                        navigation.navigate('Gráfico')
-                    }}>
-                        <Icon name='line-chart' color='#ffffff' size={40}/>
-                        <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.field4}>
-                        <Icon name='check-square-o' color='#ffffff' size={40}/>
-                        <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
-                    </TouchableOpacity>
+import Header from './components/header/Header';
+
+export default class Index extends Component {
+    render() {
+        const { navigation } = this.props
+        return (
+            <View style={{ width: '100%', flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+                <Header
+                    title='Início'
+                    menuIcon='menu'
+                    navigation={navigation}
+                />
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                    <View style={{ flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.field1} onPress={() => {
+                            navigation.navigate('SelectionScreen')
+                        }}>
+                            <Icon name='square-o' color='#ffffff' size={40} />
+                            <Text style={styles.text}>Responder {"\n"}Questionário</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.field2} onPress={() => {
+                            navigation.navigate('DisciplineScreen')
+                        }}>
+                            <Icon name='search' color='#ffffff' size={40} />
+                            <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
+                        <TouchableOpacity style={styles.field3} onPress={() => {
+                            navigation.navigate('BarChartScreen')
+                        }}>
+                            <Icon name='line-chart' color='#ffffff' size={40} />
+                            <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.field4}>
+                            <Icon name='check-square-o' color='#ffffff' size={40} />
+                            <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </View>
         )
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginTop: 10,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
+        textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10,
     }
 })

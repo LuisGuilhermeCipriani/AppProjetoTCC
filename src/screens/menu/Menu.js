@@ -12,13 +12,13 @@ export default class Menu extends Component{
                 <MenuButton nameIcon='home' nameButton='Início' onPress={()=>{
                     navigation.navigate('Home'); navigation.closeDrawer()}}/>
                 <MenuButton  nameIcon='square-o' nameButton='Responder Questionários' onPress={()=>{
-                    navigation.navigate('Selection'); navigation.closeDrawer()}}/>
+                    navigation.navigate('SelectionScreen'); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='check-square-o' nameButton='Questionários Respondidos' onPress={()=>{
                     navigation.navigate(''); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='search' nameButton='Consultar Disciplinas' onPress={()=>{
-                    navigation.navigate('Discipline'); navigation.closeDrawer()}}/>
+                    navigation.navigate('DisciplineScreen'); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='line-chart' nameButton='Consultar Desempenho' onPress={()=>{
-                    navigation.navigate('Gráfico'); navigation.closeDrawer()}}/>
+                    navigation.navigate('BarChartScreen'); navigation.closeDrawer()}}/>
                 <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={()=>{
                     navigation.navigate('Auth'); navigation.closeDrawer()}}/>
             </View>

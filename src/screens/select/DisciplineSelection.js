@@ -1,12 +1,12 @@
-import React, {Component} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage} from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 import { Card, ListItem, Button, Icon } from 'react-native-elements';
 
-
+import Header from '../../components/header/Header';
 import Api from '../../services/Api';
 
-export default class DisciplineSelection extends Component{
-    constructor(props){
+export default class DisciplineSelection extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             disciplineUser: []
@@ -20,34 +20,40 @@ export default class DisciplineSelection extends Component{
     getDisciplines = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const {disciplineUser} = (await Api.post('/DisciplineUser/findByIdUser',{idUser: _id})).data;
-            const {quizzes} = (await Api.post('/quiz/findAll', {idUser: _id, status: "S"})).data;
+            const { disciplineUser } = (await Api.post('/DisciplineUser/findByIdUser', { idUser: _id })).data;
+            const { quizzes } = (await Api.post('/quiz/findAll', { idUser: _id, status: "S" })).data;
 
-            if(quizzes !== null) {
-               this.setState({ disciplineUser });
+            if (quizzes !== null) {
+                this.setState({ disciplineUser });
             }
         } catch (err) {
             console.log(err);
         }
     }
 
-    render(){
+    render() {
         const { disciplineUser } = this.state;
-        return(
-                <View style={styles.container}>
+        return (
+            <View style={styles.container}>
+                <Header
+                    title='Seleção de Disciplinas'
+                    menuIcon='menu'
+                    navigation={this.props.navigation}
+                />
                 <ScrollView style={styles.scroll} >
-                        {disciplineUser !== null &&
-                            disciplineUser.map(disciplineUser => {
-                                const idDisciplineUser = disciplineUser._id;
-                                const { title, code, _id } = disciplineUser.idDiscipline;
-                                return (
-                                    <TouchableOpacity key={_id} onPress={()=>{this.props.navigation.navigate('QuizDiscipline', { idDisciplineUser })}}>
-                                <Card containerStyle={{borderBottomWidth: 4, borderBottomColor: '#595959'
-                            }}>
-                            <Text style={styles.nameDiscipline}>{ title } - { code }</Text>
-                        </Card>
-                        </TouchableOpacity>
-                                );
+                    {disciplineUser !== null &&
+                        disciplineUser.map(disciplineUser => {
+                            const idDisciplineUser = disciplineUser._id;
+                            const { title, code, _id } = disciplineUser.idDiscipline;
+                            return (
+                                <TouchableOpacity key={_id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { idDisciplineUser }) }}>
+                                    <Card containerStyle={{
+                                        borderBottomWidth: 4, borderBottomColor: '#595959'
+                                    }}>
+                                        <Text style={styles.nameDiscipline}>{title} - {code}</Text>
+                                    </Card>
+                                </TouchableOpacity>
+                            );
                         })
                     }
                 </ScrollView>
@@ -78,7 +84,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 15,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: {width: -1, height: 1},
+        textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10,
     },
     scroll: {
