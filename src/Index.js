@@ -31,7 +31,7 @@ export default class Index extends Component {
                     </View>
                     <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
                         <TouchableOpacity style={styles.field3} onPress={() => {
-                            navigation.navigate('BarChartScreen')
+                            navigation.navigate('chartScreen')
                         }}>
                             <Icon name='line-chart' color='#ffffff' size={40} />
                             <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>

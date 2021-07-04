@@ -9,14 +9,7 @@ export default class SearchDisciplines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            disciplineUser: [],
-            users: [
-                {
-                    name: 'brynn',
-                    avatar: 'https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg'
-                },
-                // more users here
-            ]
+            disciplines: []
         }
     }
 
@@ -27,9 +20,9 @@ export default class SearchDisciplines extends Component {
     SearchDisciplines = async () => {
         try {
             const idUser = JSON.parse(await AsyncStorage.getItem('@APP:user'))._id;
-            const response = await Api.post('DisciplineUser/findByIdUser', { idUser });
-            const { disciplineUser } = response.data;
-            this.setState({ disciplineUser });
+            const response = await Api.post('discipline/findByIdUser', { idUser, period: '2021/1' });
+            const { disciplines } = response.data;
+            this.setState({ disciplines });
         } catch (error) {
             console.log(error);
         }
@@ -37,7 +30,7 @@ export default class SearchDisciplines extends Component {
 
     render() {
 
-        const { disciplineUser, users } = this.state;
+        const { disciplines } = this.state;
         return (
             <View>
                 <Header
@@ -47,9 +40,8 @@ export default class SearchDisciplines extends Component {
                 />
                 <ScrollView>
                     {
-                        disciplineUser !== null && disciplineUser.map(disciplineUserObject => {
-                            const { idDiscipline } = disciplineUserObject;
-                            const { title, code, _id } = idDiscipline;
+                        disciplines !== null && disciplines.map(disciplineObject => {
+                            const { title, code, _id } = disciplineObject;
                             return (
                                 <Card key={_id} containerStyle={{
                                     borderBottomWidth: 2, borderBottomColor: '#ccc'

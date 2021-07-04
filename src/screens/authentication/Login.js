@@ -16,7 +16,7 @@ export default class Login extends Component {
     signIn = async () => {
         try {
             const { cpf, password } = this.state;
-            const response = await Api.post('/auth/authenticate', {
+            const response = await Api.post('/user/authenticate', {
                 cpf,
                 password
             });

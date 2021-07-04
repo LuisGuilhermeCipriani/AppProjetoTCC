@@ -1,16 +1,20 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Header } from 'react-native-elements';
-
-export default props = ({ title, navigation, menuIcon }) => {
+import { StyleSheet } from 'react-native';
+import { Header, Icon } from 'react-native-elements';
+export default props = ({ title, navigation, menuIcon, isBack }) => {
 
     const openMenu = () => {
-        navigation.openDrawer();
+        isBack ? navigation.navigate('chartScreen') : navigation.openDrawer();
     }
 
     return (
         <Header
-            leftComponent={{ icon: menuIcon, color: '#FFF', onPress: () => openMenu() }}
+            leftComponent={ <Icon
+                type="ionicon"
+                color='white'
+                name={menuIcon}
+                onPress={() => openMenu()}
+              />}
             centerComponent={{ text: title, style: { color: '#FFF', fontSize: 20 } }}
             containerStyle={{ backgroundColor: '#d3302f' }}
         />

@@ -1,11 +1,13 @@
 import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import BarChart from '../screens/chart/BarChart';
-import Index from '../Index';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const screensTab = {
+import Index from '../Index';
+import DisciplineQuestionnaireSelection from '../screens/chart/DisciplineQuestionnaireSelection';
+import Chart from '../screens/chart/Chart';
+
+const screenChartSelection = {
     Home: {
         screen: Index,
         navigationOptions: {
@@ -15,19 +17,19 @@ const screensTab = {
                 <Icon name="home" color={tintColor} size={15} />
         }
     },
-    ScreenBarChart: {
-        screen: BarChart,
+    ScreenSelectionDisciplineQuestionnaire: {
+        screen: DisciplineQuestionnaireSelection,
         navigationOptions: {
-            title: 'Gráfico de Barras',
+            title: 'Seleção de Disciplina',
             header: () => false,
             tabBarIcon: ({ tintColor }) =>
-                <Icon name="bar-chart" color={tintColor} size={15} />
+                <Icon name="search" color={tintColor} size={15} />
         }
     },
 }
 
-const screenstabconfig = {
-    initialRouteName: 'ScreenBarChart',
+const configChartSelection = {
+    initialRouteName: 'ScreenSelectionDisciplineQuestionnaire',
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
@@ -45,20 +47,66 @@ const screenstabconfig = {
     }
 }
 
-const AppTabNavigator = createBottomTabNavigator(screensTab, screenstabconfig);
+const chartSelectionNavigator = createBottomTabNavigator(screenChartSelection, configChartSelection);
 
-const screens = {
-    BarChartScreen: {
-        screen: AppTabNavigator,
+const screenCharts = {
+    Home: {
+        screen: Index,
+        navigationOptions: {
+            title: 'Início',
+            header: () => false,
+            tabBarIcon: ({ tintColor }) =>
+                <Icon name="home" color={tintColor} size={15} />
+        }
+    },
+    screenChart: {
+        screen: Chart,
+        navigationOptions: {
+            title: 'Gráfico',
+            header: () => false,
+            tabBarIcon: ({ tintColor }) =>
+                <Icon name="bar-chart" color={tintColor} size={15} />
+        }
     },
 }
 
-const screensconfig = {
+const configChart = {
+    initialRouteName: 'screenChart',
     defaultNavigationOptions: {
-        header: () => false
+        header: () => false,
+        tabBarOptions: {
+            activeTintColor: "#ffffff",
+            inactiveTintColor: "#000000",
+            activeBackgroundColor: "#d3302f",
+            inactiveBackgroundColor: "#A9A9A9",
+            style: {
+                height: 50,
+            },
+            labelStyle: {
+                fontSize: 15,
+            },
+        },
     }
 }
 
-const chartStack = createStackNavigator(screens, screensconfig)
+const chartNavigator = createBottomTabNavigator(screenCharts, configChart);
 
-export default chartStack
+const screens = {
+    chartScreen: {
+        screen: chartSelectionNavigator,
+    },
+    chart: {
+        screen: chartNavigator,
+    }
+}
+
+const screensconfig = {
+    initialRouteName: 'chartScreen',
+    defaultNavigationOptions: {
+        header: () => false,
+    }
+}
+
+const selectionStack = createStackNavigator(screens,screensconfig)
+
+export default selectionStack
