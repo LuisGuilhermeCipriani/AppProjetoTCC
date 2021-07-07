@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Modal } from 'react-native';
-import { BarChart, Grid } from 'react-native-svg-charts';
+import { BarChart, Grid, PieChart } from 'react-native-svg-charts';
 import { Text as TextChart } from 'react-native-svg';
 import RadioForm from 'react-native-simple-radio-button';
 import Header from '../../components/header/Header';
@@ -14,7 +14,7 @@ export default class BarChartHorizontalWithLabels extends Component {
         this.discipline = this.props.navigation.getParam('discipline');
         this.radioCharts = [
             { label: 'Barras', value: 0 },
-            { label: 'BoxPlot', value: 1 },
+            { label: 'Pizza', value: 1 },
             { label: 'Dispersão', value: 2 }
         ];
         this.radioOptions = [
@@ -43,8 +43,44 @@ export default class BarChartHorizontalWithLabels extends Component {
         }
     }
 
+    getPierChart = (data) => {
+        const amount1 = data.filter(value => (value < 1)).length;
+        const amount2 = data.filter(value => (value >= 1 && value < 2)).length;
+        const amount3 = data.filter(value => (value >= 2 && value < 3)).length;
+        const amount4 = data.filter(value => (value >= 3 && value < 4)).length;
+        const amount5 = data.filter(value => (value >= 4)).length;
+
+        return dataPierChart = [
+            {
+                key: 1,
+                amount: amount1,
+                svg: { fill: 'red' },
+            },
+            {
+                key: 2,
+                amount: amount2,
+                svg: { fill: 'yellow' }
+            },
+            {
+                key: 3,
+                amount: amount3,
+                svg: { fill: 'gray' }
+            },
+            {
+                key: 4,
+                amount: amount4,
+                svg: { fill: 'blue' }
+            },
+            {
+                key: 5,
+                amount: amount5,
+                svg: { fill: 'green' }
+            }
+        ]
+    }
+
     render() {
-        const { dataChart } = this.state
+        const { dataChart, valueCharts } = this.state
         const titleScreen = this.discipline.code + ' - ' + this.discipline.title
         const data = dataChart.map(object => { return parseFloat(object.weightedAverage) })
 
@@ -111,6 +147,29 @@ export default class BarChartHorizontalWithLabels extends Component {
             return total += ('Questão ' + value.option + ': ' + value.title + '\n\n')
         }, '')
 
+        const LabelsPier = ({ slices, height, width }) => {
+            return slices.map((slice, index) => {
+                const { labelCentroid, pieCentroid, data } = slice;
+                return (
+                    <TextChart
+                        key={index}
+                        x={pieCentroid[0]}
+                        y={pieCentroid[1]}
+                        fill={'white'}
+                        textAnchor={'middle'}
+                        alignmentBaseline={'middle'}
+                        fontSize={24}
+                        stroke={'black'}
+                        strokeWidth={0.2}
+                    >
+                        {data.amount}
+                    </TextChart>
+                )
+            })
+        }
+
+        const dataPierChart = this.getPierChart(data)
+
         return (
             <View style={{ justifyContent: 'space-between', flex: 1 }}>
                 <Header
@@ -119,64 +178,103 @@ export default class BarChartHorizontalWithLabels extends Component {
                     navigation={this.props.navigation}
                     isBack={true}
                 />
-                <View style={styles.containerRadio}>
-                    <View>
-                        <RadioForm
-                            radio_props={this.radioCharts}
-                            initial={0}
-                            buttonColor='#000000'
-                            buttonSize={12}
-                            buttonOuterColor='#000000'
-                            selectedButtonColor='#000000'
-                            labelStyle={{ fontSize: 12, color: '#000000' }}
-                            formHorizontal={true}
-                            labelHorizontal={false}
-                            onPress={(valueCharts) => { this.setState({ valueCharts }) }}
-                        />
+                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                    <View style={styles.containerRadio}>
+                        <View>
+                            <RadioForm
+                                radio_props={this.radioCharts}
+                                initial={0}
+                                buttonColor='#000000'
+                                buttonSize={12}
+                                buttonOuterColor='#000000'
+                                selectedButtonColor='#000000'
+                                labelStyle={{ fontSize: 12, color: '#000000' }}
+                                formHorizontal={true}
+                                labelHorizontal={false}
+                                onPress={(valueCharts) => { this.setState({ valueCharts }) }}
+                            />
+                        </View>
+                        <View>
+                            <RadioForm
+                                radio_props={this.radioOptions}
+                                initial={0}
+                                buttonColor='#000000'
+                                buttonSize={12}
+                                buttonOuterColor='#000000'
+                                selectedButtonColor='#000000'
+                                labelStyle={{ fontSize: 12, color: '#000000' }}
+                                formHorizontal={true}
+                                labelHorizontal={false}
+                                onPress={(valueOptions) => { this.setState({ valueOptions }) }}
+                            />
+                        </View>
                     </View>
-                    <View>
-                        <RadioForm
-                            radio_props={this.radioOptions}
-                            initial={0}
-                            buttonColor='#000000'
-                            buttonSize={12}
-                            buttonOuterColor='#000000'
-                            selectedButtonColor='#000000'
-                            labelStyle={{ fontSize: 12, color: '#000000' }}
-                            formHorizontal={true}
-                            labelHorizontal={false}
-                            onPress={(valueOptions) => { this.setState({ valueOptions }) }}
-                        />
-                    </View>
+                    {valueCharts == 0 &&
+                        <ScrollView style={styles.scroll}>
+                            <View>
+                                <BarChart
+                                    yAccessor={({ item }) => item}
+                                    style={{ height: 1000 }}
+                                    data={data}
+                                    horizontal={true}
+                                    svg={{ fill: "orange" }}
+                                    contentInset={{ top: 10, bottom: 10, left: 15, right: 15 }}
+                                    spacing={0.8}
+                                    gridMin={0}
+                                    gridMax={5}
+                                >
+                                    <Grid direction={Grid.Direction.VERTICAL} />
+                                    <Labels />
+                                </BarChart>
+                            </View>
+                        </ScrollView>
+                    }
+                    {(valueCharts == 0 && data.length > 0) &&
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginTop: 10 }}>
+                            {scaleChart}
+                        </View>}
+                    {valueCharts == 1 &&
+                        <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                            <PieChart
+                                style={{ height: 300 }}
+                                valueAccessor={({ item }) => item.amount}
+                                data={dataPierChart}
+                                spacing={0}
+                                outerRadius={'95%'}
+                            >
+                                <LabelsPier />
+                            </PieChart>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'red', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <Text>Péssimo</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'yellow', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <Text>Ruim</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'gray', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <Text>Regular</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'blue', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <Text>Bom</Text>
+                                </View>
+                                <View style={{ alignItems: 'center' }}>
+                                    <View style={{ backgroundColor: 'green', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <Text>Ótimo</Text>
+                                </View>
+                            </View>
+                        </View>
+                    }
+                    {data.length > 0 &&
+                        <TouchableOpacity style={{ backgroundColor: 'gray', padding: 15, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
+                            this.setState({ modalVisible: true })
+                        }}>
+                            <Text style={{ color: 'white', fontSize: 15 }}>Clique aqui para ver as questões</Text>
+                        </TouchableOpacity>}
                 </View>
-                <ScrollView style={styles.scroll}>
-                    <View>
-                        <BarChart
-                            yAccessor={({ item }) => item}
-                            style={{ height: 1000 }}
-                            data={data}
-                            horizontal={true}
-                            svg={{ fill: "orange" }}
-                            contentInset={{ top: 10, bottom: 10, left: 15, right: 15 }}
-                            spacing={0.8}
-                            gridMin={0}
-                            gridMax={5}
-                        >
-                            <Grid direction={Grid.Direction.VERTICAL} />
-                            <Labels />
-                        </BarChart>
-                    </View>
-                </ScrollView>
-                {data.length > 0 &&
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginTop: 10 }}>
-                        {scaleChart}
-                    </View>}
-                {data.length > 0 &&
-                    <TouchableOpacity style={{ backgroundColor: 'gray', padding: 15, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
-                        this.setState({ modalVisible: true })
-                    }}>
-                        <Text style={{color: 'white', fontSize: 15}}>Clique aqui para ver as questões</Text>
-                    </TouchableOpacity>}
                 <Modal
                     animationType="slide"
                     transparent={false}
@@ -189,7 +287,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                         <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'gray', padding: 15, marginTop: 10 }} onPress={() => {
                             this.setState({ modalVisible: false })
                         }}>
-                            <Text style={{color: 'white', fontSize: 15}}>Fechar</Text>
+                            <Text style={{ color: 'white', fontSize: 15 }}>Fechar</Text>
                         </TouchableOpacity>
                     </View>
                 </Modal>
