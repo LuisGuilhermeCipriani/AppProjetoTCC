@@ -32,7 +32,6 @@ export default class DisciplineQuestionnaireSelection extends Component {
 
     render() {
         const { questionnaires } = this.state;
-        //console.log('wwwwwwwwwwwwwww w    wwwwwwwwwwwwww           wwwwwwwwwwwwwwwwwwwwwwwww         ',questionnaires)
         return (
             <View style={styles.container}>
                 <Header

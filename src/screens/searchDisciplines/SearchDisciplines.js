@@ -9,7 +9,7 @@ export default class SearchDisciplines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            disciplines: []
+            classes: []
         }
     }
 
@@ -20,9 +20,9 @@ export default class SearchDisciplines extends Component {
     SearchDisciplines = async () => {
         try {
             const idUser = JSON.parse(await AsyncStorage.getItem('@APP:user'))._id;
-            const response = await Api.post('discipline/findByIdUser', { idUser, period: '2021/1' });
-            const { disciplines } = response.data;
-            this.setState({ disciplines });
+            const response = await Api.post('class/findByIdUser', { idUser, period: '2021/1' });
+            const { classes } = response.data;
+            this.setState({ classes });
         } catch (error) {
             console.log(error);
         }
@@ -30,24 +30,25 @@ export default class SearchDisciplines extends Component {
 
     render() {
 
-        const { disciplines } = this.state;
+        const { classes } = this.state;
         return (
             <View>
                 <Header
-                    title='Seleçãa de Disciplinas'
+                    title='Disciplinas Matriculadas'
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
                 <ScrollView>
                     {
-                        disciplines !== null && disciplines.map(disciplineObject => {
-                            const { title, code, _id } = disciplineObject;
+                        classes !== null && classes.map(classObject => {
+                            const { idDiscipline, _id, code } = classObject;
                             return (
                                 <Card key={_id} containerStyle={{
                                     borderBottomWidth: 2, borderBottomColor: '#ccc'
                                 }}>
-                                    <Text style={styles.nameDiscipline}>{title}</Text>
-                                    <Text>{code}</Text>
+                                    <Text style={styles.nameDiscipline}>{idDiscipline.title}</Text>
+                                    <Text>{idDiscipline.code}</Text>
+                                    <Text>{'Turma: ' + code}</Text>
                                 </Card>
                             );
                         })

@@ -53,28 +53,28 @@ export default class BarChartHorizontalWithLabels extends Component {
         return dataPierChart = [
             {
                 key: 1,
-                amount: amount1,
-                svg: { fill: 'red' },
+                amount: parseFloat((amount1 / data.length) * 100).toFixed(0),
+                svg: { fill: '#ff6666' },
             },
             {
                 key: 2,
-                amount: amount2,
-                svg: { fill: 'yellow' }
+                amount: parseFloat((amount2 / data.length) * 100).toFixed(0),
+                svg: { fill: '#e6b800' }
             },
             {
                 key: 3,
-                amount: amount3,
-                svg: { fill: 'gray' }
+                amount: parseFloat((amount3 / data.length) * 100).toFixed(0),
+                svg: { fill: '#808080' }
             },
             {
                 key: 4,
-                amount: amount4,
-                svg: { fill: 'blue' }
+                amount: parseFloat((amount4 / data.length) * 100).toFixed(0),
+                svg: { fill: '#2952a3' }
             },
             {
                 key: 5,
-                amount: amount5,
-                svg: { fill: 'green' }
+                amount: parseFloat((amount5 / data.length) * 100).toFixed(0),
+                svg: { fill: '#2d8659' }
             }
         ]
     }
@@ -160,9 +160,9 @@ export default class BarChartHorizontalWithLabels extends Component {
                         alignmentBaseline={'middle'}
                         fontSize={24}
                         stroke={'black'}
-                        strokeWidth={0.2}
+                        strokeWidth={0.5}
                     >
-                        {data.amount}
+                        {data.amount.length > 1 ? data.amount + '%' : ''} 
                     </TextChart>
                 )
             })
@@ -217,7 +217,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                                     style={{ height: 1000 }}
                                     data={data}
                                     horizontal={true}
-                                    svg={{ fill: "orange" }}
+                                    svg={{ fill: "#DEB887" }}
                                     contentInset={{ top: 10, bottom: 10, left: 15, right: 15 }}
                                     spacing={0.8}
                                     gridMin={0}
@@ -246,23 +246,23 @@ export default class BarChartHorizontalWithLabels extends Component {
                             </PieChart>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'red', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <View style={{ backgroundColor: '#ff6666', width: 20, height: 20, borderWidth: 1 }}/>
                                     <Text>Péssimo</Text>
                                 </View>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'yellow', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <View style={{ backgroundColor: '#e6b800', width: 20, height: 20, borderWidth: 1 }}/>
                                     <Text>Ruim</Text>
                                 </View>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'gray', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <View style={{ backgroundColor: '#808080', width: 20, height: 20, borderWidth: 1 }}/>
                                     <Text>Regular</Text>
                                 </View>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'blue', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <View style={{ backgroundColor: '#2952a3', width: 20, height: 20, borderWidth: 1 }}/>
                                     <Text>Bom</Text>
                                 </View>
                                 <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: 'green', width: 20, height: 20, borderWidth: 1 }}/>
+                                    <View style={{ backgroundColor: '#2d8659', width: 20, height: 20, borderWidth: 1 }}/>
                                     <Text>Ótimo</Text>
                                 </View>
                             </View>
@@ -272,7 +272,8 @@ export default class BarChartHorizontalWithLabels extends Component {
                         <TouchableOpacity style={{ backgroundColor: 'gray', padding: 15, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
                             this.setState({ modalVisible: true })
                         }}>
-                            <Text style={{ color: 'white', fontSize: 15 }}>Clique aqui para ver as questões</Text>
+                            <Text style={{ color: 'white', fontSize: 15, shadowColor: 'black', shadowOffset: {width: 0, height: 1}, 
+                            shadowOpacity: 0.2, elevation: 2 }}>Clique aqui para ver as questões</Text>
                         </TouchableOpacity>}
                 </View>
                 <Modal
