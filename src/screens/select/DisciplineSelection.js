@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card } from 'react-native-elements';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -9,7 +9,7 @@ export default class DisciplineSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            disciplineUser: []
+            questionnairesByPeriod: []
         }
     }
 
@@ -20,11 +20,12 @@ export default class DisciplineSelection extends Component {
     getDisciplines = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const { disciplineUser } = (await Api.post('/DisciplineUser/findByIdUser', { idUser: _id })).data;
-            const { quizzes } = (await Api.post('/quiz/findAll', { idUser: _id, status: "S" })).data;
+            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod', 
+            { idStudent: _id, period: '2021/1', status: 'N' })).data;
+            console.log(questionnairesByPeriod)
 
-            if (quizzes !== null) {
-                this.setState({ disciplineUser });
+            if (questionnairesByPeriod !== null) {
+                this.setState({ questionnairesByPeriod });
             }
         } catch (err) {
             console.log(err);
@@ -32,25 +33,32 @@ export default class DisciplineSelection extends Component {
     }
 
     render() {
-        const { disciplineUser } = this.state;
+        const { questionnairesByPeriod } = this.state;
+    
         return (
             <View style={styles.container}>
                 <Header
-                    title='Seleção de Disciplinas'
+                    title='Questionários Pendentes'
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
                 <ScrollView style={styles.scroll} >
-                    {disciplineUser !== null &&
-                        disciplineUser.map(disciplineUser => {
-                            const idDisciplineUser = disciplineUser._id;
-                            const { title, code, _id } = disciplineUser.idDiscipline;
+                    {questionnairesByPeriod !== null &&
+                        questionnairesByPeriod.map(questionnaire => {
+                            const { title } = questionnaire.idDiscipline;
+                            const codeDiscipline = questionnaire.idDiscipline.code;
+                            const { name } = questionnaire.idProfessor;
+                            const {code, period} = questionnaire.idClass;
                             return (
-                                <TouchableOpacity key={_id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { idDisciplineUser }) }}>
+                                <TouchableOpacity key={questionnaire._id} onPress={() => 
+                                { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
                                     <Card containerStyle={{
                                         borderBottomWidth: 4, borderBottomColor: '#595959'
                                     }}>
-                                        <Text style={styles.nameDiscipline}>{title} - {code}</Text>
+                                        <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
+                                        <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
+                                        <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
+                                        <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
                                     </Card>
                                 </TouchableOpacity>
                             );

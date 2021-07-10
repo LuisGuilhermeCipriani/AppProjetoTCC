@@ -19,7 +19,7 @@ export default class Quiz extends Component {
             index: 0,
             isSelected: false,
         };
-        this.id = this.props.navigation.getParam('idDisciplineUser');
+        this.questionnaire = this.props.navigation.getParam('questionnaire');
     }
 
     async componentDidMount() {
@@ -112,8 +112,6 @@ export default class Quiz extends Component {
         </View>
     }
 
-
-
     boundMinimumLimit = () => {
         let { index } = this.state;
         if (index > 0) {
@@ -135,54 +133,7 @@ export default class Quiz extends Component {
         const { questions, answers, index } = this.state;
         const options = answers.map((answer, index) => {
             return { label: index + 1 + ' - ' + answer.title, value: index + 1 }
-        }
-        );
-
-        /*return (
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around' }}>
-                {(questions.length > 0 && answers.length > 0) && this.renderScreens()}
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
-                        <Icon name='chevron-left' size={25} />
-                    </TouchableOpacity>
-                    <RadioForm
-                        radio_props={options}
-                        onPress={(answer) => { this.setState({ answer }) }}
-                        formHorizontal={false}
-                        initial={false}
-                        labelStyle={{ marginRight: 10, marginBottom: 30 }}
-                        animation={false}
-                        buttonColor={'#cc0000'}
-                        selectedButtonColor = '#808080'
-                    />
-                    <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
-                        <Icon name='chevron-right' size={25} />
-                    </TouchableOpacity>
-                </View>
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-                    <TouchableOpacity style={styles.commentButton} onPress={() => {
-                        navigation.navigate('Comments')
-                    }}>
-                        <Icon name='comment' style={styles.icon}/>
-                        <Text style={styles.textButton}>Comentar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.teste()}>
-                        <Icon name='save' style={styles.icon}/>
-                        <Text style={styles.textButton}>Salvar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.sendButton} onPress={() => {
-                        Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
-                            [
-                                { text: 'Sim', onPress: () => this.registerQuiz() },
-                                { text: 'Não' },
-                            ])
-                    }}>
-                        <Icon name='send' style={styles.icon}/>
-                        <Text style={styles.textButton}>Enviar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
-        )*/
+        });
 
         return (
             <View style={styles.container}>
@@ -224,21 +175,21 @@ export default class Quiz extends Component {
                     </TouchableOpacity>
                     {
                         questions.length !== index + 1 ?
-                        <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
-                            <Icon name='chevron-right' style={styles.icon} />
-                            <Text style={styles.textButton}>Próximo</Text>
-                        </TouchableOpacity>
-                        :
-                        <TouchableOpacity style={styles.sendButton} onPress={() => {
-                            Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
-                                [
-                                    { text: 'Sim', onPress: () => this.registerQuiz() },
-                                    { text: 'Não' },
-                                ])
-                        }}>
-                            <Icon name='send' style={styles.icon2} />
-                            <Text style={styles.textButton2}>Enviar</Text>
-                        </TouchableOpacity>
+                            <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
+                                <Icon name='chevron-right' style={styles.icon} />
+                                <Text style={styles.textButton}>Próximo</Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity style={styles.sendButton} onPress={() => {
+                                Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
+                                    [
+                                        { text: 'Sim', onPress: () => this.registerQuiz() },
+                                        { text: 'Não' },
+                                    ])
+                            }}>
+                                <Icon name='send' style={styles.icon2} />
+                                <Text style={styles.textButton2}>Enviar</Text>
+                            </TouchableOpacity>
                     }
                 </View>
             </View>
