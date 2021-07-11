@@ -1,12 +1,25 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Header from './components/header/Header';
 
 export default class Index extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: {}
+        }
+    }
+    async componentDidMount(){
+        const user = JSON.parse(await AsyncStorage.getItem('@APP:user'));
+        this.setState({user})
+    }
+
     render() {
-        const { navigation } = this.props
+        const { navigation } = this.props;
+        const { type } = this.state.user;
+
         return (
             <View style={{ width: '100%', flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
                 <Header
@@ -16,32 +29,40 @@ export default class Index extends Component {
                 />
                 <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                     <View style={{ flexDirection: 'row' }}>
-                        <TouchableOpacity style={styles.field1} onPress={() => {
-                            navigation.navigate('SelectionScreen')
-                        }}>
-                            <Icon name='square-o' color='#ffffff' size={40} />
-                            <Text style={styles.text}>Responder {"\n"}Questionário</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.field2} onPress={() => {
-                            navigation.navigate('DisciplineScreen')
-                        }}>
-                            <Icon name='search' color='#ffffff' size={40} />
-                            <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
-                        </TouchableOpacity>
+                        {type == 'S' &&
+                            <TouchableOpacity style={styles.field1} onPress={() => {
+                                navigation.navigate('SelectionScreen')
+                            }}>
+                                <Icon name='square-o' color='#ffffff' size={40} />
+                                <Text style={styles.text}>Responder {"\n"}Questionário</Text>
+                            </TouchableOpacity>
+                        }
+                        {(type == 'S' || type == 'P') &&
+                            <TouchableOpacity style={styles.field2} onPress={() => {
+                                navigation.navigate('DisciplineScreen')
+                            }}>
+                                <Icon name='search' color='#ffffff' size={40} />
+                                <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
+                            </TouchableOpacity>
+                        }
                     </View>
                     <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
-                        <TouchableOpacity style={styles.field3} onPress={() => {
-                            navigation.navigate('chartScreen')
-                        }}>
-                            <Icon name='line-chart' color='#ffffff' size={40} />
-                            <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.field4} onPress={() => {
-                            navigation.navigate('AnsweredScreen')
-                        }}>
-                            <Icon name='check-square-o' color='#ffffff' size={40} />
-                            <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
-                        </TouchableOpacity>
+                        {type == 'P' &&
+                            <TouchableOpacity style={styles.field3} onPress={() => {
+                                navigation.navigate('chartScreen')
+                            }}>
+                                <Icon name='line-chart' color='#ffffff' size={40} />
+                                <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
+                            </TouchableOpacity>
+                        }
+                        {type == 'S' &&
+                            <TouchableOpacity style={styles.field4} onPress={() => {
+                                navigation.navigate('AnsweredScreen')
+                            }}>
+                                <Icon name='check-square-o' color='#ffffff' size={40} />
+                                <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
+                            </TouchableOpacity>
+                        }
                     </View>
                 </View>
             </View>
