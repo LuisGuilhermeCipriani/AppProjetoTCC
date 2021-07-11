@@ -6,6 +6,7 @@ import HomeStack from './routes/HomeStack';
 import SelectionStack from './routes/SelectionStack';
 import DisciplineStack from './routes/DisciplineStack';
 import ChartStack from './routes/ChartStack';
+import AnsweredQuestionnairesStack from './routes/AnsweredQuestionnairesStack';
 
 const menuRoutes = {
     Home: {
@@ -19,6 +20,9 @@ const menuRoutes = {
     },
     Chart: {
         screen: ChartStack
+    },
+    Answered: {
+        screen: AnsweredQuestionnairesStack
     }
 }
 

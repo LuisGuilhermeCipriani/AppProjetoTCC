@@ -36,7 +36,9 @@ export default class Index extends Component {
                             <Icon name='line-chart' color='#ffffff' size={40} />
                             <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.field4}>
+                        <TouchableOpacity style={styles.field4} onPress={() => {
+                            navigation.navigate('AnsweredScreen')
+                        }}>
                             <Icon name='check-square-o' color='#ffffff' size={40} />
                             <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
                         </TouchableOpacity>

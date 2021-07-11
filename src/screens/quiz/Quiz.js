@@ -116,7 +116,7 @@ export default class Quiz extends Component {
         let { index } = this.state;
         if (index > 0) {
             index = index - 1;
-            this.setState({ index: index });
+            this.setState({ index });
         }
     }
 
@@ -124,7 +124,7 @@ export default class Quiz extends Component {
         let { questions, index } = this.state;
         if (index < questions.length - 1) {
             index = index + 1;
-            this.setState({ index: index });
+            this.setState({ index });
         }
     }
 

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
 
-export default class DisciplineSelection extends Component {
+export default class AnsweredQuestionnaires extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,7 +21,7 @@ export default class DisciplineSelection extends Component {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod', 
-            { idStudent: _id, period: '2021/1', status: 'N' })).data;
+            { idStudent: _id, period: '2021/1', status: 'S' })).data;
 
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
@@ -37,7 +37,7 @@ export default class DisciplineSelection extends Component {
         return (
             <View style={styles.container}>
                 <Header
-                    title='Questionários Pendentes'
+                    title='Questionários Respondidos'
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
@@ -49,8 +49,7 @@ export default class DisciplineSelection extends Component {
                             const { name } = questionnaire.idProfessor;
                             const {code, period} = questionnaire.idClass;
                             return (
-                                <TouchableOpacity key={questionnaire._id} onPress={() => 
-                                { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
+                                <View key={questionnaire._id}>
                                     <Card containerStyle={{
                                         borderBottomWidth: 4, borderBottomColor: '#595959'
                                     }}>
@@ -59,7 +58,7 @@ export default class DisciplineSelection extends Component {
                                         <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                         <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
                                     </Card>
-                                </TouchableOpacity>
+                                </View>
                             );
                         })
                     }
