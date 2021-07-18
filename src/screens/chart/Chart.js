@@ -79,6 +79,84 @@ export default class BarChartHorizontalWithLabels extends Component {
         ]
     }
 
+    previewQuestions = (index) => {
+        let preview = '';
+        switch(index + 1){
+            case 1:
+                preview = 'Disponibilidade do Plano';
+                break;
+            case 2:
+                preview = 'Pontualidade do Professor';
+                break;
+            case 3:
+                preview = 'Assiduidade do professor';
+                break;
+            case 4:
+                preview = 'Utilização do tempo';
+                break;
+            case 5:
+                preview = 'Disponibilidade atendimento';
+                break;
+            case 6:
+                preview = 'Esclarecimento de dúvidas';
+                break;
+            case 7:
+                preview = 'Clareza de conteúdos';
+                break;
+            case 8:
+                preview = 'Domínio do conteúdo';
+                break;
+            case 9:
+                preview = 'Atualização de materiais';
+                break;
+            case 10:
+                preview = 'Apresentação exemplos';
+                break;
+            case 11:
+                preview = 'Reflexão de avaliações';
+                break;
+            case 12:
+                preview = 'Publicação de notas';
+                break;
+            case 13:
+                preview = 'Cumprimento conteúdo';
+                break;
+            case 14:
+                preview = 'Adequação da bibliografia';
+                break;
+            case 15:
+                preview = 'Cumprimento de objetivos';
+                break;
+            case 16:
+                preview = 'Adequação da ementa';
+                break;
+            case 17:
+                preview = 'Pontualidade do aluno';
+                break;
+            case 18:
+                preview = 'Assiduidade do aluno';
+                break;
+            case 19:
+                preview = 'Esclarecimento individual';
+                break;
+            case 20:
+                preview = 'Conhecimento prévio';
+                break;
+            case 21:
+                preview = 'Realização de atividades';
+                break;
+            case 22:
+                preview = 'Dedicação do aluno';
+                break;
+            case 23:
+                preview = 'Fidelidade de notas';
+                break;
+            default:
+                preview = 'Questão';
+        }
+        return preview;
+    }
+
     render() {
         const { dataChart, valueCharts } = this.state
         const titleScreen = this.discipline.code + ' - ' + this.discipline.title
@@ -132,7 +210,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                     fill={'black'}
                     alignmentBaseline={'middle'}
                 >
-                    {'Questão ' + (index + 1) + ' - ' + 'Média: ' + value + ' (' + selectStatus(value) + ')'}
+                    {'Q' + (index+1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + value + ' (' + selectStatus(value) + ')'}
                 </TextChart>
             ))
         )
@@ -144,7 +222,7 @@ export default class BarChartHorizontalWithLabels extends Component {
         })
 
         const showQuestions = dataChart.reduce((total, value) => {
-            return total += ('Questão ' + value.option + ': ' + value.title + '\n\n')
+            return total += ('Q' + value.option + ': ' + value.title + '\n\n')
         }, '')
 
         const LabelsPier = ({ slices, height, width }) => {
@@ -217,7 +295,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                                     style={{ height: 1000 }}
                                     data={data}
                                     horizontal={true}
-                                    svg={{ fill: "#DEB887" }}
+                                    svg={{ fill: "#ffb3b3" }}
                                     contentInset={{ top: 10, bottom: 10, left: 15, right: 15 }}
                                     spacing={0.8}
                                     gridMin={0}

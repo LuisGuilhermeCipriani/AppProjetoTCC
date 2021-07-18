@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { RadioButton } from 'react-native-paper';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -12,19 +13,38 @@ export default class Quiz extends Component {
         this.state = {
             questions: [],
             answers: [],
-            quiz: {},
             question_answer: [],
-            question: '',
-            answer: '',
             index: 0,
-            isSelected: false,
+            commentary: ''
         };
         this.questionnaire = this.props.navigation.getParam('questionnaire');
     }
 
     async componentDidMount() {
-        this.getQuestions();
-        this.getAnswers();
+        this.setState({ question_answer: this.questionnaire.questionAnswer });
+        await this.getQuestions();
+        await this.getAnswers();
+        this.initial();
+    }
+
+    initial = async () => {
+        const { question_answer, questions, answers } = this.state;
+
+        const list = question_answer.map(object => {
+            const question = questions.filter(obj => obj._id == object.idQuestion)[0];
+            const answer = answers.filter(obj => obj._id == object.idAnswer)[0];
+            return ({
+                ...object,
+                idAnswer: answer,
+                idQuestion: question
+            })
+        });
+
+        const listQuestionAnswer = list.map((object, index) => {
+            return list.filter(obj => obj.idQuestion.option == index + 1)[0];
+        });
+
+        this.setState({ question_answer: listQuestionAnswer, commentary: this.questionnaire.commentary })
     }
 
     getQuestions = async () => {
@@ -51,53 +71,60 @@ export default class Quiz extends Component {
         }
     }
 
-    saveState = async () => {
-        const { question_answer, questions, answers, answer, index } = this.state;
-        question_answer.push({
-            idQuestion: questions[index]._id,
-            idAnswer: answers[answer]._id
-        });
+    updateState = (value) => {
+        const { commentary, answers, index } = this.state;
+        let { question_answer } = this.state;
+        const answer = answers.filter(object => object.option == value)[0];
+
+        question_answer[index] = {
+            ...question_answer[index],
+            idAnswer: answer
+        };
+
         this.setState({ question_answer });
     }
 
-    registerQuiz = async () => {
+    saveState = async () => {
         try {
-            const { question_answer } = this.state;
+            const { question_answer, commentary } = this.state;
+            const { idQuestionnaire } = question_answer[0];
+            const list = {
+                idQuestionnaire,
+                commentary,
+                status: 'I',
+                questionAnswer: question_answer
+            }
+            const response = await Api.put('/questionnaire/update', list)
+            Alert.alert('Progresso salvo com sucesso!')
+        } catch (error) {
+            console.log(error)
+        }
 
-            const response = await Api.post('/quiz/register', {
-                disciplineUser: this.id,
+    }
+
+    updateQuestionnaire = async () => {
+        try {
+            const { question_answer, commentary } = this.state;
+            const { idQuestionnaire } = question_answer[0];
+            const list = {
+                idQuestionnaire,
+                commentary,
                 status: 'S',
                 questionAnswer: question_answer
-            }).then(() => {
-                console.log('Salvo com sucesso!')
-            })
+            }
+            const response = await Api.put('/questionnaire/update', list)
+            Alert.alert('Questionário enviado com sucesso!')
         } catch (err) {
             console.log(err);
         }
     }
 
-    teste = () => {
-        this.boundMaximumLimit();
-        this.saveState();
-    }
-
-    renderScreens = () => {
-        const { index, questions } = this.state;
-
-        return <View style={{ alignItems: 'center' }}>
-            <View>
-                <Text style={styles.countQuestion}>Questão {index + 1} de {questions.length}</Text>
-                <Text style={styles.question}>{index + 1} - {questions[index].title}</Text>
-            </View>
-        </View>
-    }
-
     renderScreen1 = () => {
-        const { index, questions } = this.state;
-
+        const { index, question_answer } = this.state;
+        const { idQuestion } = question_answer[index];
         return <View>
             <View>
-                <Text style={styles.countQuestion}>Questão {index + 1} de {questions.length}</Text>
+                <Text style={styles.countQuestion}>Questão {idQuestion.option} de {question_answer.length}</Text>
             </View>
         </View>
     }
@@ -122,18 +149,43 @@ export default class Quiz extends Component {
 
     boundMaximumLimit = () => {
         let { questions, index } = this.state;
-        if (index < questions.length - 1) {
+        if (index <= questions.length - 1) {
             index = index + 1;
             this.setState({ index });
         }
     }
 
+    renderQuestions = () => {
+        const { index, question_answer } = this.state;
+        if (question_answer.length > 0) {
+
+            const question = question_answer[index].idQuestion.title;
+            return question;
+        }
+    }
+
+    renderRadio = () => {
+        const { index, question_answer, answers } = this.state;
+        const { option } = question_answer[index].idAnswer;
+        return (
+            <View>
+                {answers.map(object => {
+                    return <View key={object._id} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <RadioButton
+                            value={object.option}
+                            status={option === object.option ? 'checked' : 'unchecked'}
+                            onPress={() => { this.updateState(object.option) }}
+                        />
+                        <Text style={{ fontSize: 20 }}>{object.option} - {object.title}</Text>
+                    </View>
+                })}
+            </View>
+        )
+    }
+
     render() {
         const { navigation } = this.props;
-        const { questions, answers, index } = this.state;
-        const options = answers.map((answer, index) => {
-            return { label: index + 1 + ' - ' + answer.title, value: index + 1 }
-        });
+        const { answers, index, question_answer } = this.state;
 
         return (
             <View style={styles.container}>
@@ -142,25 +194,45 @@ export default class Quiz extends Component {
                     menuIcon='menu'
                     navigation={navigation}
                 />
-                <View>
-                    {(questions.length > 0 && answers.length > 0) && this.renderScreen1()}
-                </View>
-                <View style={styles.containerBody}>
+                {(question_answer.length > 0 && index < question_answer.length) &&
                     <View>
-                        {(questions.length > 0 && answers.length > 0) && this.renderScreen2()}
-                        <RadioForm style={{ paddingLeft: 30 }}
-                            radio_props={options}
-                            onPress={(answer) => { this.setState({ answer }) }}
-                            formHorizontal={false}
-                            initial={false}
-                            labelStyle={{ marginRight: 10, marginBottom: 10, fontSize: 20, paddingTop: 8 }}
-                            animation={false}
-                            buttonColor={'#cc0000'}
-                            selectedButtonColor='#808080'
-                        />
+                        {this.renderScreen1()}
+                        <View style={styles.containerBody}>
+                            <Text style={styles.question}>{this.renderQuestions()}</Text>
+                            {this.renderRadio()}
+                        </View>
                     </View>
-
-                </View>
+                }
+                {(question_answer.length > 0 && index == question_answer.length) &&
+                    <View style={{ flex: 1 }}>
+                        <Text style={{ backgroundColor: '#bfbfbf' }}>Se quiser deixe um comentário abaixo:</Text>
+                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#bfbfbf' }}>
+                            <TextInput
+                                width='90%'
+                                height='80%'
+                                marginTop={20}
+                                borderRadius={10}
+                                fontSize={20}
+                                multiline={true}
+                                textAlignVertical='top'
+                                padding={10}
+                                value={this.state.commentary}
+                                placeholder='Digite aqui...'
+                                backgroundColor='#ffffff'
+                                onChangeText={(commentary) => {
+                                    this.setState({ commentary })
+                                }}
+                            />
+                            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }}>
+                                <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'gray', padding: 15, marginTop: 10 }} onPress={() => {
+                                    this.setState({ commentary: '' })
+                                }}>
+                                    <Text style={{ color: 'white', fontSize: 15 }}>Limpar</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                }
                 <View style={styles.buttonsField}>
                     {
                         index !== 0 &&
@@ -169,12 +241,12 @@ export default class Quiz extends Component {
                             <Text style={styles.textButton}>Anterior</Text>
                         </TouchableOpacity>
                     }
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.teste()}>
+                    <TouchableOpacity style={styles.saveButton} onPress={() => this.saveState()}>
                         <Icon name='save' style={styles.icon} />
                         <Text style={styles.textButton}>Salvar</Text>
                     </TouchableOpacity>
                     {
-                        questions.length !== index + 1 ?
+                        question_answer.length + 1 !== index + 1 ?
                             <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
                                 <Icon name='chevron-right' style={styles.icon} />
                                 <Text style={styles.textButton}>Próximo</Text>
@@ -183,7 +255,7 @@ export default class Quiz extends Component {
                             <TouchableOpacity style={styles.sendButton} onPress={() => {
                                 Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
                                     [
-                                        { text: 'Sim', onPress: () => this.registerQuiz() },
+                                        { text: 'Sim', onPress: () => this.updateQuestionnaire() },
                                         { text: 'Não' },
                                     ])
                             }}>

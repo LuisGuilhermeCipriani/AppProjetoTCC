@@ -21,7 +21,7 @@ export default class DisciplineSelection extends Component {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod', 
-            { idStudent: _id, period: '2021/1', status: 'N' })).data;
+            { idStudent: _id, period: '2021/1' })).data;
 
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
@@ -58,6 +58,7 @@ export default class DisciplineSelection extends Component {
                                         <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
                                         <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                         <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
+                                        <Text style={styles.nameDiscipline}>{'STATUS: ' + questionnaire.status.toUpperCase()}</Text>
                                     </Card>
                                 </TouchableOpacity>
                             );
