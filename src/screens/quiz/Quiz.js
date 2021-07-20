@@ -24,7 +24,7 @@ export default class Quiz extends Component {
         this.setState({ question_answer: this.questionnaire.questionAnswer });
         await this.getQuestions();
         await this.getAnswers();
-        this.initial();
+        await this.initial();
     }
 
     initial = async () => {
@@ -106,14 +106,21 @@ export default class Quiz extends Component {
         try {
             const { question_answer, commentary } = this.state;
             const { idQuestionnaire } = question_answer[0];
-            const list = {
-                idQuestionnaire,
-                commentary,
-                status: 'S',
-                questionAnswer: question_answer
+            const allchecked = question_answer.filter(object => object.idAnswer == undefined);
+
+            if (allchecked.length > 0) {
+                Alert.alert('Preencha todas as respostas!');
+                this.setState({ index: allchecked[0].idQuestion.option - 1 });
+            } else {
+                const list = {
+                    idQuestionnaire,
+                    commentary,
+                    status: 'S',
+                    questionAnswer: question_answer
+                }
+                const response = await Api.put('/questionnaire/update', list)
+                Alert.alert('Questionário enviado com sucesso!')
             }
-            const response = await Api.put('/questionnaire/update', list)
-            Alert.alert('Questionário enviado com sucesso!')
         } catch (err) {
             console.log(err);
         }
@@ -166,104 +173,138 @@ export default class Quiz extends Component {
 
     renderRadio = () => {
         const { index, question_answer, answers } = this.state;
-        const { option } = question_answer[index].idAnswer;
+        const option = question_answer[index].idAnswer != undefined ? question_answer[index].idAnswer.option : 0;
         return (
-            <View>
-                {answers.map(object => {
-                    return <View key={object._id} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <RadioButton
-                            value={object.option}
-                            status={option === object.option ? 'checked' : 'unchecked'}
-                            onPress={() => { this.updateState(object.option) }}
-                        />
-                        <Text style={{ fontSize: 20 }}>{object.option} - {object.title}</Text>
+            answers.map(object => {
+                return <View key={object._id} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <RadioButton
+                        value={object.option}
+                        status={option === object.option ? 'checked' : 'unchecked'}
+                        onPress={() => { this.updateState(object.option) }}
+                    />
+                    <Text style={{ fontSize: 20 }}>{object.option} - {object.title}</Text>
+                </View>
+            })
+        )
+    }
+
+    renderBody = () => {
+        const { index, question_answer } = this.state;
+
+        return (question_answer.length > 0
+            ?
+            index < question_answer.length ?
+                <View style={{ flex: 1, width: '100%' }}>
+                    {this.renderScreen1()}
+                    <View style={{
+                        justifyContent: 'space-between', flex: 1, backgroundColor: 'white', marginLeft: 10,
+                        marginRight: 10, borderRadius: 10
+                    }}>
+                        <Text style={styles.question}>{this.renderQuestions()}</Text>
+                        <View style={{ marginBottom: 10, padding: 10 }}>{this.renderRadio()}</View>
                     </View>
-                })}
+                </View>
+                :
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                    <View style={{ width: '100%' }}>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, textAlign: 'center' }}>
+                            Comentários, sugestões ou críticas?
+                        </Text>
+                        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
+                            Escreva abaixo:
+                        </Text>
+                    </View>
+                    <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
+                        <TextInput
+                            width='90%'
+                            height='95%'
+                            borderRadius={10}
+                            fontSize={20}
+                            multiline={true}
+                            textAlignVertical='top'
+                            padding={10}
+                            value={this.state.commentary}
+                            placeholder='Digite aqui...'
+                            backgroundColor='#ffffff'
+                            onChangeText={(commentary) => {
+                                this.setState({ commentary })
+                            }}
+                        />
+                    </View>
+                    <View style={{
+                        width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
+                        padding: 10
+                    }}>
+                        <TouchableOpacity style={styles.cleanButton} onPress={() => {
+                            this.setState({ commentary: '' })
+                        }}>
+                            <Text style={{ color: 'white', fontSize: 15 }}>Limpar</Text>
+                        </TouchableOpacity>
+                        <View style={styles.backButton} />
+                        <View style={styles.backButton} />
+                    </View>
+                </View>
+            :
+            <View />
+        )
+    }
+
+    renderFooter = () => {
+        const { index, question_answer } = this.state;
+
+        return (question_answer.length > 0
+            ?
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: '#bfbfbf', padding: 10 }}>
+                {
+                    index !== 0 &&
+                    <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
+                        <Icon name='chevron-left' style={styles.icon} />
+                        <Text style={styles.textButton}>Anterior</Text>
+                    </TouchableOpacity>
+                }
+                <TouchableOpacity style={styles.saveButton} onPress={() => this.saveState()}>
+                    <Icon name='save' style={styles.icon} />
+                    <Text style={styles.textButton}>Salvar</Text>
+                </TouchableOpacity>
+                {
+                    question_answer.length + 1 !== index + 1 ?
+                        <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
+                            <Icon name='chevron-right' style={styles.icon} />
+                            <Text style={styles.textButton}>Próximo</Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity style={styles.sendButton} onPress={() => {
+                            Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
+                                [
+                                    { text: 'Sim', onPress: () => this.updateQuestionnaire() },
+                                    { text: 'Não' },
+                                ])
+                        }}>
+                            <Icon name='send' style={styles.icon2} />
+                            <Text style={styles.textButton2}>Enviar</Text>
+                        </TouchableOpacity>
+                }
             </View>
+            :
+            <View />
         )
     }
 
     render() {
         const { navigation } = this.props;
-        const { answers, index, question_answer } = this.state;
+        const { title, code } = this.questionnaire.idDiscipline;
 
         return (
             <View style={styles.container}>
                 <Header
-                    title='Questionário'
-                    menuIcon='menu'
+                    title={code + ' - ' + title}
+                    menuIcon='arrow-back'
                     navigation={navigation}
+                    isBack={true}
+                    screenName='SelectionScreen'
                 />
-                {(question_answer.length > 0 && index < question_answer.length) &&
-                    <View>
-                        {this.renderScreen1()}
-                        <View style={styles.containerBody}>
-                            <Text style={styles.question}>{this.renderQuestions()}</Text>
-                            {this.renderRadio()}
-                        </View>
-                    </View>
-                }
-                {(question_answer.length > 0 && index == question_answer.length) &&
-                    <View style={{ flex: 1 }}>
-                        <Text style={{ backgroundColor: '#bfbfbf' }}>Se quiser deixe um comentário abaixo:</Text>
-                        <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center', backgroundColor: '#bfbfbf' }}>
-                            <TextInput
-                                width='90%'
-                                height='80%'
-                                marginTop={20}
-                                borderRadius={10}
-                                fontSize={20}
-                                multiline={true}
-                                textAlignVertical='top'
-                                padding={10}
-                                value={this.state.commentary}
-                                placeholder='Digite aqui...'
-                                backgroundColor='#ffffff'
-                                onChangeText={(commentary) => {
-                                    this.setState({ commentary })
-                                }}
-                            />
-                            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-around' }}>
-                                <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'gray', padding: 15, marginTop: 10 }} onPress={() => {
-                                    this.setState({ commentary: '' })
-                                }}>
-                                    <Text style={{ color: 'white', fontSize: 15 }}>Limpar</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                }
-                <View style={styles.buttonsField}>
-                    {
-                        index !== 0 &&
-                        <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
-                            <Icon name='chevron-left' style={styles.icon} />
-                            <Text style={styles.textButton}>Anterior</Text>
-                        </TouchableOpacity>
-                    }
-                    <TouchableOpacity style={styles.saveButton} onPress={() => this.saveState()}>
-                        <Icon name='save' style={styles.icon} />
-                        <Text style={styles.textButton}>Salvar</Text>
-                    </TouchableOpacity>
-                    {
-                        question_answer.length + 1 !== index + 1 ?
-                            <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
-                                <Icon name='chevron-right' style={styles.icon} />
-                                <Text style={styles.textButton}>Próximo</Text>
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity style={styles.sendButton} onPress={() => {
-                                Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
-                                    [
-                                        { text: 'Sim', onPress: () => this.updateQuestionnaire() },
-                                        { text: 'Não' },
-                                    ])
-                            }}>
-                                <Icon name='send' style={styles.icon2} />
-                                <Text style={styles.textButton2}>Enviar</Text>
-                            </TouchableOpacity>
-                    }
-                </View>
+                {this.renderBody()}
+                {this.renderFooter()}
             </View>
         )
     }
@@ -272,8 +313,9 @@ export default class Quiz extends Component {
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
+        justifyContent: 'space-between',
         backgroundColor: '#bfbfbf',
-        height: '100%',
+        //height: '100%',
         flex: 1,
         flexDirection: 'column'
     },
@@ -281,7 +323,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '90%',
-        height: '10%',
+        //height: '10%',
         alignItems: 'center',
         marginTop: 10
     },
@@ -296,6 +338,15 @@ const styles = StyleSheet.create({
     },
     backButton: {
         backgroundColor: '#d3302f',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        borderRadius: 5,
+        elevation: 5,
+        width: '30%'
+    },
+    cleanButton: {
+        backgroundColor: 'blue',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -372,9 +423,10 @@ const styles = StyleSheet.create({
     },
     containerBody: {
         backgroundColor: '#ffffff',
-        height: '65%',
+        //height: '70%',
         width: '90%',
         borderRadius: 10,
+        justifyContent: 'space-between'
     },
     scrollView: {
         borderLeftWidth: 4,

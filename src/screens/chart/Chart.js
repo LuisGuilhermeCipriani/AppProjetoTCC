@@ -255,6 +255,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                     menuIcon='arrow-back'
                     navigation={this.props.navigation}
                     isBack={true}
+                    screenName='chartScreen'
                 />
                 <View style={{ flex: 1, justifyContent: 'space-between' }}>
                     <View style={styles.containerRadio}>

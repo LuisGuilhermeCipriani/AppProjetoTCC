@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
-export default props = ({ title, navigation, menuIcon, isBack }) => {
+export default props = ({ title, navigation, menuIcon, isBack, screenName }) => {
 
     const openMenu = () => {
-        isBack ? navigation.navigate('chartScreen') : navigation.openDrawer();
+        isBack ? navigation.navigate(screenName) : navigation.openDrawer();
     }
 
     return (

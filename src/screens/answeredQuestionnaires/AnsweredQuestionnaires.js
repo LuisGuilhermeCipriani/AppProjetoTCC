@@ -20,8 +20,8 @@ export default class AnsweredQuestionnaires extends Component {
     getDisciplines = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod', 
-            { idStudent: _id, period: '2021/1', status: 'S' })).data;
+            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriodFinished', 
+            { idStudent: _id, period: '2021/1' })).data;
 
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
