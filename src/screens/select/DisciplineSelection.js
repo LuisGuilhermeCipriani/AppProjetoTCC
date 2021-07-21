@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements';
+import RadioForm from 'react-native-simple-radio-button';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -9,8 +10,14 @@ export default class DisciplineSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            questionnairesByPeriod: []
-        }
+            questionnairesByPeriod: [],
+            valueRadio: 1
+        };
+        this.radioValues = [
+            { label: 'Pendentes', value: 0 },
+            { label: 'Todos', value: 1 },
+            { label: 'Incompletos', value: 2 }
+        ]
     }
 
     async componentDidMount() {
@@ -20,8 +27,8 @@ export default class DisciplineSelection extends Component {
     getDisciplines = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod', 
-            { idStudent: _id, period: '2021/1' })).data;
+            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod',
+                { idStudent: _id, period: '2021/1' })).data;
 
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
@@ -31,34 +38,79 @@ export default class DisciplineSelection extends Component {
         }
     }
 
-    render() {
-        const { questionnairesByPeriod } = this.state;
+    renderRadio = () => {
+        return (
+            <RadioForm
+                radio_props={this.radioValues}
+                initial={1}
+                buttonColor='#000000'
+                buttonSize={12}
+                buttonOuterColor='#000000'
+                selectedButtonColor='#000000'
+                labelStyle={{ fontSize: 12, color: '#000000' }}
+                formHorizontal={true}
+                labelHorizontal={false}
+                onPress={(valueRadio) => { this.setState({ valueRadio }) }}
+            />
+        )
+    }
+
+    filterQuestionnaires = () => {
+        const { valueRadio, questionnairesByPeriod } = this.state;
+        let questionnaires = questionnairesByPeriod;
+        if(valueRadio == 0){
+            questionnaires = this.filterByOption(questionnairesByPeriod, 'N');
+        }
+        if(valueRadio == 2){
+            questionnaires = this.filterByOption(questionnairesByPeriod, 'I');
+        }
+        return questionnaires;
+    }
     
+    filterByOption = (questionnaires, option) => {
+        const pendings = questionnaires.filter(object => object.status == option);
+        return pendings;
+    }
+
+    render() {
+        const questionnaires = this.filterQuestionnaires();
+
         return (
             <View style={styles.container}>
                 <Header
-                    title='Questionários Pendentes'
+                    title='Responder Questionário'
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
+                <View style={{width:'100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingTop: 10}}>
+                    {this.renderRadio()}
+                </View>
                 <ScrollView style={styles.scroll} >
-                    {questionnairesByPeriod !== null &&
-                        questionnairesByPeriod.map(questionnaire => {
+                    {questionnaires !== null &&
+                        questionnaires.map(questionnaire => {
                             const { title } = questionnaire.idDiscipline;
                             const codeDiscipline = questionnaire.idDiscipline.code;
                             const { name } = questionnaire.idProfessor;
-                            const {code, period} = questionnaire.idClass;
+                            const { code, period } = questionnaire.idClass;
+                            const background = questionnaire.status == 'I' ? '#ffcc00' : '#e60000';
+                            const border = questionnaire.status == 'I' ? '#ffff66' : '#ff4d4d';
+                            const status = questionnaire.status == 'I' ? 'Incompleto' : 'Pendente';
+
                             return (
-                                <TouchableOpacity key={questionnaire._id} onPress={() => 
-                                { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
-                                    <Card containerStyle={{
-                                        borderBottomWidth: 4, borderBottomColor: '#595959'
+                                <TouchableOpacity key={questionnaire._id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
+                                    <Card containerStyle={{ //borderBottomWidth: 4, borderBottomColor: '#595959', 
+                                        padding: 0, borderRadius: 10
                                     }}>
-                                        <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
-                                        <Text style={styles.nameDiscipline}>{'STATUS: ' + questionnaire.status.toUpperCase()}</Text>
+                                        <View style={{ padding: 10 }}>
+                                            <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
+                                        </View>
+                                        <View style={{ backgroundColor: background, width: '100%', borderBottomColor: border, justifyContent: 'center',
+                                            borderRightColor: border, borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10}}>
+                                            <Text style={styles.nameDiscipline}>{'Status: ' + status}</Text>
+                                        </View>
                                     </Card>
                                 </TouchableOpacity>
                             );

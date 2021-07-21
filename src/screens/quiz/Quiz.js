@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RadioButton } from 'react-native-paper';
 
 import Header from '../../components/header/Header';
@@ -15,7 +16,8 @@ export default class Quiz extends Component {
             answers: [],
             question_answer: [],
             index: 0,
-            commentary: ''
+            commentary: '',
+            radioColor: '#000000'
         };
         this.questionnaire = this.props.navigation.getParam('questionnaire');
     }
@@ -72,7 +74,7 @@ export default class Quiz extends Component {
     }
 
     updateState = (value) => {
-        const { commentary, answers, index } = this.state;
+        const { answers, index } = this.state;
         let { question_answer } = this.state;
         const answer = answers.filter(object => object.option == value)[0];
 
@@ -81,7 +83,7 @@ export default class Quiz extends Component {
             idAnswer: answer
         };
 
-        this.setState({ question_answer });
+        this.setState({ question_answer, radioColor: '#000000' });
     }
 
     saveState = async () => {
@@ -110,7 +112,7 @@ export default class Quiz extends Component {
 
             if (allchecked.length > 0) {
                 Alert.alert('Preencha todas as respostas!');
-                this.setState({ index: allchecked[0].idQuestion.option - 1 });
+                this.setState({ index: allchecked[0].idQuestion.option - 1, radioColor: '#ff0000' });
             } else {
                 const list = {
                     idQuestionnaire,
@@ -150,7 +152,7 @@ export default class Quiz extends Component {
         let { index } = this.state;
         if (index > 0) {
             index = index - 1;
-            this.setState({ index });
+            this.setState({ index, radioColor: '#000000' });
         }
     }
 
@@ -158,7 +160,7 @@ export default class Quiz extends Component {
         let { questions, index } = this.state;
         if (index <= questions.length - 1) {
             index = index + 1;
-            this.setState({ index });
+            this.setState({ index, radioColor: '#000000' });
         }
     }
 
@@ -172,7 +174,7 @@ export default class Quiz extends Component {
     }
 
     renderRadio = () => {
-        const { index, question_answer, answers } = this.state;
+        const { index, question_answer, answers, radioColor } = this.state;
         const option = question_answer[index].idAnswer != undefined ? question_answer[index].idAnswer.option : 0;
         return (
             answers.map(object => {
@@ -181,6 +183,8 @@ export default class Quiz extends Component {
                         value={object.option}
                         status={option === object.option ? 'checked' : 'unchecked'}
                         onPress={() => { this.updateState(object.option) }}
+                        uncheckedColor={radioColor}
+                        color='#d3302f'
                     />
                     <Text style={{ fontSize: 20 }}>{object.option} - {object.title}</Text>
                 </View>
@@ -220,6 +224,7 @@ export default class Quiz extends Component {
                             height='95%'
                             borderRadius={10}
                             fontSize={20}
+                            maxLength = {500}
                             multiline={true}
                             textAlignVertical='top'
                             padding={10}
@@ -232,16 +237,17 @@ export default class Quiz extends Component {
                         />
                     </View>
                     <View style={{
-                        width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
+                        width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
                         padding: 10
                     }}>
                         <TouchableOpacity style={styles.cleanButton} onPress={() => {
                             this.setState({ commentary: '' })
                         }}>
-                            <Text style={{ color: 'white', fontSize: 15 }}>Limpar</Text>
+                            <Icon2 name='broom' style={styles.leftIcon} />
+                            <Text style={styles.textButton3}>Limpar</Text>
                         </TouchableOpacity>
                         <View style={styles.backButton} />
-                        <View style={styles.backButton} />
+                        <View style={{height:'100%'}}><Text>{500 - this.state.commentary.length} caracteres restantes</Text></View> 
                     </View>
                 </View>
             :
@@ -254,34 +260,40 @@ export default class Quiz extends Component {
 
         return (question_answer.length > 0
             ?
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: '#bfbfbf', padding: 10 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: '#d9d9d9', padding: 10 }}>
                 {
                     index !== 0 &&
                     <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
-                        <Icon name='chevron-left' style={styles.icon} />
+                        <Icon name='chevron-left' style={styles.leftIcon} />
                         <Text style={styles.textButton}>Anterior</Text>
                     </TouchableOpacity>
                 }
-                <TouchableOpacity style={styles.saveButton} onPress={() => this.saveState()}>
-                    <Icon name='save' style={styles.icon} />
+                <TouchableOpacity style={styles.saveButton} onPress={() => {
+                    Alert.alert('Atenção', 'Deseja salvar progresso atual?',
+                    [
+                        { text: 'Sim', onPress: () => this.saveState() },
+                        { text: 'Não' },
+                    ])
+                    }}>
+                    <Icon name='save' style={styles.leftIcon} />
                     <Text style={styles.textButton}>Salvar</Text>
                 </TouchableOpacity>
                 {
                     question_answer.length + 1 !== index + 1 ?
                         <TouchableOpacity style={styles.forwardButton} onPress={() => { this.boundMaximumLimit() }}>
-                            <Icon name='chevron-right' style={styles.icon} />
                             <Text style={styles.textButton}>Próximo</Text>
+                            <Icon name='chevron-right' style={styles.rightIcon} />
                         </TouchableOpacity>
                         :
                         <TouchableOpacity style={styles.sendButton} onPress={() => {
-                            Alert.alert('Atenção', 'Deseja mesmo enviar o questionário?',
+                            Alert.alert('Atenção', 'Deseja mesmo enviar o Questionário? Uma vez finalizado não será mais possível altera-lo',
                                 [
                                     { text: 'Sim', onPress: () => this.updateQuestionnaire() },
                                     { text: 'Não' },
                                 ])
                         }}>
-                            <Icon name='send' style={styles.icon2} />
-                            <Text style={styles.textButton2}>Enviar</Text>
+                            <Icon name='send' style={styles.leftIcon} />
+                            <Text style={styles.textButton}>Enviar</Text>
                         </TouchableOpacity>
                 }
             </View>
@@ -314,7 +326,7 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#bfbfbf',
+        backgroundColor: '#d9d9d9',
         //height: '100%',
         flex: 1,
         flexDirection: 'column'
@@ -328,7 +340,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     forwardButton: {
-        backgroundColor: '#d3302f',
+        backgroundColor: '#404040',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -337,7 +349,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     backButton: {
-        backgroundColor: '#d3302f',
+        backgroundColor: '#404040',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -346,7 +358,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     cleanButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#e48181',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -376,7 +388,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     sendButton: {
-        backgroundColor: '#d2d22d',
+        backgroundColor: '#002b80',
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -398,6 +410,16 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold'
     },
+    textButton3: {
+        color: 'white', 
+        padding: 5, 
+        paddingRight: 10,
+        fontSize: 15, 
+        fontWeight: 'bold',
+        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowOffset: { width: -1, height: 1 },
+        textShadowRadius: 5,
+    },
     countQuestion: {
         fontSize: 20,
         textAlign: 'center',
@@ -411,15 +433,17 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 30
     },
-    icon: {
+    leftIcon: {
         color: '#ffffff',
         fontSize: 20,
-        paddingLeft: 10
+        paddingLeft: 10,
+        elevation: 5
     },
-    icon2: {
-        color: '#000000',
+    rightIcon: {
+        color: '#ffffff',
         fontSize: 20,
-        paddingLeft: 10
+        paddingRight: 10,
+        elevation: 5
     },
     containerBody: {
         backgroundColor: '#ffffff',
