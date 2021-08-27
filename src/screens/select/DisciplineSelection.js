@@ -28,7 +28,7 @@ export default class DisciplineSelection extends Component {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod',
-                { idStudent: _id, period: '2021/1' })).data;
+                { idStudent: _id })).data;
 
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });

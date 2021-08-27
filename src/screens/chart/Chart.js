@@ -25,7 +25,7 @@ export default class BarChartHorizontalWithLabels extends Component {
             dataChart: [],
             valueCharts: 0,
             valueOptions: 3,
-            modalVisible: false
+            modalVisible: false,
         }
     }
 
