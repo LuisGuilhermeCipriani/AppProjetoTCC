@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements';
+import { color } from 'react-native-reanimated';
 import RadioForm from 'react-native-simple-radio-button';
 
 import Header from '../../components/header/Header';
@@ -95,6 +96,7 @@ export default class DisciplineSelection extends Component {
                             const background = questionnaire.status == 'I' ? '#ffcc00' : '#e60000';
                             const border = questionnaire.status == 'I' ? '#ffff66' : '#ff4d4d';
                             const status = questionnaire.status == 'I' ? 'Incompleto' : 'Pendente';
+                            const textColor = questionnaire.status == 'I' ? '#dfff00' : '#ffffff';
 
                             return (
                                 <TouchableOpacity key={questionnaire._id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
@@ -109,7 +111,7 @@ export default class DisciplineSelection extends Component {
                                         </View>
                                         <View style={{ backgroundColor: background, width: '100%', borderBottomColor: border, justifyContent: 'center',
                                             borderRightColor: border, borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10}}>
-                                            <Text style={styles.nameDiscipline}>{'Status: ' + status}</Text>
+                                            <Text style={{fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor}}>{'Status: ' + status}</Text>
                                         </View>
                                     </Card>
                                 </TouchableOpacity>

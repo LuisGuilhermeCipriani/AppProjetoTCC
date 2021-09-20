@@ -15,6 +15,11 @@ export default class Menu extends Component {
         this.setState({ user })
     }
 
+    logout = async (navigation) => {
+        await AsyncStorage.removeItem('@APP:user');
+        navigation.navigate('Auth');
+    }
+
     render() {
         const { navigation } = this.props
         const { type } = this.state.user
@@ -44,7 +49,7 @@ export default class Menu extends Component {
                     }} />
                 }
                 <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={() => {
-                    navigation.navigate('Auth'); navigation.closeDrawer()
+                    this.logout(navigation)
                 }} />
             </View>
         )
