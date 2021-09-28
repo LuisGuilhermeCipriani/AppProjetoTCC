@@ -96,7 +96,7 @@ export default class DisciplineSelection extends Component {
                             const background = questionnaire.status == 'I' ? '#ffcc00' : '#e60000';
                             const border = questionnaire.status == 'I' ? '#ffff66' : '#ff4d4d';
                             const status = questionnaire.status == 'I' ? 'Incompleto' : 'Pendente';
-                            const textColor = questionnaire.status == 'I' ? '#dfff00' : '#ffffff';
+                            const textColor = questionnaire.status == 'I' ? '#000000' : '#ffffff';
 
                             return (
                                 <TouchableOpacity key={questionnaire._id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
