@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import Api from '../../services/Api';
 
@@ -37,17 +38,22 @@ export default class Login extends Component {
         }
     }
 
+    help = () => {
+        const helpMessage = 'Para acessar o sistema é necessário informar o CPF e Senha cadastrados no Sistema de Apoio Integrado (SIGA).' 
+        + '\n\nCaso haja incompatibilidade nos dados, favor entrar em contato com o suporte da Universidade.'
+        Alert.alert('Ajuda ', helpMessage);
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                <LinearGradient colors={['#f2c0c0', '#e06c6c', '#d3302f']} style={styles.header}>
+
                     <View style={styles.containerHeader}>
-                        <View style={styles.logo}>
-                            <Text style={styles.textLogo}>UFJF</Text>
-                        </View>
-                        <Text style={styles.textHeader}>Sistema de apoio à análise de avaliações</Text>
+                        <Text style={styles.textUFJF}>UFJF</Text>
+                        <Text style={styles.textHeader}>Sistema de apoio à análise de avaliações discentes</Text>
                     </View>
-                </View>
+                </LinearGradient>
                 <View style={styles.body}>
                     <View style={styles.containerBody}>
                         <View style={styles.contentBody}>
@@ -62,7 +68,7 @@ export default class Login extends Component {
                     </View>
                 </View>
                 <View style={styles.footer}>
-                    <TouchableOpacity style={styles.infoButton}>
+                    <TouchableOpacity style={styles.infoButton} onPress={() => { this.help() }}>
                         <Icon name='help-circle' size={30} color='#ffffff' />
                     </TouchableOpacity>
                 </View>
@@ -74,23 +80,35 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#bfbfbf'
+        backgroundColor: '#d3302f'
     },
     containerHeader: {
         alignItems: 'center',
         justifyContent: 'center',
     },
     textHeader: {
-        color: '#000000',
+        color: '#ffffff',
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        marginTop: 25
+        marginTop: 25,
+        marginBottom: 20,
+        textShadowColor: '#000000',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 10
+    },
+    textUFJF: {
+        fontSize: 50,
+        color: '#ffffff',
+        textShadowColor: '#000000',
+        textShadowOffset: { width: 3, height: 3 },
+        textShadowRadius: 10,
     },
     inputText: {
         padding: 5,
         fontSize: 20,
-        borderWidth: 2
+        borderWidth: 2,
+        borderRadius: 10
     },
     textButton: {
         color: '#ffffff',
@@ -118,14 +136,16 @@ const styles = StyleSheet.create({
         height: '35%',
     },
     body: {
-        height: '55%',
-        padding: 30
+        //height: '55%',
+        //padding: 30,
+        flex: 1
     },
     footer: {
         height: '10%',
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'flex-end',
+        backgroundColor: '#ffffff',
         paddingRight: 40
     },
     logo: {
@@ -142,13 +162,14 @@ const styles = StyleSheet.create({
     },
     containerBody: {
         backgroundColor: '#ffffff',
-        height: '80%',
-        //borderWidth: 2,
+        flex: 1,
+        borderTopLeftRadius: 50,
+        borderTopRightRadius: 50,
         justifyContent: 'space-around',
         padding: 20
     },
     contentBody: {
-        height: '40%',
+        height: 100,
         justifyContent: 'space-between'
     }
 });

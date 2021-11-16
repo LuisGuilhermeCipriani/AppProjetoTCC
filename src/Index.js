@@ -31,7 +31,7 @@ export default class Index extends Component {
                     <View style={{ flexDirection: 'row' }}>
                         {type == 'S' &&
                             <TouchableOpacity style={styles.field1} onPress={() => {
-                                navigation.navigate('SelectionScreen')
+                                navigation.navigate('ScreenSelectionDisciplines')
                             }}>
                                 <Icon name='square-o' color='#ffffff' size={40} />
                                 <Text style={styles.text}>Responder {"\n"}Questionário</Text>
@@ -39,7 +39,7 @@ export default class Index extends Component {
                         }
                         {(type == 'S' || type == 'P') &&
                             <TouchableOpacity style={styles.field2} onPress={() => {
-                                navigation.navigate('DisciplineScreen')
+                                navigation.navigate('ScreenSearchDisciplines')
                             }}>
                                 <Icon name='search' color='#ffffff' size={40} />
                                 <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
@@ -49,7 +49,7 @@ export default class Index extends Component {
                     <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
                         {type == 'P' &&
                             <TouchableOpacity style={styles.field3} onPress={() => {
-                                navigation.navigate('chartScreen')
+                                navigation.navigate('ScreenSelectionDisciplineQuestionnaire')
                             }}>
                                 <Icon name='line-chart' color='#ffffff' size={40} />
                                 <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
@@ -57,7 +57,7 @@ export default class Index extends Component {
                         }
                         {type == 'S' &&
                             <TouchableOpacity style={styles.field4} onPress={() => {
-                                navigation.navigate('AnsweredScreen')
+                                navigation.navigate('ScreenAnsweredQuestionnaires')
                             }}>
                                 <Icon name='check-square-o' color='#ffffff' size={40} />
                                 <Text style={styles.text}>Questionários {"\n"}respondidos</Text>

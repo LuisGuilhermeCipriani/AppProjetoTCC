@@ -37,6 +37,8 @@ export default class Menu extends Component {
                         <Text style={styles.textTopSideMenu}>{registration}</Text>
                     </View>
                 </View>
+                <View style={styles.topSideMenu2}></View>
+                <View style={styles.topSideMenu3}></View>
                 <View style={{ marginLeft: 20, marginTop: 40 }}>
                     <MenuButton nameIcon='home' nameButton='Início' onPress={() => {
                         navigation.navigate('Home'); navigation.closeDrawer()
@@ -78,6 +80,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start'
     },
+    topSideMenu2: {
+        backgroundColor: '#e06c6c',
+        height: '1%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    },
+    topSideMenu3: {
+        backgroundColor: '#f6d5d5',
+        height: '1%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start'
+    },
     imageMenu: {
         backgroundColor: '#ffffff',
         height: 70,
@@ -91,8 +107,6 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     viewTextTopSideMenu: {
-        //justifyContent: '',
-        //alignItems: 'center',
         marginLeft: 10,
         marginTop: 25,
         flexShrink: 1

@@ -155,7 +155,8 @@ export default class AnsweredQuestionnaires extends Component {
                 }
                 <ScrollView style={styles.scroll} >
 
-                    {questionnairesByPeriod !== null &&
+                    {questionnairesByPeriod.length > 0
+                    ?
                         questionnairesByPeriod.map(questionnaire => {
                             const { title } = questionnaire.idDiscipline;
                             const codeDiscipline = questionnaire.idDiscipline.code;
@@ -180,6 +181,10 @@ export default class AnsweredQuestionnaires extends Component {
                                 </View>
                             );
                         })
+                        :
+                        <View style={styles.viewNullText}>
+                            <Text style={styles.nullText}>Não há questionários encontrados!</Text>
+                        </View>
                     }
                 </ScrollView>
             </View>
@@ -223,5 +228,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 10
+    },
+    viewNullText: {
+        flex:1, 
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 20
+    },
+    nullText: {
+        fontSize: 15
     }
 })

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements';
-import { color } from 'react-native-reanimated';
 import RadioForm from 'react-native-simple-radio-button';
 
 import Header from '../../components/header/Header';
@@ -12,7 +11,8 @@ export default class DisciplineSelection extends Component {
         super(props);
         this.state = {
             questionnairesByPeriod: [],
-            valueRadio: 1
+            valueRadio: 1,
+            isLoading: false
         };
         this.radioValues = [
             { label: 'Pendentes', value: 0 },
@@ -25,15 +25,24 @@ export default class DisciplineSelection extends Component {
         this.getDisciplines();
     }
 
+    componentDidUpdate() {
+        if (this.props.navigation.getParam('load') === true) {
+            this.getDisciplines();
+        }
+    }
+
     getDisciplines = async () => {
         try {
+            this.setState({ isLoading: true });
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriod',
-                { idStudent: _id })).data;
-
+            const { data } = (await Api.post('/questionnaire/findAllByPeriod',
+                { idStudent: _id }));
+            const { questionnairesByPeriod } = data
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
             }
+            this.props.navigation.setParams({ load: false });
+            this.setState({ isLoading: false });
         } catch (err) {
             console.log(err);
         }
@@ -59,15 +68,15 @@ export default class DisciplineSelection extends Component {
     filterQuestionnaires = () => {
         const { valueRadio, questionnairesByPeriod } = this.state;
         let questionnaires = questionnairesByPeriod;
-        if(valueRadio == 0){
+        if (valueRadio == 0) {
             questionnaires = this.filterByOption(questionnairesByPeriod, 'N');
         }
-        if(valueRadio == 2){
+        if (valueRadio == 2) {
             questionnaires = this.filterByOption(questionnairesByPeriod, 'I');
         }
         return questionnaires;
     }
-    
+
     filterByOption = (questionnaires, option) => {
         const pendings = questionnaires.filter(object => object.status == option);
         return pendings;
@@ -76,6 +85,13 @@ export default class DisciplineSelection extends Component {
     render() {
         const questionnaires = this.filterQuestionnaires();
 
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.Indicator}>
+                    <ActivityIndicator size="large" color='#d3302f' />
+                </View>
+            )
+        }
         return (
             <View style={styles.container}>
                 <Header
@@ -83,11 +99,12 @@ export default class DisciplineSelection extends Component {
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
-                <View style={{width:'100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingTop: 10}}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingTop: 10 }}>
                     {this.renderRadio()}
                 </View>
                 <ScrollView style={styles.scroll} >
-                    {questionnaires !== null &&
+                    {questionnaires.length > 0
+                        ?
                         questionnaires.map(questionnaire => {
                             const { title } = questionnaire.idDiscipline;
                             const codeDiscipline = questionnaire.idDiscipline.code;
@@ -109,14 +126,20 @@ export default class DisciplineSelection extends Component {
                                             <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                             <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
                                         </View>
-                                        <View style={{ backgroundColor: background, width: '100%', borderBottomColor: border, justifyContent: 'center',
-                                            borderRightColor: border, borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10}}>
-                                            <Text style={{fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor}}>{'Status: ' + status}</Text>
+                                        <View style={{
+                                            backgroundColor: background, width: '100%', borderBottomColor: border, justifyContent: 'center',
+                                            borderRightColor: border, borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10
+                                        }}>
+                                            <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor }}>{'Status: ' + status}</Text>
                                         </View>
                                     </Card>
                                 </TouchableOpacity>
                             );
                         })
+                        :
+                        <View style={styles.viewNullText}>
+                            <Text style={styles.nullText}>Não há questionários encontrados!</Text>
+                        </View>
                     }
                 </ScrollView>
             </View>
@@ -160,5 +183,20 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 10
+    },
+    Indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
+    },
+    viewNullText: {
+        flex:1, 
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 20
+    },
+    nullText: {
+        fontSize: 15
     }
 })

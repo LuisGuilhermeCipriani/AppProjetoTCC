@@ -20,7 +20,7 @@ export default class SearchDisciplines extends Component {
     SearchDisciplines = async () => {
         try {
             const idUser = JSON.parse(await AsyncStorage.getItem('@APP:user'))._id;
-            const response = await Api.post('class/findByIdUser', { idUser, period: '2021/1' });
+            const response = await Api.post('class/findByIdUser', { idUser, active: true });
             const { classes } = response.data;
             this.setState({ classes });
         } catch (error) {
@@ -39,8 +39,9 @@ export default class SearchDisciplines extends Component {
                     navigation={this.props.navigation}
                 />
                 <ScrollView>
-                    {
-                        classes !== null && classes.map(classObject => {
+                    {classes.length > 0
+                        ?
+                        classes.map(classObject => {
                             const { idDiscipline, _id, code } = classObject;
                             return (
                                 <Card key={_id} containerStyle={{
@@ -52,6 +53,10 @@ export default class SearchDisciplines extends Component {
                                 </Card>
                             );
                         })
+                        :
+                        <View style={styles.viewNullText}>
+                            <Text style={styles.nullText}>Não há disciplinas encontradas!</Text>
+                        </View>
                     }
                 </ScrollView>
             </View>
@@ -66,5 +71,14 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 10
+    },
+    viewNullText: {
+        flex:1, 
+        alignItems:'center',
+        justifyContent:'center',
+        marginTop: 20
+    },
+    nullText: {
+        fontSize: 15
     }
 });

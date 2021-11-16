@@ -20,7 +20,7 @@ export default class DisciplineQuestionnaireSelection extends Component {
     getQuestionnaires = async () => {
         try {
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-            const { questionnaires } = (await Api.post('/questionnaire/findByIdProfessor', { idProfessor: _id, period: '2021/1' })).data;
+            const { questionnaires } = (await Api.post('/questionnaire/findByIdProfessor', { idProfessor: _id, active: true })).data;
 
             if (questionnaires !== null) {
                 this.setState({ questionnaires });

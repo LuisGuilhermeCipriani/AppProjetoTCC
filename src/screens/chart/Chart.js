@@ -158,9 +158,12 @@ export default class BarChartHorizontalWithLabels extends Component {
     }
 
     render() {
-        const { dataChart, valueCharts } = this.state
+        const { dataChart, valueCharts, valueOptions } = this.state
         const titleScreen = this.discipline.code + ' - ' + this.discipline.title
-        const data = dataChart.map(object => { return parseFloat(object.weightedAverage) })
+        const data = dataChart.map(object => { 
+            const valueWeight = valueOptions == 3 ? object.weightedAverage : object.outlierWeightedAverage;
+            return parseFloat(valueWeight) 
+        })
 
         const data3 = data.map(value => {
             let fill
@@ -210,7 +213,8 @@ export default class BarChartHorizontalWithLabels extends Component {
                     fill={'black'}
                     alignmentBaseline={'middle'}
                 >
-                    {'Q' + (index+1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + value + ' (' + selectStatus(value) + ')'}
+                    {'Q' + (index+1)}
+                    {/*'Q' + (index+1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + value + ' (' + selectStatus(value) + ')'*/}
                 </TextChart>
             ))
         )

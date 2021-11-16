@@ -98,10 +98,10 @@ export default class Quiz extends Component {
             }
             const response = await Api.put('/questionnaire/update', list)
             Alert.alert('Progresso salvo com sucesso!')
+            this.props.navigation.navigate('ScreenSelectionDisciplines', {load: true})
         } catch (error) {
             console.log(error)
         }
-
     }
 
     updateQuestionnaire = async () => {
@@ -122,6 +122,7 @@ export default class Quiz extends Component {
                 }
                 const response = await Api.put('/questionnaire/update', list)
                 Alert.alert('Questionário enviado com sucesso!')
+                this.props.navigation.navigate('ScreenSelectionDisciplines', {load: true})
             }
         } catch (err) {
             console.log(err);
