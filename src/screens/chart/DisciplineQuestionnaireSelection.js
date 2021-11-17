@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage, ActivityIndicator } from 'react-native';
+import { Card } from 'react-native-elements';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -9,7 +9,8 @@ export default class DisciplineQuestionnaireSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            questionnaires: []
+            questionnaires: [],
+            isLoading: false
         }
     }
 
@@ -19,12 +20,14 @@ export default class DisciplineQuestionnaireSelection extends Component {
 
     getQuestionnaires = async () => {
         try {
+            this.setState({isLoading: true})
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnaires } = (await Api.post('/questionnaire/findByIdProfessor', { idProfessor: _id, active: true })).data;
 
             if (questionnaires !== null) {
                 this.setState({ questionnaires });
             }
+            this.setState({isLoading: false})
         } catch (err) {
             console.log(err);
         }
@@ -32,6 +35,15 @@ export default class DisciplineQuestionnaireSelection extends Component {
 
     render() {
         const { questionnaires } = this.state;
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.Indicator}>
+                    <ActivityIndicator size="large" color='#d3302f' />
+                </View>
+            )
+        }
+
         return (
             <View style={styles.container}>
                 <Header
@@ -65,7 +77,7 @@ export default class DisciplineQuestionnaireSelection extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#bfbfbf',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -99,5 +111,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold",
         marginBottom: 10
+    },
+    Indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
     }
 })

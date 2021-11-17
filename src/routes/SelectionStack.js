@@ -4,7 +4,6 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Index from '../Index';
-import HomeStack from '../routes/HomeStack';
 import DisciplineSelection from '../screens/select/DisciplineSelection';
 import Quiz from '../screens/quiz/Quiz';
 
@@ -37,7 +36,7 @@ const configDisciplineSelection = {
             activeTintColor: "#ffffff",
             inactiveTintColor: "#000000",
             activeBackgroundColor: "#d3302f",
-            inactiveBackgroundColor: "#A9A9A9",
+            inactiveBackgroundColor: "#bfbfbf",
             style: {
                 height: 50,
             },

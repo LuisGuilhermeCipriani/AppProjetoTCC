@@ -12,7 +12,8 @@ export default class DisciplineSelection extends Component {
         this.state = {
             questionnairesByPeriod: [],
             valueRadio: 1,
-            isLoading: false
+            isLoading: false,
+            mounted: false
         };
         this.radioValues = [
             { label: 'Pendentes', value: 0 },
@@ -26,8 +27,9 @@ export default class DisciplineSelection extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.navigation.getParam('load') === true) {
+        if (this.props.navigation.getParam('load') === true && this.state.mounted === false ) {
             this.getDisciplines();
+            this.setState(true)
         }
     }
 
@@ -149,7 +151,7 @@ export default class DisciplineSelection extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#bfbfbf',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -197,6 +199,6 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     nullText: {
-        fontSize: 15
+        fontSize: 18
     }
 })

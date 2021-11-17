@@ -11,9 +11,9 @@ export default class Index extends Component {
             user: {}
         }
     }
-    async componentDidMount(){
+    async componentDidMount() {
         const user = JSON.parse(await AsyncStorage.getItem('@APP:user'));
-        this.setState({user})
+        this.setState({ user })
     }
 
     render() {
@@ -47,8 +47,16 @@ export default class Index extends Component {
                         }
                     </View>
                     <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
-                        {type == 'P' &&
+                        {(type == 'S' || type == 'P') &&
                             <TouchableOpacity style={styles.field3} onPress={() => {
+                                navigation.navigate('ScreenSearchDisciplines')
+                            }}>
+                                <Icon name='file' color='#ffffff' size={40} />
+                                <Text style={styles.text}>Sobre o {"\n"}Aplicativo</Text>
+                            </TouchableOpacity>
+                        }
+                        {type == 'P' &&
+                            <TouchableOpacity style={styles.field4} onPress={() => {
                                 navigation.navigate('ScreenSelectionDisciplineQuestionnaire')
                             }}>
                                 <Icon name='line-chart' color='#ffffff' size={40} />
@@ -60,7 +68,7 @@ export default class Index extends Component {
                                 navigation.navigate('ScreenAnsweredQuestionnaires')
                             }}>
                                 <Icon name='check-square-o' color='#ffffff' size={40} />
-                                <Text style={styles.text}>Questionários {"\n"}respondidos</Text>
+                                <Text style={styles.text}>Questionários {"\n"}Respondidos</Text>
                             </TouchableOpacity>
                         }
                     </View>
@@ -75,6 +83,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#941e1e',
         width: '55%',
         height: 150,
+        borderRadius: 10,
         marginRight: 5,
         marginBottom: 5,
         alignItems: 'center',
@@ -84,6 +93,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d84141',
         width: '35%',
         height: 150,
+        borderRadius: 10,
         marginLeft: 5,
         marginBottom: 5,
         alignItems: 'center',
@@ -93,6 +103,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#d84141',
         width: '35%',
         height: 150,
+        borderRadius: 10,
         marginRight: 5,
         marginTop: 5,
         alignItems: 'center',
@@ -102,6 +113,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#941e1e',
         width: '55%',
         height: 150,
+        borderRadius: 10,
         marginLeft: 5,
         marginTop: 5,
         alignItems: 'center',
@@ -109,7 +121,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: 'white',
-        fontSize: 20,
+        fontSize: 18,
         marginLeft: 10,
         marginTop: 10,
         textShadowColor: 'rgba(0, 0, 0, 0.75)',

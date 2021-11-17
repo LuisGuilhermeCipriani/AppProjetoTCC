@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, AsyncStorage, ScrollView  } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { View, Text, StyleSheet, AsyncStorage, ScrollView, ActivityIndicator } from 'react-native';
+import { Card } from 'react-native-elements';
 import Header from '../../components/header/Header';
 
 import Api from '../../services/Api';
@@ -9,7 +9,8 @@ export default class SearchDisciplines extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            classes: []
+            classes: [],
+            isLoading: false
         }
     }
 
@@ -19,10 +20,11 @@ export default class SearchDisciplines extends Component {
 
     SearchDisciplines = async () => {
         try {
+            this.setState({isLoading: true})
             const idUser = JSON.parse(await AsyncStorage.getItem('@APP:user'))._id;
             const response = await Api.post('class/findByIdUser', { idUser, active: true });
             const { classes } = response.data;
-            this.setState({ classes });
+            this.setState({ classes, isLoading: false });
         } catch (error) {
             console.log(error);
         }
@@ -31,6 +33,15 @@ export default class SearchDisciplines extends Component {
     render() {
 
         const { classes } = this.state;
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.Indicator}>
+                    <ActivityIndicator size="large" color='#d3302f' />
+                </View>
+            )
+        }
+
         return (
             <View>
                 <Header
@@ -80,5 +91,11 @@ const styles = StyleSheet.create({
     },
     nullText: {
         fontSize: 15
+    },
+    Indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
     }
 });

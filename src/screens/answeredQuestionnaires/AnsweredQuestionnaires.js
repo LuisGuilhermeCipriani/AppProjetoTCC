@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Card } from 'react-native-elements';
 import CalendarPicker from 'react-native-calendar-picker';
 import RadioForm from 'react-native-simple-radio-button';
@@ -20,7 +20,8 @@ export default class AnsweredQuestionnaires extends Component {
             startDate: new Date(),
             finalDate: new Date(),
             option: 0,
-            allSelected: 0
+            allSelected: 0,
+            isLoading: false
         };
         this.onDateChange = this.onDateChange.bind(this);
         this.radioValues = [
@@ -35,6 +36,7 @@ export default class AnsweredQuestionnaires extends Component {
 
     getDisciplines = async () => {
         try {
+            this.setState({isLoading: true})
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriodFinished',
                 { idStudent: _id })).data;
@@ -42,6 +44,7 @@ export default class AnsweredQuestionnaires extends Component {
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
             }
+            this.setState({isLoading: false})
         } catch (err) {
             console.log(err);
         }
@@ -91,6 +94,14 @@ export default class AnsweredQuestionnaires extends Component {
         const { selectedStartDate, allSelected, option, startDate, finalDate } = this.state;
         const initialDate = selectedStartDate ? selectedStartDate.toString() : '';
         const questionnairesByPeriod = this.findByDate();
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.Indicator}>
+                    <ActivityIndicator size="large" color='#d3302f' />
+                </View>
+            )
+        }
 
         return (
             <View style={styles.container}>
@@ -194,7 +205,7 @@ export default class AnsweredQuestionnaires extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#bfbfbf',
+        backgroundColor: '#ffffff',
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -237,5 +248,11 @@ const styles = StyleSheet.create({
     },
     nullText: {
         fontSize: 15
+    },
+    Indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
     }
 })
