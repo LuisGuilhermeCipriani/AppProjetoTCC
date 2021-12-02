@@ -5,10 +5,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AppColors } from '../colors/AppColors';
 
 import Index from '../Index';
-import DisciplineQuestionnaireSelection from '../screens/chart/DisciplineQuestionnaireSelection';
-import Chart from '../screens/chart/Chart';
+import PerformanceReport from '../screens/performanceReport/PerformanceReport';
+import DisciplineReportSelection from '../screens/performanceReport/DisciplineReportSelection';
 
-const screenChartSelection = {
+const screenReportSelection = {
     Home: {
         screen: Index,
         navigationOptions: {
@@ -18,8 +18,8 @@ const screenChartSelection = {
                 <Icon name="home" color={tintColor} size={15} />
         }
     },
-    ScreenSelectionDisciplineQuestionnaire: {
-        screen: DisciplineQuestionnaireSelection,
+    ScreenSelectionDisciplineReport: {
+        screen: DisciplineReportSelection,
         navigationOptions: {
             title: 'Seleção de Disciplina',
             header: () => false,
@@ -29,8 +29,8 @@ const screenChartSelection = {
     },
 }
 
-const configChartSelection = {
-    initialRouteName: 'ScreenSelectionDisciplineQuestionnaire',
+const configReportSelection = {
+    initialRouteName: 'ScreenSelectionDisciplineReport',
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
@@ -48,9 +48,9 @@ const configChartSelection = {
     }
 }
 
-const chartSelectionNavigator = createBottomTabNavigator(screenChartSelection, configChartSelection);
+const reportSelectionNavigator = createBottomTabNavigator(screenReportSelection, configReportSelection);
 
-const screenCharts = {
+const screenReports = {
     Home: {
         screen: Index,
         navigationOptions: {
@@ -60,19 +60,19 @@ const screenCharts = {
                 <Icon name="home" color={tintColor} size={15} />
         }
     },
-    screenChart: {
-        screen: Chart,
+    screenReport: {
+        screen: PerformanceReport,
         navigationOptions: {
-            title: 'Gráfico',
+            title: 'Relatório',
             header: () => false,
             tabBarIcon: ({ tintColor }) =>
-                <Icon name="bar-chart" color={tintColor} size={15} />
+                <Icon name="list-alt" color={tintColor} size={15} />
         }
     },
 }
 
-const configChart = {
-    initialRouteName: 'screenChart',
+const configReport = {
+    initialRouteName: 'screenReport',
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
@@ -90,19 +90,19 @@ const configChart = {
     }
 }
 
-const chartNavigator = createBottomTabNavigator(screenCharts, configChart);
+const reportNavigator = createBottomTabNavigator(screenReports, configReport);
 
 const screens = {
-    chartScreen: {
-        screen: chartSelectionNavigator,
+    reportScreen: {
+        screen: reportSelectionNavigator,
     },
-    chart: {
-        screen: chartNavigator,
+    performanceReport: {
+        screen: reportNavigator,
     }
 }
 
 const screensconfig = {
-    initialRouteName: 'chartScreen',
+    initialRouteName: 'reportScreen',
     defaultNavigationOptions: {
         header: () => false,
     }

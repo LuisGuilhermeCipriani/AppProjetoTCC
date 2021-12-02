@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet, AsyncStorage, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from 'react-native-elements';
 import Header from '../../components/header/Header';
+import { AppColors } from "../../colors/AppColors";
 
 import Api from '../../services/Api';
 
@@ -37,7 +38,7 @@ export default class SearchDisciplines extends Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.Indicator}>
-                    <ActivityIndicator size="large" color='#d3302f' />
+                    <ActivityIndicator size="large" color={AppColors.backgroundColor1} />
                 </View>
             )
         }
@@ -55,9 +56,7 @@ export default class SearchDisciplines extends Component {
                         classes.map(classObject => {
                             const { idDiscipline, _id, code } = classObject;
                             return (
-                                <Card key={_id} containerStyle={{
-                                    borderBottomWidth: 2, borderBottomColor: '#ccc'
-                                }}>
+                                <Card key={_id} containerStyle={styles.cardStyle}>
                                     <Text style={styles.nameDiscipline}>{idDiscipline.title}</Text>
                                     <Text>{idDiscipline.code}</Text>
                                     <Text>{'Turma: ' + code}</Text>
@@ -81,21 +80,25 @@ const styles = StyleSheet.create({
     nameDiscipline: {
         fontSize: 16,
         fontWeight: "bold",
-        marginBottom: 10
+        marginBottom: 10,
     },
     viewNullText: {
         flex:1, 
         alignItems:'center',
         justifyContent:'center',
-        marginTop: 20
+        marginTop: 20,
     },
     nullText: {
-        fontSize: 15
+        fontSize: 15,
     },
     Indicator: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff'
+        backgroundColor: AppColors.backgroundColor4,
+    },
+    cardStyle: {
+        borderBottomWidth: 2, 
+        borderBottomColor: AppColors.cardColor4,
     }
 });

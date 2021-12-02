@@ -6,6 +6,7 @@ import RadioForm from 'react-native-simple-radio-button';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
+import { AppColors } from '../../colors/AppColors';
 
 moment = require('moment');
 moment.locale('pt-BR');
@@ -69,11 +70,11 @@ export default class AnsweredQuestionnaires extends Component {
             <RadioForm
                 radio_props={this.radioValues}
                 initial={0}
-                buttonColor='#000000'
+                buttonColor={AppColors.radioColor1}
                 buttonSize={12}
-                buttonOuterColor='#000000'
-                selectedButtonColor='#000000'
-                labelStyle={{ fontSize: 12, color: '#000000' }}
+                buttonOuterColor={AppColors.radioColor1}
+                selectedButtonColor={AppColors.radioColor1}
+                labelStyle={{ fontSize: 12, color: AppColors.radioColor1 }}
                 formHorizontal={true}
                 labelHorizontal={false}
                 onPress={(allSelected) => { this.setState({ allSelected }) }}
@@ -98,7 +99,7 @@ export default class AnsweredQuestionnaires extends Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.Indicator}>
-                    <ActivityIndicator size="large" color='#d3302f' />
+                    <ActivityIndicator size="large" color={AppColors.backgroundColor1} />
                 </View>
             )
         }
@@ -118,11 +119,11 @@ export default class AnsweredQuestionnaires extends Component {
                     animationType="slide"
                     transparent={true}
                     visible={this.state.modalVisible}
-                    backgroundColor='green'
+                    //backgroundColor='green'
                     flex={1}
                 >
-                    <View style={{ backgroundColor: '#ffffff', flex: 1, justifyContent: 'center' }}>
-                        <View style={{ height: '90%', justifyContent: 'center' }}>
+                    <View style={styles.containerCalendar}>
+                        <View style={styles.calendar}>
                             <CalendarPicker
                                 onDateChange={this.onDateChange}
                                 weekdays={['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']}
@@ -130,33 +131,33 @@ export default class AnsweredQuestionnaires extends Component {
                                     'Outubro', 'Novembro', 'Dezembro']}
                                 previousTitle='Anterior'
                                 nextTitle='Próximo'
-                                selectedDayColor='#d3302f'
-                                selectedDayTextColor='#ffffff'
-                                todayBackgroundColor='#404040'
+                                selectedDayColor={AppColors.calendarColor1}
+                                selectedDayTextColor={AppColors.calendarColor2}
+                                todayBackgroundColor={AppColors.calendarColor3}
                                 selectedStartDate={option == 1 ? startDate : finalDate}
                                 initialDate={option == 1 ? startDate : finalDate}
                             />
                         </View>
-                        <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'gray', padding: 15, marginTop: 10 }} onPress={() => {
+                        <TouchableOpacity style={styles.calendarTouchableOpacity} onPress={() => {
                             this.setState({ modalVisible: false })
                         }}>
-                            <Text style={{ color: 'white', fontSize: 15 }}>Fechar</Text>
+                            <Text style={styles.textCalendarTouchableOpacity}>Fechar</Text>
                         </TouchableOpacity>
                     </View>
                 </Modal>
 
                 {allSelected == 1 &&
-                    <View style={{ marginBottom: 15 }}>
-                        <Text style={{ marginBottom: 10, marginTop: 20, fontSize: 15, fontWeight: 'bold' }}>Selecione abaixo o intervalo de tempo</Text>
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 15 }}>De: </Text>
-                            <TouchableOpacity onPress={() => this.setState({ modalVisible: true, option: 1 })} style={{ backgroundColor: '#ffffff', width: 100, alignItems: 'center', padding: 10, marginRight: 5, borderRadius: 10 }} >
+                    <View style={styles.containerViewDate}>
+                        <Text style={styles.textDate}>Selecione abaixo o intervalo de tempo</Text>
+                        <View style={styles.viewDate}>
+                            <Text style={styles.textDate}>De: </Text>
+                            <TouchableOpacity onPress={() => this.setState({ modalVisible: true, option: 1 })} style={styles.startDateTouchableOpacity} >
                                 <Text>
                                     {String(moment(this.state.startDate).format('DD/MM/YYYY'))}
                                 </Text>
                             </TouchableOpacity>
-                            <Text style={{ fontSize: 15 }}>à </Text>
-                            <TouchableOpacity onPress={() => this.setState({ modalVisible: true, option: 2 })} style={{ backgroundColor: '#ffffff', width: 100, alignItems: 'center', padding: 10, marginLeft: 5, borderRadius: 10 }} >
+                            <Text style={styles.textDate}>à </Text>
+                            <TouchableOpacity onPress={() => this.setState({ modalVisible: true, option: 2 })} style={styles.finalDateTouchableOpacity} >
                                 <Text>
                                     {String(moment(this.state.finalDate).format('DD/MM/YYYY'))}
                                 </Text>
@@ -175,17 +176,16 @@ export default class AnsweredQuestionnaires extends Component {
                             const { code, period } = questionnaire.idClass;
                             return (
                                 <View key={questionnaire._id}>
-                                    <Card containerStyle={{
-                                        borderBottomWidth: 4, borderBottomColor: '#595959'
-                                    }}>
+                                    <Card containerStyle={
+                                        styles.cardContainerStyle
+                                    }>
                                         <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
                                         <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
                                         <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                         <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
-                                        <View style={{
-                                            backgroundColor: '#40bf80', width: '100%', borderBottomColor: '#2d8659', justifyContent: 'center',
-                                            borderRightColor: '#2d8659', borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10
-                                        }}>
+                                        <View style={
+                                            styles.cardView
+                                        }>
                                             <Text style={styles.nameDiscipline}>{'Status: ' + (questionnaire.status == 'S') ? 'Respondido' : 'Não Respondido' }</Text>
                                         </View>
                                     </Card>
@@ -205,35 +205,14 @@ export default class AnsweredQuestionnaires extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#ffffff',
+        backgroundColor: AppColors.backgroundColor4,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
     },
-    disciplineButton: {
-        backgroundColor: '#969393',
-        height: 50,
-        width: '70%',
-        borderRadius: 20,
-        borderWidth: 3,
-        borderColor: '#ffad29',
-        paddingTop: 15,
-        marginTop: 30,
-    },
-    textDiscipline: {
-        color: '#000',
-        textAlign: 'center',
-        fontSize: 15,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 10,
-    },
     scroll: {
         width: '100%',
         maxHeight: '80%',
-    },
-    scrollView: {
-        alignItems: 'center',
     },
     nameDiscipline: {
         fontSize: 16,
@@ -253,6 +232,75 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff'
+        backgroundColor: AppColors.backgroundColor4,
+    },
+    containerCalendar: {
+        backgroundColor: AppColors.backgroundColor4, 
+        flex: 1, 
+        justifyContent: 'center',
+    },
+    calendar: {
+        height: '90%', 
+        justifyContent: 'center',
+    },
+    calendarTouchableOpacity: {
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        backgroundColor: AppColors.calendarColor3,
+        padding: 15, 
+        marginTop: 10,
+    },
+    textCalendarTouchableOpacity: {
+        color: AppColors.calendarColor2, 
+        fontSize: 15,
+    },
+    containerViewDate: {
+        marginBottom: 15,
+    },
+    textDate: {
+        marginBottom: 10, 
+        marginTop: 20, 
+        fontSize: 15, 
+        fontWeight: 'bold',
+    },
+    viewDate: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+    },
+    textDate: {
+        fontSize: 15,
+    },
+    cardContainerStyle: {
+        borderBottomWidth: 4, 
+        borderBottomColor: AppColors.cardColor1,
+    },
+    cardView: {
+        backgroundColor: AppColors.cardColor2, 
+        width: '100%', 
+        borderBottomColor: AppColors.cardColor3, 
+        justifyContent: 'center',
+        borderRightColor: AppColors.cardColor3, 
+        borderBottomWidth: 3, 
+        borderRightWidth: 3, 
+        paddingLeft: 10, 
+        paddingRight: 10,
+        paddingTop: 10,
+    },
+    startDateTouchableOpacity: {
+        backgroundColor: AppColors.buttomColor2, 
+        width: 100, 
+        alignItems: 'center', 
+        padding: 10, 
+        marginRight: 5, 
+        borderRadius: 10,
+    },
+    finalDateTouchableOpacity: {
+        backgroundColor: AppColors.buttomColor2, 
+        width: 100, 
+        alignItems: 'center', 
+        padding: 10, 
+        marginLeft: 5, 
+        borderRadius: 10,
     }
 })

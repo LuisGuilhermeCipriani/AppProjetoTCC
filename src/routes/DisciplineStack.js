@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Index from '../Index';
+import { AppColors } from '../colors/AppColors';
 
 import SearchDisciplines from '../screens/searchDisciplines/SearchDisciplines';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -32,10 +33,10 @@ const screenstabconfig = {
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
-            activeTintColor: "#ffffff",
-            inactiveTintColor: "#000000",
-            activeBackgroundColor: "#d3302f",
-            inactiveBackgroundColor: "#A9A9A9",
+            activeTintColor: AppColors.tabBarColor1,
+            inactiveTintColor: AppColors.tabBarColor2,
+            activeBackgroundColor: AppColors.tabBarColor3,
+            inactiveBackgroundColor: AppColors.tabBarColor4,
             style: {
                 height: 50,
             },

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, AsyncStorage } from 'react-native';
 import { Card } from 'react-native-elements';
 import RadioForm from 'react-native-simple-radio-button';
+import { AppColors } from '../../colors/AppColors';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -26,12 +27,12 @@ export default class DisciplineSelection extends Component {
         this.getDisciplines();
     }
 
-    componentDidUpdate() {
+    /*componentDidUpdate() {
         if (this.props.navigation.getParam('load') === true && this.state.mounted === false ) {
             this.getDisciplines();
             this.setState(true)
         }
-    }
+    }*/
 
     getDisciplines = async () => {
         try {
@@ -55,11 +56,11 @@ export default class DisciplineSelection extends Component {
             <RadioForm
                 radio_props={this.radioValues}
                 initial={1}
-                buttonColor='#000000'
+                buttonColor={AppColors.radioColor1}
                 buttonSize={12}
-                buttonOuterColor='#000000'
-                selectedButtonColor='#000000'
-                labelStyle={{ fontSize: 12, color: '#000000' }}
+                buttonOuterColor={AppColors.radioColor1}
+                selectedButtonColor={AppColors.radioColor1}
+                labelStyle={{ fontSize: 12, color: AppColors.radioColor1 }}
                 formHorizontal={true}
                 labelHorizontal={false}
                 onPress={(valueRadio) => { this.setState({ valueRadio }) }}
@@ -90,7 +91,7 @@ export default class DisciplineSelection extends Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.Indicator}>
-                    <ActivityIndicator size="large" color='#d3302f' />
+                    <ActivityIndicator size="large" color={AppColors.backgroundColor1} />
                 </View>
             )
         }
@@ -101,7 +102,7 @@ export default class DisciplineSelection extends Component {
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', paddingTop: 10 }}>
+                <View style={styles.viewRender1}>
                     {this.renderRadio()}
                 </View>
                 <ScrollView style={styles.scroll} >
@@ -112,27 +113,24 @@ export default class DisciplineSelection extends Component {
                             const codeDiscipline = questionnaire.idDiscipline.code;
                             const { name } = questionnaire.idProfessor;
                             const { code, period } = questionnaire.idClass;
-                            const background = questionnaire.status == 'I' ? '#ffcc00' : '#e60000';
-                            const border = questionnaire.status == 'I' ? '#ffff66' : '#ff4d4d';
+                            const background = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor1 : AppColors.statusQuestionnaireColor2;
+                            const border = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor3 : AppColors.statusQuestionnaireColor4;
                             const status = questionnaire.status == 'I' ? 'Incompleto' : 'Pendente';
-                            const textColor = questionnaire.status == 'I' ? '#000000' : '#ffffff';
+                            const textColor = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor5 : AppColors.statusQuestionnaireColor6;
 
                             return (
                                 <TouchableOpacity key={questionnaire._id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
-                                    <Card containerStyle={{ //borderBottomWidth: 4, borderBottomColor: '#595959', 
-                                        padding: 0, borderRadius: 10
-                                    }}>
-                                        <View style={{ padding: 10 }}>
+                                    <Card containerStyle={styles.cardStyle}>
+                                        <View style={styles.viewRender2}>
                                             <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
                                             <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
                                             <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                             <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
                                         </View>
-                                        <View style={{
-                                            backgroundColor: background, width: '100%', borderBottomColor: border, justifyContent: 'center',
-                                            borderRightColor: border, borderBottomWidth: 3, borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10
-                                        }}>
-                                            <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor }}>{'Status: ' + status}</Text>
+                                        <View style={{backgroundColor: background, width: '100%', borderBottomColor: border, 
+                                            justifyContent: 'center', borderRightColor: border, borderBottomWidth: 3, 
+                                            borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10,}}>
+                                            <Text style={{fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor}}>{'Status: ' + status}</Text>
                                         </View>
                                     </Card>
                                 </TouchableOpacity>
@@ -151,54 +149,65 @@ export default class DisciplineSelection extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#ffffff',
+        backgroundColor: AppColors.backgroundColor4,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
-    },
-    disciplineButton: {
-        backgroundColor: '#969393',
-        height: 50,
-        width: '70%',
-        borderRadius: 20,
-        borderWidth: 3,
-        borderColor: '#ffad29',
-        paddingTop: 15,
-        marginTop: 30,
-    },
-    textDiscipline: {
-        color: '#000',
-        textAlign: 'center',
-        fontSize: 15,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
-        textShadowOffset: { width: -1, height: 1 },
-        textShadowRadius: 10,
     },
     scroll: {
         width: '100%',
         maxHeight: '80%',
     },
-    scrollView: {
-        alignItems: 'center',
-    },
     nameDiscipline: {
         fontSize: 16,
         fontWeight: "bold",
-        marginBottom: 10
+        marginBottom: 10,
     },
     Indicator: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#ffffff'
+        backgroundColor: AppColors.backgroundColor4,
     },
     viewNullText: {
         flex:1, 
         alignItems:'center',
         justifyContent:'center',
-        marginTop: 20
+        marginTop: 20,
     },
     nullText: {
-        fontSize: 18
-    }
+        fontSize: 18,
+    },
+    viewRender1: {
+        width: '100%', 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-around', 
+        paddingTop: 10,
+    },
+    cardStyle: {
+        padding: 0, 
+        borderRadius: 10,
+    },
+    viewRender2: {
+        padding: 10,
+    },
+    /*viewRender3: {
+        backgroundColor: background, 
+        width: '100%', 
+        borderBottomColor: border, 
+        justifyContent: 'center',
+        borderRightColor: border, 
+        borderBottomWidth: 3, 
+        borderRightWidth: 3, 
+        paddingLeft: 10, 
+        paddingRight: 10, 
+        paddingTop: 10,
+    },*/
+    /*textRender: {
+        fontSize: 16, 
+        fontWeight: "bold", 
+        marginBottom: 10, 
+        color: textColor,
+    }*/
 })

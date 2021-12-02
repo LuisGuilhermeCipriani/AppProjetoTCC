@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Header, Icon } from 'react-native-elements';
+import { AppColors } from '../../colors/AppColors';
+
 export default props = ({ title, navigation, menuIcon, isBack, screenName }) => {
 
     const openMenu = () => {
@@ -11,12 +13,12 @@ export default props = ({ title, navigation, menuIcon, isBack, screenName }) => 
         <Header
             leftComponent={ <Icon
                 type="ionicon"
-                color='white'
+                color={AppColors.iconColor1}
                 name={menuIcon}
                 onPress={() => openMenu()}
               />}
-            centerComponent={{ text: title, style: { color: '#FFF', fontSize: 20 } }}
-            containerStyle={{ backgroundColor: '#d3302f' }}
+            centerComponent={{ text: title, style: styles.centerComponentStyle }}
+            containerStyle={styles.containerStyle}
         />
     );
 }
@@ -33,6 +35,13 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
         letterSpacing: 1,
-        color: '#ffffff'
+        color: AppColors.textColor1,
+    },
+    centerComponentStyle: {
+        color: AppColors.backgroundColor4, 
+        fontSize: 20,
+    },
+    containerStyle: {
+        backgroundColor: AppColors.backgroundColor1,
     }
 });

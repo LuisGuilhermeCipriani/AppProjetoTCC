@@ -5,6 +5,7 @@ import { Text as TextChart } from 'react-native-svg';
 import RadioForm from 'react-native-simple-radio-button';
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
+import { AppColors } from '../../colors/AppColors';
 
 export default class BarChartHorizontalWithLabels extends Component {
 
@@ -54,27 +55,27 @@ export default class BarChartHorizontalWithLabels extends Component {
             {
                 key: 1,
                 amount: parseFloat((amount1 / data.length) * 100).toFixed(0),
-                svg: { fill: '#ff6666' },
+                svg: { fill: AppColors.pierChartColor1 },
             },
             {
                 key: 2,
                 amount: parseFloat((amount2 / data.length) * 100).toFixed(0),
-                svg: { fill: '#e6b800' }
+                svg: { fill: AppColors.pierChartColor2 }
             },
             {
                 key: 3,
                 amount: parseFloat((amount3 / data.length) * 100).toFixed(0),
-                svg: { fill: '#808080' }
+                svg: { fill: AppColors.pierChartColor3 }
             },
             {
                 key: 4,
                 amount: parseFloat((amount4 / data.length) * 100).toFixed(0),
-                svg: { fill: '#2952a3' }
+                svg: { fill: AppColors.pierChartColor4 }
             },
             {
                 key: 5,
                 amount: parseFloat((amount5 / data.length) * 100).toFixed(0),
-                svg: { fill: '#2d8659' }
+                svg: { fill: AppColors.pierChartColor5 }
             }
         ]
     }
@@ -165,7 +166,7 @@ export default class BarChartHorizontalWithLabels extends Component {
             return parseFloat(valueWeight) 
         })
 
-        const data3 = data.map(value => {
+        /*const data3 = data.map(value => {
             let fill
             if (value < 1) {
                 fill = 'black'
@@ -186,7 +187,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                     fill: fill,
                 }
             })
-        })
+        })*/
 
         const selectStatus = (value) => {
             if (value < 1) {
@@ -210,7 +211,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                     x={x(0) + 10}
                     y={y(index) + (bandwidth / 2)}
                     fontSize={14}
-                    fill={'black'}
+                    fill={AppColors.chartColor1}
                     alignmentBaseline={'middle'}
                 >
                     {'Q' + (index+1)}
@@ -221,7 +222,7 @@ export default class BarChartHorizontalWithLabels extends Component {
 
         const scaleChart = [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map((value, index) => {
             return (
-                <Text key={index} style={{ fontWeight: 'bold' }}>{value}</Text>
+                <Text key={index} style={styles.textScaleChart}>{value}</Text>
             )
         })
 
@@ -241,7 +242,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                         textAnchor={'middle'}
                         alignmentBaseline={'middle'}
                         fontSize={24}
-                        stroke={'black'}
+                        stroke={AppColors.chartColor1}
                         strokeWidth={0.5}
                     >
                         {data.amount.length > 1 ? data.amount + '%' : ''} 
@@ -253,7 +254,7 @@ export default class BarChartHorizontalWithLabels extends Component {
         const dataPierChart = this.getPierChart(data)
 
         return (
-            <View style={{ justifyContent: 'space-between', flex: 1 }}>
+            <View style={styles.viewContainer}>
                 <Header
                     title={titleScreen}
                     menuIcon='arrow-back'
@@ -261,17 +262,17 @@ export default class BarChartHorizontalWithLabels extends Component {
                     isBack={true}
                     screenName='chartScreen'
                 />
-                <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <View style={styles.viewContainer}>
                     <View style={styles.containerRadio}>
                         <View>
                             <RadioForm
                                 radio_props={this.radioCharts}
                                 initial={0}
-                                buttonColor='#000000'
+                                buttonColor={AppColors.radioColor1}
                                 buttonSize={12}
-                                buttonOuterColor='#000000'
-                                selectedButtonColor='#000000'
-                                labelStyle={{ fontSize: 12, color: '#000000' }}
+                                buttonOuterColor={AppColors.radioColor1}
+                                selectedButtonColor={AppColors.radioColor1}
+                                labelStyle={{ fontSize: 12, color: AppColors.radioColor1 }}
                                 formHorizontal={true}
                                 labelHorizontal={false}
                                 onPress={(valueCharts) => { this.setState({ valueCharts }) }}
@@ -281,11 +282,11 @@ export default class BarChartHorizontalWithLabels extends Component {
                             <RadioForm
                                 radio_props={this.radioOptions}
                                 initial={0}
-                                buttonColor='#000000'
+                                buttonColor={AppColors.radioColor1}
                                 buttonSize={12}
-                                buttonOuterColor='#000000'
-                                selectedButtonColor='#000000'
-                                labelStyle={{ fontSize: 12, color: '#000000' }}
+                                buttonOuterColor={AppColors.radioColor1}
+                                selectedButtonColor={AppColors.radioColor1}
+                                labelStyle={{ fontSize: 12, color: AppColors.radioColor1 }}
                                 formHorizontal={true}
                                 labelHorizontal={false}
                                 onPress={(valueOptions) => { this.setState({ valueOptions }) }}
@@ -300,7 +301,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                                     style={{ height: 1000 }}
                                     data={data}
                                     horizontal={true}
-                                    svg={{ fill: "#ffb3b3" }}
+                                    svg={{ fill: AppColors.chartColor2 }}
                                     contentInset={{ top: 10, bottom: 10, left: 15, right: 15 }}
                                     spacing={0.8}
                                     gridMin={0}
@@ -313,13 +314,13 @@ export default class BarChartHorizontalWithLabels extends Component {
                         </ScrollView>
                     }
                     {(valueCharts == 0 && data.length > 0) &&
-                        <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginBottom: 10, marginTop: 10 }}>
+                        <View style={styles.viewScaleChart}>
                             {scaleChart}
                         </View>}
                     {valueCharts == 1 &&
-                        <View style={{ justifyContent: 'space-between', flex: 1 }}>
+                        <View style={styles.viewContainer}>
                             <PieChart
-                                style={{ height: 300 }}
+                                style={styles.pieChart}
                                 valueAccessor={({ item }) => item.amount}
                                 data={dataPierChart}
                                 spacing={0}
@@ -327,36 +328,35 @@ export default class BarChartHorizontalWithLabels extends Component {
                             >
                                 <LabelsPier />
                             </PieChart>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: '#ff6666', width: 20, height: 20, borderWidth: 1 }}/>
+                            <View style={styles.viewContainerPieChart}>
+                                <View style={styles.viewPieChart}>
+                                    <View style={styles.viewStyle1PierChart}/>
                                     <Text>Péssimo</Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: '#e6b800', width: 20, height: 20, borderWidth: 1 }}/>
+                                <View style={styles.viewPieChart}>
+                                    <View style={styles.viewStyle2PierChart}/>
                                     <Text>Ruim</Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: '#808080', width: 20, height: 20, borderWidth: 1 }}/>
+                                <View style={styles.viewPieChart}>
+                                    <View style={styles.viewStyle3PierChart}/>
                                     <Text>Regular</Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: '#2952a3', width: 20, height: 20, borderWidth: 1 }}/>
+                                <View style={styles.viewPieChart}>
+                                    <View style={styles.viewStyle4PierChart}/>
                                     <Text>Bom</Text>
                                 </View>
-                                <View style={{ alignItems: 'center' }}>
-                                    <View style={{ backgroundColor: '#2d8659', width: 20, height: 20, borderWidth: 1 }}/>
+                                <View style={styles.viewPieChart}>
+                                    <View style={styles.viewStyle5PierChartccv}/>
                                     <Text>Ótimo</Text>
                                 </View>
                             </View>
                         </View>
                     }
                     {data.length > 0 &&
-                        <TouchableOpacity style={{ backgroundColor: 'gray', padding: 15, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
+                        <TouchableOpacity style={styles.showQuestionsTouchableOpacity} onPress={() => {
                             this.setState({ modalVisible: true })
                         }}>
-                            <Text style={{ color: 'white', fontSize: 15, shadowColor: 'black', shadowOffset: {width: 0, height: 1}, 
-                            shadowOpacity: 0.2, elevation: 2 }}>Clique aqui para ver as questões</Text>
+                            <Text style={styles.textShowQuestions}>Clique aqui para ver as questões</Text>
                         </TouchableOpacity>}
                 </View>
                 <Modal
@@ -364,14 +364,14 @@ export default class BarChartHorizontalWithLabels extends Component {
                     transparent={false}
                     visible={this.state.modalVisible}
                 >
-                    <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                        <ScrollView style={{ height: '90%' }}>
-                            <Text style={{ padding: 10, textAlign: 'justify' }}>{showQuestions}</Text>
+                    <View style={styles.viewContainer}>
+                        <ScrollView style={styles.scrollViewModal}>
+                            <Text style={styles.textScrollViewModal}>{showQuestions}</Text>
                         </ScrollView>
-                        <TouchableOpacity style={{ alignItems: 'center', justifyContent: 'center', backgroundColor: 'gray', padding: 15, marginTop: 10 }} onPress={() => {
+                        <TouchableOpacity style={styles.exitTouchableOpacity} onPress={() => {
                             this.setState({ modalVisible: false })
                         }}>
-                            <Text style={{ color: 'white', fontSize: 15 }}>Fechar</Text>
+                            <Text style={styles.textExit}>Fechar</Text>
                         </TouchableOpacity>
                     </View>
                 </Modal>
@@ -384,10 +384,6 @@ const styles = StyleSheet.create({
     scroll: {
         height: '60%'
     },
-    container: {
-        flexDirection: 'row',
-        height: 1050
-    },
     containerRadio: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -395,9 +391,89 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 5
     },
-    barChart: {
+    textScaleChart: {
+        fontWeight: 'bold',
+    },
+    viewContainer: {
+        justifyContent: 'space-between', 
         flex: 1,
-        marginLeft: 8,
-        marginRight: 8
+    },
+    viewScaleChart: {
+        flexDirection: 'row', 
+        justifyContent: 'space-around',
+         marginBottom: 10, 
+         marginTop: 10,
+    },
+    pieChart: {
+        height: 300,
+    },
+    viewContainerPieChart: {
+        flexDirection: 'row', 
+        justifyContent: 'space-around',
+    },
+    viewPieChart: {
+        alignItems: 'center',
+    },
+    viewStyle1PierChart: {
+        backgroundColor: AppColors.pierChartColor1,
+        width: 20, 
+        height: 20, 
+        borderWidth: 1,
+    },
+    viewStyle2PierChart: {
+        backgroundColor: AppColors.pierChartColor2, 
+        width: 20, 
+        height: 20, 
+        borderWidth: 1,
+    },
+    viewStyle3PierChart: {
+        backgroundColor: AppColors.pierChartColor3,
+        width: 20,
+        height: 20, 
+        borderWidth: 1,
+    },
+    viewStyle4PierChart: {
+        backgroundColor: AppColors.pierChartColor4, 
+        width: 20, 
+        height: 20, 
+        borderWidth: 1,
+    },
+    viewStyle5PierChartccv: {
+        backgroundColor: AppColors.pierChartColor5, 
+        width: 20, 
+        height: 20, 
+        borderWidth: 1,
+    },
+    showQuestionsTouchableOpacity: {
+        backgroundColor: AppColors.buttomColor3, 
+        padding: 15, 
+        alignItems: 'center', 
+        justifyContent: 'center',
+    },
+    textShowQuestions: {
+        color: AppColors.textColor1, 
+        fontSize: 15, 
+        shadowColor: AppColors.shadowColor, 
+        shadowOffset: {width: 0, height: 1},
+        shadowOpacity: 0.2, 
+        elevation: 2
+    },
+    scrollViewModal: {
+        height: '90%',
+    },
+    textScrollViewModal: {
+        padding: 10, 
+        textAlign: 'justify',
+    },
+    exitTouchableOpacity: {
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        backgroundColor: AppColors.buttomColor3, 
+        padding: 15, 
+        marginTop: 10,
+    },
+    textExit: {
+        color: AppColors.textColor1, 
+        fontSize: 15,
     }
 })

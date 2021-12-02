@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, TextInput } from 'react-native';
-import RadioForm from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { RadioButton } from 'react-native-paper';
+import { AppColors } from '../../colors/AppColors';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -17,7 +17,7 @@ export default class Quiz extends Component {
             question_answer: [],
             index: 0,
             commentary: '',
-            radioColor: '#000000'
+            radioColor: AppColors.radioColor1
         };
         this.questionnaire = this.props.navigation.getParam('questionnaire');
     }
@@ -83,7 +83,7 @@ export default class Quiz extends Component {
             idAnswer: answer
         };
 
-        this.setState({ question_answer, radioColor: '#000000' });
+        this.setState({ question_answer, radioColor: AppColors.radioColor1 });
     }
 
     saveState = async () => {
@@ -112,7 +112,7 @@ export default class Quiz extends Component {
 
             if (allchecked.length > 0) {
                 Alert.alert('Preencha todas as respostas!');
-                this.setState({ index: allchecked[0].idQuestion.option - 1, radioColor: '#ff0000' });
+                this.setState({ index: allchecked[0].idQuestion.option - 1, radioColor: AppColors.radioColor2 });
             } else {
                 const list = {
                     idQuestionnaire,
@@ -142,7 +142,7 @@ export default class Quiz extends Component {
     renderScreen2 = () => {
         const { index, questions } = this.state;
 
-        return <View style={{ alignItems: 'center' }}>
+        return <View style={styles.viewRenderScreen2}>
             <View>
                 <Text style={styles.question}>{questions[index].title}</Text>
             </View>
@@ -153,7 +153,7 @@ export default class Quiz extends Component {
         let { index } = this.state;
         if (index > 0) {
             index = index - 1;
-            this.setState({ index, radioColor: '#000000' });
+            this.setState({ index, radioColor: AppColors.radioColor1 });
         }
     }
 
@@ -161,7 +161,7 @@ export default class Quiz extends Component {
         let { questions, index } = this.state;
         if (index <= questions.length - 1) {
             index = index + 1;
-            this.setState({ index, radioColor: '#000000' });
+            this.setState({ index, radioColor: AppColors.radioColor1 });
         }
     }
 
@@ -179,15 +179,15 @@ export default class Quiz extends Component {
         const option = question_answer[index].idAnswer != undefined ? question_answer[index].idAnswer.option : 0;
         return (
             answers.map(object => {
-                return <View key={object._id} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                return <View key={object._id} style={styles.viewRenderRadio}>
                     <RadioButton
                         value={object.option}
                         status={option === object.option ? 'checked' : 'unchecked'}
                         onPress={() => { this.updateState(object.option) }}
                         uncheckedColor={radioColor}
-                        color='#d3302f'
+                        color={AppColors.radioColor3}
                     />
-                    <Text style={{ fontSize: 20 }}>{object.option} - {object.title}</Text>
+                    <Text style={styles.textRenderRadio}>{object.option} - {object.title}</Text>
                 </View>
             })
         )
@@ -199,27 +199,24 @@ export default class Quiz extends Component {
         return (question_answer.length > 0
             ?
             index < question_answer.length ?
-                <View style={{ flex: 1, width: '100%' }}>
+                <View style={styles.viewRenderBody1}>
                     {this.renderScreen1()}
-                    <View style={{
-                        justifyContent: 'space-between', flex: 1, backgroundColor: 'white', marginLeft: 10,
-                        marginRight: 10, borderRadius: 10
-                    }}>
+                    <View style={styles.viewRenderBody2}>
                         <Text style={styles.question}>{this.renderQuestions()}</Text>
-                        <View style={{ marginBottom: 10, padding: 10 }}>{this.renderRadio()}</View>
+                        <View style={styles.viewRenderBody3}>{this.renderRadio()}</View>
                     </View>
                 </View>
                 :
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                    <View style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', marginTop: 10, textAlign: 'center' }}>
+                <View style={styles.viewRenderBody4}>
+                    <View style={styles.viewRenderBody5}>
+                        <Text style={styles.textRenderBody1}>
                             Comentários, sugestões ou críticas?
                         </Text>
-                        <Text style={{ fontSize: 20, fontWeight: 'bold', textAlign: 'center' }}>
+                        <Text style={styles.textRenderBody2}>
                             Escreva abaixo:
                         </Text>
                     </View>
-                    <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center', width: '100%' }}>
+                    <View style={styles.viewRenderBody6}>
                         <TextInput
                             width='90%'
                             height='95%'
@@ -231,24 +228,21 @@ export default class Quiz extends Component {
                             padding={10}
                             value={this.state.commentary}
                             placeholder='Digite aqui...'
-                            backgroundColor='#ffffff'
+                            backgroundColor={AppColors.textColor1}
                             onChangeText={(commentary) => {
                                 this.setState({ commentary })
                             }}
                         />
                     </View>
-                    <View style={{
-                        width: '90%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around',
-                        padding: 10
-                    }}>
+                    <View style={styles.viewRenderBody7}>
                         <TouchableOpacity style={styles.cleanButton} onPress={() => {
                             this.setState({ commentary: '' })
                         }}>
                             <Icon2 name='broom' style={styles.leftIcon} />
-                            <Text style={styles.textButton3}>Limpar</Text>
+                            <Text style={styles.textButton2}>Limpar</Text>
                         </TouchableOpacity>
                         <View style={styles.backButton} />
-                        <View style={{height:'100%'}}><Text>{500 - this.state.commentary.length} caracteres restantes</Text></View> 
+                        <View style={styles.viewRenderBody8}><Text>{500 - this.state.commentary.length} caracteres restantes</Text></View> 
                     </View>
                 </View>
             :
@@ -261,7 +255,7 @@ export default class Quiz extends Component {
 
         return (question_answer.length > 0
             ?
-            <View style={{ flexDirection: 'row', justifyContent: 'space-around', width: '100%', backgroundColor: '#d9d9d9', padding: 10 }}>
+            <View style={styles.viewRenderFooter}>
                 {
                     index !== 0 &&
                     <TouchableOpacity style={styles.backButton} onPress={() => { this.boundMinimumLimit() }}>
@@ -327,21 +321,12 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#d9d9d9',
-        //height: '100%',
+        backgroundColor: AppColors.backgroundColor6,
         flex: 1,
         flexDirection: 'column'
     },
-    buttonsField: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        width: '90%',
-        //height: '10%',
-        alignItems: 'center',
-        marginTop: 10
-    },
     forwardButton: {
-        backgroundColor: '#404040',
+        backgroundColor: AppColors.buttomColor4,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -350,7 +335,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     backButton: {
-        backgroundColor: '#404040',
+        backgroundColor: AppColors.buttomColor4,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -359,7 +344,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     cleanButton: {
-        backgroundColor: '#e48181',
+        backgroundColor: AppColors.buttomColor5,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -367,20 +352,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         width: '30%'
     },
-    commentButton: {
-        backgroundColor: '#d3302f',
-        alignItems: 'center',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        borderRadius: 5,
-        paddingTop: 5,
-        paddingBottom: 5,
-        paddingLeft: 15,
-        paddingRight: 15,
-        marginLeft: 10
-    },
     saveButton: {
-        backgroundColor: '#206020',
+        backgroundColor: AppColors.buttomColor6,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -389,7 +362,7 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     sendButton: {
-        backgroundColor: '#002b80',
+        backgroundColor: AppColors.buttomColor7,
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
@@ -398,26 +371,20 @@ const styles = StyleSheet.create({
         width: '30%'
     },
     textButton: {
-        color: '#ffffff',
+        color: AppColors.textColor1,
         padding: 10,
         fontSize: 15,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowColor: AppColors.textShadowColor2,
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 5,
     },
     textButton2: {
-        color: '#000000',
-        padding: 10,
-        fontSize: 15,
-        fontWeight: 'bold'
-    },
-    textButton3: {
-        color: 'white', 
+        color: AppColors.textColor1, 
         padding: 5, 
         paddingRight: 10,
         fontSize: 15, 
         fontWeight: 'bold',
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowColor: AppColors.textShadowColor2,
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 5,
     },
@@ -435,32 +402,84 @@ const styles = StyleSheet.create({
         paddingBottom: 30
     },
     leftIcon: {
-        color: '#ffffff',
+        color: AppColors.iconColor1,
         fontSize: 20,
         paddingLeft: 10,
         elevation: 5
     },
     rightIcon: {
-        color: '#ffffff',
+        color: AppColors.iconColor1,
         fontSize: 20,
         paddingRight: 10,
         elevation: 5
     },
-    containerBody: {
-        backgroundColor: '#ffffff',
-        //height: '70%',
-        width: '90%',
+    viewRenderScreen2: {
+        alignItems: 'center',
+    },
+    viewRenderRadio: {
+        flexDirection: 'row', 
+        alignItems: 'center',
+    },
+    textRenderRadio: {
+        fontSize: 20,
+    },
+    viewRenderBody1: {
+        flex: 1, 
+        width: '100%',
+    },
+    viewRenderBody2: {
+        justifyContent: 'space-between', 
+        flex: 1, 
+        backgroundColor: AppColors.backgroundColor4, 
+        marginLeft: 10,
+        marginRight: 10, 
         borderRadius: 10,
-        justifyContent: 'space-between'
     },
-    scrollView: {
-        borderLeftWidth: 4,
-        borderRightWidth: 4,
-        borderTopWidth: 4,
-        borderBottomWidth: 4,
-        marginTop: 20,
-        height: 400,
-        borderColor: '#d3302f',
-        backgroundColor: '#ffffff',
+    viewRenderBody3: {
+        marginBottom: 10, 
+        padding: 10,
     },
+    viewRenderBody4: {
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        width: '100%',
+    },
+    viewRenderBody5: {
+        width: '100%',
+    },
+    textRenderBody1: {
+        fontSize: 20, 
+        fontWeight: 'bold', 
+        marginTop: 10, 
+        textAlign: 'center',
+    },
+    textRenderBody2: {
+        fontSize: 20, 
+        fontWeight: 'bold', 
+        textAlign: 'center',
+    },
+    viewRenderBody6: {
+        flex: 1, 
+        justifyContent: 'flex-end', 
+        alignItems: 'center', 
+        width: '100%',
+    },
+    viewRenderBody7: {
+        width: '90%', 
+        flexDirection: 'row', 
+        alignItems: 'center', 
+        justifyContent: 'space-around',
+        padding: 10,
+    },
+    viewRenderBody8: {
+        height:'100%',
+    },
+    viewRenderFooter: {
+        flexDirection: 'row', 
+        justifyContent: 'space-around', 
+        width: '100%', 
+        backgroundColor: AppColors.backgroundColor6, 
+        padding: 10,
+    }
 })

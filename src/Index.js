@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppColors } from './colors/AppColors';
 
 import Header from './components/header/Header';
 
@@ -21,37 +22,45 @@ export default class Index extends Component {
         const { type } = this.state.user;
 
         return (
-            <View style={{ width: '100%', flex: 1, alignItems: 'center', justifyContent: 'flex-start' }}>
+            <View style={styles.viewRender1}>
                 <Header
                     title='Início'
                     menuIcon='menu'
                     navigation={navigation}
                 />
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                    <View style={{ flexDirection: 'row' }}>
+                <View style={styles.viewRender2}>
+                    <View style={styles.viewRender3}>
                         {type == 'S' &&
                             <TouchableOpacity style={styles.field1} onPress={() => {
                                 navigation.navigate('ScreenSelectionDisciplines')
                             }}>
-                                <Icon name='square-o' color='#ffffff' size={40} />
+                                <Icon name='square-o' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Responder {"\n"}Questionário</Text>
+                            </TouchableOpacity>
+                        }
+                        {type == 'P' &&
+                            <TouchableOpacity style={styles.field1} onPress={() => {
+                                navigation.navigate('ScreenSelectionDisciplineReport')
+                            }}>
+                                <Icon name='list-alt' color={AppColors.iconColor1} size={40} />
+                                <Text style={styles.text}>Gerar Relatório</Text>
                             </TouchableOpacity>
                         }
                         {(type == 'S' || type == 'P') &&
                             <TouchableOpacity style={styles.field2} onPress={() => {
                                 navigation.navigate('ScreenSearchDisciplines')
                             }}>
-                                <Icon name='search' color='#ffffff' size={40} />
+                                <Icon name='search' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Consultar {"\n"}Disciplinas</Text>
                             </TouchableOpacity>
                         }
                     </View>
-                    <View style={{ alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row' }}>
+                    <View style={styles.viewRender4}>
                         {(type == 'S' || type == 'P') &&
                             <TouchableOpacity style={styles.field3} onPress={() => {
                                 navigation.navigate('ScreenSearchDisciplines')
                             }}>
-                                <Icon name='file' color='#ffffff' size={40} />
+                                <Icon name='file' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Sobre o {"\n"}Aplicativo</Text>
                             </TouchableOpacity>
                         }
@@ -59,7 +68,7 @@ export default class Index extends Component {
                             <TouchableOpacity style={styles.field4} onPress={() => {
                                 navigation.navigate('ScreenSelectionDisciplineQuestionnaire')
                             }}>
-                                <Icon name='line-chart' color='#ffffff' size={40} />
+                                <Icon name='line-chart' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
                             </TouchableOpacity>
                         }
@@ -67,7 +76,7 @@ export default class Index extends Component {
                             <TouchableOpacity style={styles.field4} onPress={() => {
                                 navigation.navigate('ScreenAnsweredQuestionnaires')
                             }}>
-                                <Icon name='check-square-o' color='#ffffff' size={40} />
+                                <Icon name='check-square-o' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Questionários {"\n"}Respondidos</Text>
                             </TouchableOpacity>
                         }
@@ -80,7 +89,7 @@ export default class Index extends Component {
 
 const styles = StyleSheet.create({
     field1: {
-        backgroundColor: '#941e1e',
+        backgroundColor: AppColors.backgroundColor7,
         width: '55%',
         height: 150,
         borderRadius: 10,
@@ -90,7 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field2: {
-        backgroundColor: '#d84141',
+        backgroundColor: AppColors.backgroundColor8,
         width: '35%',
         height: 150,
         borderRadius: 10,
@@ -100,7 +109,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field3: {
-        backgroundColor: '#d84141',
+        backgroundColor: AppColors.backgroundColor8,
         width: '35%',
         height: 150,
         borderRadius: 10,
@@ -110,7 +119,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     field4: {
-        backgroundColor: '#941e1e',
+        backgroundColor: AppColors.backgroundColor7,
         width: '55%',
         height: 150,
         borderRadius: 10,
@@ -124,9 +133,28 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginLeft: 10,
         marginTop: 10,
-        textShadowColor: 'rgba(0, 0, 0, 0.75)',
+        textShadowColor: AppColors.textShadowColor2,
         textShadowOffset: { width: -1, height: 1 },
         textShadowRadius: 10,
+    },
+    viewRender1: {
+        width: '100%', 
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'flex-start',
+    }, 
+    viewRender2: {
+        flex: 1, 
+        alignItems: 'center', 
+        justifyContent: 'center',
+    },
+    viewRender3: {
+        flexDirection: 'row',
+    }, 
+    viewRender4: {
+        alignItems: 'flex-end', 
+        justifyContent: 'center', 
+        flexDirection: 'row',
     }
 })
 

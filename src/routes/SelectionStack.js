@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppColors } from '../colors/AppColors';
 
 import Index from '../Index';
 import DisciplineSelection from '../screens/select/DisciplineSelection';
@@ -33,10 +34,10 @@ const configDisciplineSelection = {
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
-            activeTintColor: "#ffffff",
-            inactiveTintColor: "#000000",
-            activeBackgroundColor: "#d3302f",
-            inactiveBackgroundColor: "#bfbfbf",
+            activeTintColor: AppColors.tabBarColor1,
+            inactiveTintColor: AppColors.tabBarColor2,
+            activeBackgroundColor: AppColors.tabBarColor3,
+            inactiveBackgroundColor: AppColors.tabBarColor4,
             style: {
                 height: 50,
             },
@@ -75,10 +76,10 @@ const configQuizDiscipline = {
     defaultNavigationOptions: {
         header: () => false,
         tabBarOptions: {
-            activeTintColor: "#ffffff",
-            inactiveTintColor: "#000000",
-            activeBackgroundColor: "#d3302f",
-            inactiveBackgroundColor: "#A9A9A9",
+            activeTintColor: AppColors.tabBarColor1,
+            inactiveTintColor: AppColors.tabBarColor2,
+            activeBackgroundColor: AppColors.tabBarColor3,
+            inactiveBackgroundColor: AppColors.tabBarColor4,
             style: {
                 height: 50,
             },

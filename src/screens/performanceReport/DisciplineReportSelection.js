@@ -6,7 +6,7 @@ import { AppColors } from '../../colors/AppColors';
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
 
-export default class DisciplineQuestionnaireSelection extends Component {
+export default class DisciplineReportSelection extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -60,7 +60,8 @@ export default class DisciplineQuestionnaireSelection extends Component {
                             const professor = obj.idProfessor;
                             const objectClass = obj.idClass;
                             return (
-                                <TouchableOpacity key={obj._id} onPress={() => { this.props.navigation.navigate('screenChart', { questionnaires: object, discipline }) }}>
+                                <TouchableOpacity key={obj._id} onPress={() => { this.props.navigation.navigate('screenReport',
+                                { questionnaires: object, discipline, professor, objectClass }) }}>
                                     <Card containerStyle={
                                         styles.cardStyle
                                     }>

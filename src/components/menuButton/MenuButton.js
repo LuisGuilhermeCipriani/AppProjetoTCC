@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AppColors } from '../../colors/AppColors';
 
 
 export default class MenuButton extends Component{
@@ -18,13 +19,13 @@ const styles = StyleSheet.create({
     icon: {
         height: 25,
         width: 25,
-        color: '#d42b2b',
+        color: AppColors.iconColor2,
     },
     text: {
         fontSize: 16,
         marginLeft: 10,
         marginTop: 2,
-        color: '#000000',
+        color: AppColors.textColor2,
     },
     container: {
         flexDirection: 'row',

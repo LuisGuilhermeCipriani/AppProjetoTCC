@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { AppColors } from '../../colors/AppColors';
 
 import Api from '../../services/Api';
 
@@ -47,7 +48,7 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <LinearGradient colors={['#f2c0c0', '#e06c6c', '#d3302f']} style={styles.header}>
+                <LinearGradient colors={[AppColors.backgroundColor3, AppColors.backgroundColor2, AppColors.backgroundColor1]} style={styles.header}>
 
                     <View style={styles.containerHeader}>
                         <Text style={styles.textUFJF}>UFJF</Text>
@@ -58,9 +59,9 @@ export default class Login extends Component {
                     <View style={styles.containerBody}>
                         <View style={styles.contentBody}>
                             <TextInput style={styles.inputText} onChangeText={cpf => this.setState({ cpf })} placeholder='CPF'
-                                underlineColorAndroid='#c3c3c3' />
+                                underlineColorAndroid={AppColors.underlineColor} />
                             <TextInput secureTextEntry={true} style={styles.inputText} onChangeText={password => this.setState({ password })} placeholder='Senha'
-                                underlineColorAndroid='#c3c3c3' />
+                                underlineColorAndroid={AppColors.underlineColor} />
                         </View>
                         <TouchableOpacity style={styles.enterButton} onPress={() => { this.signIn() }}>
                             <Text style={styles.textButton}>Entrar</Text>
@@ -69,7 +70,7 @@ export default class Login extends Component {
                 </View>
                 <View style={styles.footer}>
                     <TouchableOpacity style={styles.infoButton} onPress={() => { this.help() }}>
-                        <Icon name='help-circle' size={30} color='#ffffff' />
+                        <Icon name='help-circle' size={30} color={AppColors.iconColor1} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -80,27 +81,27 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#d3302f'
+        backgroundColor: AppColors.backgroundColor1,
     },
     containerHeader: {
         alignItems: 'center',
         justifyContent: 'center',
     },
     textHeader: {
-        color: '#ffffff',
+        color: AppColors.textColor1,
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         marginTop: 25,
         marginBottom: 20,
-        textShadowColor: '#000000',
+        textShadowColor: AppColors.textShadowColor,
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 10
     },
     textUFJF: {
         fontSize: 50,
-        color: '#ffffff',
-        textShadowColor: '#000000',
+        color: AppColors.textColor1,
+        textShadowColor: AppColors.textShadowColor,
         textShadowOffset: { width: 3, height: 3 },
         textShadowRadius: 10,
     },
@@ -111,12 +112,12 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     textButton: {
-        color: '#ffffff',
+        color: AppColors.textColor1,
         fontSize: 20,
     },
     enterButton: {
         padding: 10,
-        backgroundColor: '#d3302f',
+        backgroundColor: AppColors.buttomColor1,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 50,
-        backgroundColor: '#d3302f',
+        backgroundColor: AppColors.buttomColor1,
     },
     header: {
         alignItems: 'center',
@@ -136,8 +137,6 @@ const styles = StyleSheet.create({
         height: '35%',
     },
     body: {
-        //height: '55%',
-        //padding: 30,
         flex: 1
     },
     footer: {
@@ -145,23 +144,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         justifyContent: 'flex-end',
-        backgroundColor: '#ffffff',
+        backgroundColor: AppColors.backgroundColor4,
         paddingRight: 40
     },
-    logo: {
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 130,
-        height: 130,
-        borderRadius: 100,
-        backgroundColor: '#d3302f',
-    },
-    textLogo: {
-        color: '#ffffff',
-        fontSize: 40
-    },
     containerBody: {
-        backgroundColor: '#ffffff',
+        backgroundColor: AppColors.backgroundColor4,
         flex: 1,
         borderTopLeftRadius: 50,
         borderTopRightRadius: 50,
