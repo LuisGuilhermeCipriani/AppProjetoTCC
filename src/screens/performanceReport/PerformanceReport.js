@@ -81,10 +81,10 @@ export default class PerformanceReport extends Component {
 
                     <Card>
                         <Card.Title>Relatório de Desempenho</Card.Title>
-                        <Text>Nome da Disciplina: {this.discipline.title}</Text>
-                        <Text>Código da Disciplina: {this.discipline.code}</Text>
-                        <Text>Período da Disciplina: {this.objectClass.period}</Text>
-                        <Text>Nome do Professor: {this.professor.name}</Text>
+                        <Text>{this.discipline.title}</Text>
+                        <Text>{this.discipline.code}</Text>
+                        <Text>Período: {this.objectClass.period}</Text>
+                        <Text>Docente: {this.professor.name}</Text>
 
                         <View style={styles.viewCardStyle}>
                             <Text style={styles.fieldTable1}>Questão</Text>

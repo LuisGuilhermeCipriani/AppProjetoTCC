@@ -11,7 +11,8 @@ export default class SearchDisciplines extends Component {
         super(props);
         this.state = {
             classes: [],
-            isLoading: false
+            isLoading: false,
+            user: {}
         }
     }
 
@@ -22,10 +23,12 @@ export default class SearchDisciplines extends Component {
     SearchDisciplines = async () => {
         try {
             this.setState({isLoading: true})
-            const idUser = JSON.parse(await AsyncStorage.getItem('@APP:user'))._id;
+            const user = JSON.parse(await AsyncStorage.getItem('@APP:user'));
+            
+            const idUser = user._id;
             const response = await Api.post('class/findByIdUser', { idUser, active: true });
             const { classes } = response.data;
-            this.setState({ classes, isLoading: false });
+            this.setState({ classes, user, isLoading: false });
         } catch (error) {
             console.log(error);
         }
@@ -33,7 +36,9 @@ export default class SearchDisciplines extends Component {
 
     render() {
 
-        const { classes } = this.state;
+        const { classes, user } = this.state;
+        
+        const title = user.type == 'P' ? 'Disciplinas' : 'Disciplinas Matriculadas'
 
         if (this.state.isLoading) {
             return (
@@ -44,9 +49,9 @@ export default class SearchDisciplines extends Component {
         }
 
         return (
-            <View>
+            <View style={styles.container}>
                 <Header
-                    title='Disciplinas Matriculadas'
+                    title={title}
                     menuIcon='menu'
                     navigation={this.props.navigation}
                 />
@@ -54,12 +59,13 @@ export default class SearchDisciplines extends Component {
                     {classes.length > 0
                         ?
                         classes.map(classObject => {
-                            const { idDiscipline, _id, code } = classObject;
+                            const { idDiscipline, _id, code, idProfessor } = classObject;
                             return (
                                 <Card key={_id} containerStyle={styles.cardStyle}>
                                     <Text style={styles.nameDiscipline}>{idDiscipline.title}</Text>
                                     <Text>{idDiscipline.code}</Text>
                                     <Text>{'Turma: ' + code}</Text>
+                                    <Text>{'Docente: ' + idProfessor.name}</Text>
                                 </Card>
                             );
                         })
@@ -77,6 +83,10 @@ export default class SearchDisciplines extends Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: AppColors.backgroundColor10,
+        flex: 1,
+    },
     nameDiscipline: {
         fontSize: 16,
         fontWeight: "bold",
@@ -100,5 +110,6 @@ const styles = StyleSheet.create({
     cardStyle: {
         borderBottomWidth: 2, 
         borderBottomColor: AppColors.cardColor4,
-    }
+        borderRadius: 10,
+    },
 });

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, ScrollView, AsyncStorage, ActivityIndicator } from 'react-native';
 import { Card } from 'react-native-elements';
 import { AppColors } from '../../colors/AppColors';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -16,19 +17,23 @@ export default class DisciplineReportSelection extends Component {
     }
 
     async componentDidMount() {
-        this.getQuestionnaires();
+        this.onLoad();
+    }
+
+    onLoad = () => {
+        this.props.navigation.addListener('didFocus', () => this.getQuestionnaires())
     }
 
     getQuestionnaires = async () => {
         try {
-            this.setState({isLoading: true})
+            this.setState({ isLoading: true })
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnaires } = (await Api.post('/questionnaire/findByIdProfessor', { idProfessor: _id, active: true })).data;
 
             if (questionnaires !== null) {
                 this.setState({ questionnaires });
             }
-            this.setState({isLoading: false})
+            this.setState({ isLoading: false })
         } catch (err) {
             console.log(err);
         }
@@ -60,12 +65,22 @@ export default class DisciplineReportSelection extends Component {
                             const professor = obj.idProfessor;
                             const objectClass = obj.idClass;
                             return (
-                                <TouchableOpacity key={obj._id} onPress={() => { this.props.navigation.navigate('screenReport',
-                                { questionnaires: object, discipline, professor, objectClass }) }}>
+                                <TouchableOpacity key={obj._id} onPress={() => {
+                                    this.props.navigation.navigate('screenReport',
+                                        { questionnaires: object, discipline, professor, objectClass })
+                                }}>
                                     <Card containerStyle={
                                         styles.cardStyle
                                     }>
-                                        <Text style={styles.nameDiscipline}>{discipline.code} - {discipline.title} - {objectClass.code} - {professor.name}</Text>
+                                        <View style={styles.cardContainer}>
+                                        <View>
+                                            <Text style={styles.nameDiscipline}>{discipline.title}</Text>
+                                            <Text style={styles.nameDiscipline}>{discipline.code}</Text>
+                                            <Text style={styles.nameDiscipline}>Turma: {objectClass.code}</Text>
+                                            <Text style={styles.nameDiscipline}>Docente: {professor.name}</Text>
+                                        </View>
+                                            <Icon name='angle-right' style={styles.rightIcon} />
+                                        </View>
                                     </Card>
                                 </TouchableOpacity>
                             );
@@ -79,7 +94,7 @@ export default class DisciplineReportSelection extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: AppColors.backgroundColor4,
+        backgroundColor: AppColors.backgroundColor10,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -100,7 +115,19 @@ const styles = StyleSheet.create({
         backgroundColor: AppColors.backgroundColor4
     },
     cardStyle: {
-        borderBottomWidth: 4, 
-        borderBottomColor: AppColors.cardColor1,
+        borderBottomWidth: 2,
+        borderBottomColor: AppColors.cardColor4,
+        borderRadius: 10,
+    },
+    rightIcon: {
+        color: AppColors.textColor2,
+        fontSize: 30,
+        elevation: 5,
+    },
+    cardContainer: {
+        flexDirection: 'row',
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'space-between',
     }
 })

@@ -97,8 +97,7 @@ export default class Quiz extends Component {
                 questionAnswer: question_answer
             }
             const response = await Api.put('/questionnaire/update', list)
-            Alert.alert('Progresso salvo com sucesso!')
-            this.props.navigation.navigate('ScreenSelectionDisciplines', {load: true})
+            this.props.navigation.navigate('ScreenSelectionDisciplines')
         } catch (error) {
             console.log(error)
         }

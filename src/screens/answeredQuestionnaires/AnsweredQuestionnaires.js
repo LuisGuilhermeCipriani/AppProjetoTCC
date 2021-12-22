@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableOpacity, ActivityIndicator, TextInput } from 'react-native';
 import { Card } from 'react-native-elements';
 import CalendarPicker from 'react-native-calendar-picker';
 import RadioForm from 'react-native-simple-radio-button';
@@ -22,7 +22,8 @@ export default class AnsweredQuestionnaires extends Component {
             finalDate: new Date(),
             option: 0,
             allSelected: 0,
-            isLoading: false
+            isLoading: false,
+            period: '',
         };
         this.onDateChange = this.onDateChange.bind(this);
         this.radioValues = [
@@ -32,12 +33,16 @@ export default class AnsweredQuestionnaires extends Component {
     }
 
     async componentDidMount() {
-        this.getDisciplines();
+        this.onLoad();
+    }
+
+    onLoad = () => {
+        this.props.navigation.addListener('didFocus', () => this.getDisciplines())
     }
 
     getDisciplines = async () => {
         try {
-            this.setState({isLoading: true})
+            this.setState({ isLoading: true })
             const { _id } = JSON.parse(await AsyncStorage.getItem('@APP:user'));
             const { questionnairesByPeriod } = (await Api.post('/questionnaire/findAllByPeriodFinished',
                 { idStudent: _id })).data;
@@ -45,7 +50,7 @@ export default class AnsweredQuestionnaires extends Component {
             if (questionnairesByPeriod !== null) {
                 this.setState({ questionnairesByPeriod });
             }
-            this.setState({isLoading: false})
+            this.setState({ isLoading: false })
         } catch (err) {
             console.log(err);
         }
@@ -91,10 +96,19 @@ export default class AnsweredQuestionnaires extends Component {
         return allSelected == 0 ? questionnairesByPeriod : questionnairesByDate
     }
 
+    findByPeriod = () => {
+        const { questionnairesByPeriod, allSelected, period } = this.state;
+        const filteredQuestionnaire = questionnairesByPeriod.filter(value => (
+            value.idClass.period == period
+        ))
+        return allSelected == 0 ? questionnairesByPeriod : filteredQuestionnaire
+    }
+
     render() {
         const { selectedStartDate, allSelected, option, startDate, finalDate } = this.state;
         const initialDate = selectedStartDate ? selectedStartDate.toString() : '';
-        const questionnairesByPeriod = this.findByDate();
+        //const questionnairesByPeriod = this.findByDate();
+        const questionnairesByPeriod = this.findByPeriod();
 
         if (this.state.isLoading) {
             return (
@@ -119,7 +133,6 @@ export default class AnsweredQuestionnaires extends Component {
                     animationType="slide"
                     transparent={true}
                     visible={this.state.modalVisible}
-                    //backgroundColor='green'
                     flex={1}
                 >
                     <View style={styles.containerCalendar}>
@@ -146,7 +159,7 @@ export default class AnsweredQuestionnaires extends Component {
                     </View>
                 </Modal>
 
-                {allSelected == 1 &&
+                {/*allSelected == 1 &&
                     <View style={styles.containerViewDate}>
                         <Text style={styles.textDate}>Selecione abaixo o intervalo de tempo</Text>
                         <View style={styles.viewDate}>
@@ -164,29 +177,45 @@ export default class AnsweredQuestionnaires extends Component {
                             </TouchableOpacity>
                         </View>
                     </View>
+                */}
+
+                {allSelected == 1 &&
+                    <View style={styles.containerViewPeriod}>
+                        <Text style={styles.textPeriod}>Informe abaixo o período</Text>
+                        <TextInput style={styles.periodTextInput} borderRadius={5} padding={5} width='80%' backgroundColor="#ffffff" onChangeText={(period) => { this.setState({ period }) }} placeholder='Ex: 2021/3' />
+                    </View>
                 }
+
                 <ScrollView style={styles.scroll} >
 
                     {questionnairesByPeriod.length > 0
-                    ?
+                        ?
                         questionnairesByPeriod.map(questionnaire => {
                             const { title } = questionnaire.idDiscipline;
                             const codeDiscipline = questionnaire.idDiscipline.code;
                             const { name } = questionnaire.idProfessor;
                             const { code, period } = questionnaire.idClass;
+                            const background = questionnaire.status == 'S' && AppColors.statusQuestionnaireColor7;
+                            const border = questionnaire.status == 'S' && AppColors.statusQuestionnaireColor8;
+                            const status = questionnaire.status == 'S' && 'Finalizado';
+                            const textColor = questionnaire.status == 'S' && AppColors.statusQuestionnaireColor5;
+
                             return (
                                 <View key={questionnaire._id}>
-                                    <Card containerStyle={
-                                        styles.cardContainerStyle
-                                    }>
-                                        <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
-                                        <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
-                                        <View style={
-                                            styles.cardView
-                                        }>
-                                            <Text style={styles.nameDiscipline}>{'Status: ' + (questionnaire.status == 'S') ? 'Respondido' : 'Não Respondido' }</Text>
+                                    <Card containerStyle={styles.cardContainerStyle}>
+                                        <View style={styles.viewRender2}>
+                                            <Text style={styles.nameDiscipline}>{title}</Text>
+                                            <Text style={styles.nameDiscipline}>{codeDiscipline}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Docente: ' + name}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
+                                            <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
+                                        </View>
+                                        <View style={{
+                                            backgroundColor: background, width: '100%', borderBottomColor: border,
+                                            justifyContent: 'center', borderRightColor: border, borderBottomWidth: 3,
+                                            borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10,
+                                        }}>
+                                            <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor }}>{'Status: ' + status}</Text>
                                         </View>
                                     </Card>
                                 </View>
@@ -205,7 +234,7 @@ export default class AnsweredQuestionnaires extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: AppColors.backgroundColor4,
+        backgroundColor: AppColors.backgroundColor10,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -220,9 +249,9 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     viewNullText: {
-        flex:1, 
-        alignItems:'center',
-        justifyContent:'center',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 20
     },
     nullText: {
@@ -235,72 +264,93 @@ const styles = StyleSheet.create({
         backgroundColor: AppColors.backgroundColor4,
     },
     containerCalendar: {
-        backgroundColor: AppColors.backgroundColor4, 
-        flex: 1, 
+        backgroundColor: AppColors.backgroundColor4,
+        flex: 1,
         justifyContent: 'center',
     },
     calendar: {
-        height: '90%', 
+        height: '90%',
         justifyContent: 'center',
     },
     calendarTouchableOpacity: {
-        alignItems: 'center', 
-        justifyContent: 'center', 
+        alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: AppColors.calendarColor3,
-        padding: 15, 
+        padding: 15,
         marginTop: 10,
     },
     textCalendarTouchableOpacity: {
-        color: AppColors.calendarColor2, 
+        color: AppColors.calendarColor2,
         fontSize: 15,
     },
     containerViewDate: {
         marginBottom: 15,
     },
     textDate: {
-        marginBottom: 10, 
-        marginTop: 20, 
-        fontSize: 15, 
+        marginBottom: 10,
+        marginTop: 20,
+        fontSize: 15,
         fontWeight: 'bold',
     },
     viewDate: {
-        flexDirection: 'row', 
-        justifyContent: 'space-between', 
+        flexDirection: 'row',
+        justifyContent: 'space-between',
         alignItems: 'center',
     },
     textDate: {
         fontSize: 15,
     },
     cardContainerStyle: {
-        borderBottomWidth: 4, 
+        borderBottomWidth: 1,
         borderBottomColor: AppColors.cardColor1,
+        padding: 0,
+        borderRadius: 10,
     },
     cardView: {
-        backgroundColor: AppColors.cardColor2, 
-        width: '100%', 
-        borderBottomColor: AppColors.cardColor3, 
+        backgroundColor: AppColors.cardColor2,
+        width: '100%',
+        borderBottomColor: AppColors.cardColor3,
         justifyContent: 'center',
-        borderRightColor: AppColors.cardColor3, 
-        borderBottomWidth: 3, 
-        borderRightWidth: 3, 
-        paddingLeft: 10, 
+        borderRightColor: AppColors.cardColor3,
+        borderBottomWidth: 3,
+        borderRightWidth: 3,
+        paddingLeft: 10,
         paddingRight: 10,
         paddingTop: 10,
     },
     startDateTouchableOpacity: {
-        backgroundColor: AppColors.buttomColor2, 
-        width: 100, 
-        alignItems: 'center', 
-        padding: 10, 
-        marginRight: 5, 
+        backgroundColor: AppColors.buttomColor2,
+        width: 100,
+        alignItems: 'center',
+        padding: 10,
+        marginRight: 5,
         borderRadius: 10,
     },
     finalDateTouchableOpacity: {
-        backgroundColor: AppColors.buttomColor2, 
-        width: 100, 
-        alignItems: 'center', 
-        padding: 10, 
-        marginLeft: 5, 
+        backgroundColor: AppColors.buttomColor2,
+        width: 100,
+        alignItems: 'center',
+        padding: 10,
+        marginLeft: 5,
         borderRadius: 10,
-    }
+    },
+    periodTextInput: {
+        backgroundColor: AppColors.inputColor,
+    },
+    containerViewPeriod: {
+        backgroundColor: AppColors.backgroundColor5,
+        width: '100%',
+        height: 90,
+        marginTop: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+    },
+    textPeriod: {
+        color: AppColors.textColor2,
+        marginBottom: 10,
+    },
+    viewRender2: {
+        padding: 10,
+    },
 })

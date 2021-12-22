@@ -48,7 +48,7 @@ export default class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <LinearGradient colors={[AppColors.backgroundColor3, AppColors.backgroundColor2, AppColors.backgroundColor1]} style={styles.header}>
+                <LinearGradient colors={[AppColors.backgroundColor12, AppColors.backgroundColor10, AppColors.backgroundColor11]} style={styles.header}>
 
                     <View style={styles.containerHeader}>
                         <Text style={styles.textUFJF}>UFJF</Text>
@@ -81,7 +81,7 @@ export default class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: AppColors.backgroundColor1,
+        backgroundColor: AppColors.backgroundColor11,
     },
     containerHeader: {
         alignItems: 'center',
@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
     },
     textUFJF: {
         fontSize: 50,
-        color: AppColors.textColor1,
-        textShadowColor: AppColors.textShadowColor,
-        textShadowOffset: { width: 3, height: 3 },
-        textShadowRadius: 10,
+        color: AppColors.textColor2,
+        //textShadowColor: AppColors.textShadowColor,
+        //textShadowOffset: { width: 3, height: 3 },
+        //textShadowRadius: 10,
     },
     inputText: {
         padding: 5,

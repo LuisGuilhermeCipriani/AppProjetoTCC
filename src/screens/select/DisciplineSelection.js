@@ -13,8 +13,7 @@ export default class DisciplineSelection extends Component {
         this.state = {
             questionnairesByPeriod: [],
             valueRadio: 1,
-            isLoading: false,
-            mounted: false
+            isLoading: false
         };
         this.radioValues = [
             { label: 'Pendentes', value: 0 },
@@ -24,15 +23,12 @@ export default class DisciplineSelection extends Component {
     }
 
     async componentDidMount() {
-        this.getDisciplines();
+        this.onLoad();
     }
 
-    /*componentDidUpdate() {
-        if (this.props.navigation.getParam('load') === true && this.state.mounted === false ) {
-            this.getDisciplines();
-            this.setState(true)
-        }
-    }*/
+    onLoad = () => {
+        this.props.navigation.addListener('didFocus', () => this.getDisciplines())
+    }
 
     getDisciplines = async () => {
         try {
@@ -116,21 +112,24 @@ export default class DisciplineSelection extends Component {
                             const background = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor1 : AppColors.statusQuestionnaireColor2;
                             const border = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor3 : AppColors.statusQuestionnaireColor4;
                             const status = questionnaire.status == 'I' ? 'Incompleto' : 'Pendente';
-                            const textColor = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor5 : AppColors.statusQuestionnaireColor6;
+                            const textColor = questionnaire.status == 'I' ? AppColors.statusQuestionnaireColor5 : AppColors.statusQuestionnaireColor5;
 
                             return (
                                 <TouchableOpacity key={questionnaire._id} onPress={() => { this.props.navigation.navigate('QuizDiscipline', { questionnaire }) }}>
                                     <Card containerStyle={styles.cardStyle}>
                                         <View style={styles.viewRender2}>
-                                            <Text style={styles.nameDiscipline}>{codeDiscipline} - {title}</Text>
+                                            <Text style={styles.nameDiscipline}>{title}</Text>
+                                            <Text style={styles.nameDiscipline}>{codeDiscipline}</Text>
                                             <Text style={styles.nameDiscipline}>{'Professor(a): ' + name}</Text>
                                             <Text style={styles.nameDiscipline}>{'Turma: ' + code}</Text>
                                             <Text style={styles.nameDiscipline}>{'Período: ' + period}</Text>
                                         </View>
-                                        <View style={{backgroundColor: background, width: '100%', borderBottomColor: border, 
-                                            justifyContent: 'center', borderRightColor: border, borderBottomWidth: 3, 
-                                            borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10,}}>
-                                            <Text style={{fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor}}>{'Status: ' + status}</Text>
+                                        <View style={{
+                                            backgroundColor: background, width: '100%', borderBottomColor: border,
+                                            justifyContent: 'center', borderRightColor: border, borderBottomWidth: 3,
+                                            borderRightWidth: 3, paddingLeft: 10, paddingRight: 10, paddingTop: 10,
+                                        }}>
+                                            <Text style={{ fontSize: 16, fontWeight: "bold", marginBottom: 10, color: textColor }}>{'Status: ' + status}</Text>
                                         </View>
                                     </Card>
                                 </TouchableOpacity>
@@ -149,7 +148,7 @@ export default class DisciplineSelection extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: AppColors.backgroundColor4,
+        backgroundColor: AppColors.backgroundColor10,
         alignItems: 'center',
         justifyContent: 'flex-start',
         flex: 1,
@@ -170,44 +169,28 @@ const styles = StyleSheet.create({
         backgroundColor: AppColors.backgroundColor4,
     },
     viewNullText: {
-        flex:1, 
-        alignItems:'center',
-        justifyContent:'center',
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
         marginTop: 20,
     },
     nullText: {
         fontSize: 18,
     },
     viewRender1: {
-        width: '100%', 
-        flexDirection: 'row', 
-        alignItems: 'center', 
-        justifyContent: 'space-around', 
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
         paddingTop: 10,
     },
     cardStyle: {
-        padding: 0, 
+        borderBottomWidth: 1,
+        borderBottomColor: AppColors.cardColor1,
+        padding: 0,
         borderRadius: 10,
     },
     viewRender2: {
         padding: 10,
-    },
-    /*viewRender3: {
-        backgroundColor: background, 
-        width: '100%', 
-        borderBottomColor: border, 
-        justifyContent: 'center',
-        borderRightColor: border, 
-        borderBottomWidth: 3, 
-        borderRightWidth: 3, 
-        paddingLeft: 10, 
-        paddingRight: 10, 
-        paddingTop: 10,
-    },*/
-    /*textRender: {
-        fontSize: 16, 
-        fontWeight: "bold", 
-        marginBottom: 10, 
-        color: textColor,
-    }*/
+    }
 })

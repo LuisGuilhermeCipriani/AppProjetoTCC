@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Modal } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import { BarChart, Grid, PieChart } from 'react-native-svg-charts';
 import { Text as TextChart } from 'react-native-svg';
 import RadioForm from 'react-native-simple-radio-button';
@@ -27,6 +27,7 @@ export default class BarChartHorizontalWithLabels extends Component {
             valueCharts: 0,
             valueOptions: 3,
             modalVisible: false,
+            isLoading: false,
         }
     }
 
@@ -35,12 +36,18 @@ export default class BarChartHorizontalWithLabels extends Component {
     }
 
     getChart = async (questionnaires) => {
-        if (questionnaires != null) {
-            const { dataChart } = (await Api.post('chartController/chart', questionnaires)).data
+        try {
+            this.setState({ isLoading: true });
+            if (questionnaires != null) {
+                const { dataChart } = (await Api.post('chartController/chart', questionnaires)).data
 
-            if (dataChart != null) {
-                this.setState({ dataChart })
+                if (dataChart != null) {
+                    this.setState({ dataChart })
+                }
+                this.setState({ isLoading: false });
             }
+        } catch (err) {
+            console.log(err);
         }
     }
 
@@ -82,7 +89,7 @@ export default class BarChartHorizontalWithLabels extends Component {
 
     previewQuestions = (index) => {
         let preview = '';
-        switch(index + 1){
+        switch (index + 1) {
             case 1:
                 preview = 'Disponibilidade do Plano';
                 break;
@@ -161,10 +168,18 @@ export default class BarChartHorizontalWithLabels extends Component {
     render() {
         const { dataChart, valueCharts, valueOptions } = this.state
         const titleScreen = this.discipline.code + ' - ' + this.discipline.title
-        const data = dataChart.map(object => { 
+        const data = dataChart.map(object => {
             const valueWeight = valueOptions == 3 ? object.weightedAverage : object.outlierWeightedAverage;
-            return parseFloat(valueWeight) 
+            return parseFloat(valueWeight)
         })
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.Indicator}>
+                    <ActivityIndicator size="large" color={AppColors.backgroundColor1} />
+                </View>
+            )
+        }
 
         /*const data3 = data.map(value => {
             let fill
@@ -214,8 +229,9 @@ export default class BarChartHorizontalWithLabels extends Component {
                     fill={AppColors.chartColor1}
                     alignmentBaseline={'middle'}
                 >
-                    {'Q' + (index+1)}
-                    {/*'Q' + (index+1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + value + ' (' + selectStatus(value) + ')'*/}
+                    {/*'Q' + (index+1)*/}
+                    {'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + 
+                    value + ' (' + selectStatus(value) + ')'}
                 </TextChart>
             ))
         )
@@ -245,7 +261,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                         stroke={AppColors.chartColor1}
                         strokeWidth={0.5}
                     >
-                        {data.amount.length > 1 ? data.amount + '%' : ''} 
+                        {data.amount.length > 1 ? data.amount + '%' : ''}
                     </TextChart>
                 )
             })
@@ -330,23 +346,23 @@ export default class BarChartHorizontalWithLabels extends Component {
                             </PieChart>
                             <View style={styles.viewContainerPieChart}>
                                 <View style={styles.viewPieChart}>
-                                    <View style={styles.viewStyle1PierChart}/>
+                                    <View style={styles.viewStyle1PierChart} />
                                     <Text>Péssimo</Text>
                                 </View>
                                 <View style={styles.viewPieChart}>
-                                    <View style={styles.viewStyle2PierChart}/>
+                                    <View style={styles.viewStyle2PierChart} />
                                     <Text>Ruim</Text>
                                 </View>
                                 <View style={styles.viewPieChart}>
-                                    <View style={styles.viewStyle3PierChart}/>
+                                    <View style={styles.viewStyle3PierChart} />
                                     <Text>Regular</Text>
                                 </View>
                                 <View style={styles.viewPieChart}>
-                                    <View style={styles.viewStyle4PierChart}/>
+                                    <View style={styles.viewStyle4PierChart} />
                                     <Text>Bom</Text>
                                 </View>
                                 <View style={styles.viewPieChart}>
-                                    <View style={styles.viewStyle5PierChartccv}/>
+                                    <View style={styles.viewStyle5PierChartccv} />
                                     <Text>Ótimo</Text>
                                 </View>
                             </View>
@@ -395,20 +411,20 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     viewContainer: {
-        justifyContent: 'space-between', 
+        justifyContent: 'space-between',
         flex: 1,
     },
     viewScaleChart: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-around',
-         marginBottom: 10, 
-         marginTop: 10,
+        marginBottom: 10,
+        marginTop: 10,
     },
     pieChart: {
         height: 300,
     },
     viewContainerPieChart: {
-        flexDirection: 'row', 
+        flexDirection: 'row',
         justifyContent: 'space-around',
     },
     viewPieChart: {
@@ -416,64 +432,70 @@ const styles = StyleSheet.create({
     },
     viewStyle1PierChart: {
         backgroundColor: AppColors.pierChartColor1,
-        width: 20, 
-        height: 20, 
+        width: 20,
+        height: 20,
         borderWidth: 1,
     },
     viewStyle2PierChart: {
-        backgroundColor: AppColors.pierChartColor2, 
-        width: 20, 
-        height: 20, 
+        backgroundColor: AppColors.pierChartColor2,
+        width: 20,
+        height: 20,
         borderWidth: 1,
     },
     viewStyle3PierChart: {
         backgroundColor: AppColors.pierChartColor3,
         width: 20,
-        height: 20, 
+        height: 20,
         borderWidth: 1,
     },
     viewStyle4PierChart: {
-        backgroundColor: AppColors.pierChartColor4, 
-        width: 20, 
-        height: 20, 
+        backgroundColor: AppColors.pierChartColor4,
+        width: 20,
+        height: 20,
         borderWidth: 1,
     },
     viewStyle5PierChartccv: {
-        backgroundColor: AppColors.pierChartColor5, 
-        width: 20, 
-        height: 20, 
+        backgroundColor: AppColors.pierChartColor5,
+        width: 20,
+        height: 20,
         borderWidth: 1,
     },
     showQuestionsTouchableOpacity: {
-        backgroundColor: AppColors.buttomColor3, 
-        padding: 15, 
-        alignItems: 'center', 
+        backgroundColor: AppColors.buttomColor3,
+        padding: 15,
+        alignItems: 'center',
         justifyContent: 'center',
     },
     textShowQuestions: {
-        color: AppColors.textColor1, 
-        fontSize: 15, 
-        shadowColor: AppColors.shadowColor, 
-        shadowOffset: {width: 0, height: 1},
-        shadowOpacity: 0.2, 
+        color: AppColors.textColor1,
+        fontSize: 15,
+        shadowColor: AppColors.shadowColor,
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.2,
         elevation: 2
     },
     scrollViewModal: {
         height: '90%',
     },
     textScrollViewModal: {
-        padding: 10, 
+        padding: 10,
         textAlign: 'justify',
     },
     exitTouchableOpacity: {
-        alignItems: 'center', 
-        justifyContent: 'center', 
-        backgroundColor: AppColors.buttomColor3, 
-        padding: 15, 
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: AppColors.buttomColor3,
+        padding: 15,
         marginTop: 10,
     },
     textExit: {
-        color: AppColors.textColor1, 
+        color: AppColors.textColor1,
         fontSize: 15,
-    }
+    },
+    Indicator: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: AppColors.backgroundColor4,
+    },
 })
