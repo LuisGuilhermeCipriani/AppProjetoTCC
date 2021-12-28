@@ -71,7 +71,7 @@ export default class Menu extends Component {
                     }
                     {(type == 'S' || type == 'P') &&
                         <MenuButton nameIcon='file' nameButton='Sobre o Aplicativo' onPress={() => {
-                            navigation.navigate('ScreenSearchDisciplines'); navigation.closeDrawer()
+                            navigation.navigate('ScreenAboutApp'); navigation.closeDrawer()
                         }} />
                     }
                     <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={() => {

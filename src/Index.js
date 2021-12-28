@@ -58,7 +58,7 @@ export default class Index extends Component {
                     <View style={styles.viewRender4}>
                         {(type == 'S' || type == 'P') &&
                             <TouchableOpacity style={styles.field3} onPress={() => {
-                                navigation.navigate('ScreenSearchDisciplines')
+                                navigation.navigate('ScreenAboutApp')
                             }}>
                                 <Icon name='file' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Sobre o {"\n"}Aplicativo</Text>

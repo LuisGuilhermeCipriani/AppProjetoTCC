@@ -69,9 +69,9 @@ export default class DisciplineQuestionnaireSelection extends Component {
                                         <View style={styles.cardContainer}>
                                         <View>
                                             <Text style={styles.nameDiscipline}>{discipline.title}</Text>
-                                            <Text style={styles.nameDiscipline}>{discipline.code}</Text>
-                                            <Text style={styles.nameDiscipline}>Turma: {objectClass.code}</Text>
-                                            <Text style={styles.nameDiscipline}>Docente: {professor.name}</Text>
+                                            <Text>{discipline.code}</Text>
+                                            <Text>Turma: {objectClass.code}</Text>
+                                            <Text>Docente: {professor.name}</Text>
                                         </View>
                                             <Icon name='angle-right' style={styles.rightIcon} />
                                         </View>

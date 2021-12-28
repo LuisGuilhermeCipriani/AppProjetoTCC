@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { Card } from 'react-native-elements';
 import { AppColors } from '../../colors/AppColors';
+import RadioForm from 'react-native-simple-radio-button';
+
 
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
@@ -14,9 +16,14 @@ export default class PerformanceReport extends Component {
         this.discipline = this.props.navigation.getParam('discipline');
         this.professor = this.props.navigation.getParam('professor');
         this.objectClass = this.props.navigation.getParam('objectClass');
+        this.radioOptions = [
+            { label: 'Com Outlier', value: 3 },
+            { label: 'Sem Outlier', value: 4 }
+        ];
         this.state = {
             dataChart: [],
-            isLoading: false
+            isLoading: false,
+            valueOptions: 3,
         }
     }
 
@@ -25,7 +32,7 @@ export default class PerformanceReport extends Component {
     }
 
     getChart = async (questionnaires) => {
-        this.setState({isLoading: true})
+        this.setState({ isLoading: true })
         if (questionnaires != null) {
             const { dataChart } = (await Api.post('chartController/chart', questionnaires)).data
 
@@ -33,7 +40,7 @@ export default class PerformanceReport extends Component {
                 this.setState({ dataChart })
             }
         }
-        this.setState({isLoading: false})
+        this.setState({ isLoading: false })
     }
 
     selectStatus = (value) => {
@@ -52,8 +59,12 @@ export default class PerformanceReport extends Component {
 
     render() {
 
-        const { dataChart, isLoading } = this.state;
+        const { dataChart, isLoading, valueOptions } = this.state;
         const titleScreen = this.discipline.code + ' - ' + this.discipline.title;
+        const data = dataChart.map(object => {
+            const valueWeight = valueOptions == 3 ? object.weightedAverage : object.outlierWeightedAverage;
+            return parseFloat(valueWeight)
+        })
 
         if (isLoading) {
             return (
@@ -62,11 +73,6 @@ export default class PerformanceReport extends Component {
                 </View>
             )
         }
-
-        const data = dataChart.map(object => {
-            const valueWeight = object.weightedAverage;
-            return parseFloat(valueWeight)
-        })
 
         return (
             <View style={styles.container}>
@@ -77,8 +83,23 @@ export default class PerformanceReport extends Component {
                     isBack={true}
                     screenName='ScreenSelectionDisciplineReport'
                 />
-                <View style={styles.containerBody}>
 
+                <View style={styles.StyleRadioButton}>
+                    <RadioForm
+                        radio_props={this.radioOptions}
+                        initial={0}
+                        buttonColor={AppColors.radioColor1}
+                        buttonSize={12}
+                        buttonOuterColor={AppColors.radioColor1}
+                        selectedButtonColor={AppColors.radioColor1}
+                        labelStyle={{ fontSize: 12, color: AppColors.radioColor1 }}
+                        formHorizontal={true}
+                        labelHorizontal={false}
+                        onPress={(valueOptions) => { this.setState({ valueOptions }) }}
+                    />
+                </View>
+
+                <View style={styles.containerBody}>
                     <Card>
                         <Card.Title>Relatório de Desempenho</Card.Title>
                         <Text>{this.discipline.title}</Text>
@@ -224,4 +245,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: AppColors.backgroundColor4
     },
+    StyleRadioButton: {
+        alignItems: 'center',
+        marginTop: 20,
+    }
 })

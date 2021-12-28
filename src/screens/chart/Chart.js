@@ -5,6 +5,7 @@ import { Text as TextChart } from 'react-native-svg';
 import RadioForm from 'react-native-simple-radio-button';
 import Header from '../../components/header/Header';
 import Api from '../../services/Api';
+import { Card } from 'react-native-elements';
 import { AppColors } from '../../colors/AppColors';
 
 export default class BarChartHorizontalWithLabels extends Component {
@@ -15,8 +16,8 @@ export default class BarChartHorizontalWithLabels extends Component {
         this.discipline = this.props.navigation.getParam('discipline');
         this.radioCharts = [
             { label: 'Barras', value: 0 },
-            { label: 'Pizza', value: 1 },
-            { label: 'Dispersão', value: 2 }
+            //{ label: 'Pizza', value: 1 },
+            //{ label: 'Dispersão', value: 2 }
         ];
         this.radioOptions = [
             { label: 'Com Outlier', value: 3 },
@@ -230,8 +231,9 @@ export default class BarChartHorizontalWithLabels extends Component {
                     alignmentBaseline={'middle'}
                 >
                     {/*'Q' + (index+1)*/}
-                    {'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + 
-                    value + ' (' + selectStatus(value) + ')'}
+                    {/*'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + 
+                    value + ' (' + selectStatus(value) + ')'*/}
+                    {'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"'}
                 </TextChart>
             ))
         )
@@ -294,7 +296,7 @@ export default class BarChartHorizontalWithLabels extends Component {
                                 onPress={(valueCharts) => { this.setState({ valueCharts }) }}
                             />
                         </View>
-                        <View>
+                        <View style={styles.StyleRadioButton}>
                             <RadioForm
                                 radio_props={this.radioOptions}
                                 initial={0}
@@ -381,9 +383,11 @@ export default class BarChartHorizontalWithLabels extends Component {
                     visible={this.state.modalVisible}
                 >
                     <View style={styles.viewContainer}>
-                        <ScrollView style={styles.scrollViewModal}>
-                            <Text style={styles.textScrollViewModal}>{showQuestions}</Text>
-                        </ScrollView>
+                        <Card style={styles.cardStyle}>
+                            <ScrollView style={styles.scrollViewModal}>
+                                <Text style={styles.textScrollViewModal}>{showQuestions}</Text>
+                            </ScrollView>
+                        </Card>
                         <TouchableOpacity style={styles.exitTouchableOpacity} onPress={() => {
                             this.setState({ modalVisible: false })
                         }}>
@@ -407,12 +411,18 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 5
     },
+    cardStyle: {
+        borderBottomWidth: 2,
+        borderBottomColor: AppColors.cardColor4,
+        borderRadius: 10,
+    },
     textScaleChart: {
         fontWeight: 'bold',
     },
     viewContainer: {
         justifyContent: 'space-between',
         flex: 1,
+        backgroundColor: AppColors.backgroundColor10,
     },
     viewScaleChart: {
         flexDirection: 'row',
@@ -461,13 +471,13 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     showQuestionsTouchableOpacity: {
-        backgroundColor: AppColors.buttomColor3,
+        backgroundColor: AppColors.buttomColor8,
         padding: 15,
         alignItems: 'center',
         justifyContent: 'center',
     },
     textShowQuestions: {
-        color: AppColors.textColor1,
+        color: AppColors.textColor2,
         fontSize: 15,
         shadowColor: AppColors.shadowColor,
         shadowOffset: { width: 0, height: 1 },
@@ -498,4 +508,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: AppColors.backgroundColor4,
     },
+    StyleRadioButton: {
+        paddingRight: 10,
+    }
 })

@@ -8,6 +8,7 @@ import DisciplineStack from './routes/DisciplineStack';
 import ChartStack from './routes/ChartStack';
 import AnsweredQuestionnairesStack from './routes/AnsweredQuestionnairesStack';
 import PerformanceReport from './routes/PerformanceReportStack';
+import AboutTheAppStack from './routes/AboutTheAppStack';
 
 const menuRoutes = {
     Home: {
@@ -27,6 +28,9 @@ const menuRoutes = {
     },
     Answered: {
         screen: AnsweredQuestionnairesStack
+    },
+    About: {
+        screen: AboutTheAppStack
     }
 }
 
