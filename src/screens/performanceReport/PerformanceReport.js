@@ -44,15 +44,15 @@ export default class PerformanceReport extends Component {
     }
 
     selectStatus = (value) => {
-        if (value < 1) {
+        if ((value >= 1) && (value < 2)) {
             return 'Péssimo'
-        } else if (value >= 1 && value < 2) {
-            return 'Ruim'
         } else if (value >= 2 && value < 3) {
-            return 'Regular'
+            return 'Ruim'
         } else if (value >= 3 && value < 4) {
+            return 'Regular'
+        } else if (value >= 4 && value < 5) {
             return 'Bom'
-        } else if (value >= 4) {
+        } else if (value == 5) { 
             return 'Excelente'
         }
     }
