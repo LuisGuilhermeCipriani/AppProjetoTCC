@@ -55,7 +55,7 @@ export default class Login extends Component {
                         <View style={styles.imageLogo}>
                             <Image
                                 style={styles.imageStyle}
-                                source={require('../../../assets/LogoSAD.png')}
+                                source={require('../../../assets/logo.png')}
                             />
                         </View>
                     </View>
