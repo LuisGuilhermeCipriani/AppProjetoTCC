@@ -40,43 +40,47 @@ export default class Menu extends Component {
                 </View>
                 <View style={styles.topSideMenu2}></View>
                 <View style={styles.topSideMenu3}></View>
-                <View style={styles.ViewStyle}>
-                    <MenuButton nameIcon='home' nameButton='Início' onPress={() => {
-                        navigation.navigate('Home'); navigation.closeDrawer()
-                    }} />
-                    {type == 'S' &&
-                        <MenuButton nameIcon='square-o' nameButton='Responder Questionários' onPress={() => {
-                            navigation.navigate('ScreenSelectionDisciplines'); navigation.closeDrawer()
+                <View style={styles.viewMenu}>
+                    <View style={styles.ViewStyle}>
+                        <MenuButton nameIcon='home' nameButton='Início' onPress={() => {
+                            navigation.navigate('Home'); navigation.closeDrawer()
                         }} />
-                    }
-                    {type == 'S' &&
-                        <MenuButton nameIcon='check-square-o' nameButton='Questionários Respondidos' onPress={() => {
-                            navigation.navigate('ScreenAnsweredQuestionnaires'); navigation.closeDrawer()
+                        {type == 'S' &&
+                            <MenuButton nameIcon='square-o' nameButton='Responder Questionários' onPress={() => {
+                                navigation.navigate('ScreenSelectionDisciplines'); navigation.closeDrawer()
+                            }} />
+                        }
+                        {type == 'S' &&
+                            <MenuButton nameIcon='check-square-o' nameButton='Questionários Respondidos' onPress={() => {
+                                navigation.navigate('ScreenAnsweredQuestionnaires'); navigation.closeDrawer()
+                            }} />
+                        }
+                        {(type == 'S' || type == 'P') &&
+                            <MenuButton nameIcon='search' nameButton='Consultar Disciplinas' onPress={() => {
+                                navigation.navigate('ScreenSearchDisciplines'); navigation.closeDrawer()
+                            }} />
+                        }
+                        {type == 'P' &&
+                            <MenuButton nameIcon='file' nameButton='Gerar Relatório' onPress={() => {
+                                navigation.navigate('ScreenSelectionDisciplineReport'); navigation.closeDrawer()
+                            }} />
+                        }
+                        {type == 'P' &&
+                            <MenuButton nameIcon='bar-chart' nameButton='Consultar Desempenho' onPress={() => {
+                                navigation.navigate('ScreenSelectionDisciplineQuestionnaire'); navigation.closeDrawer()
+                            }} />
+                        }
+                        {(type == 'S' || type == 'P') &&
+                            <MenuButton nameIcon='info-circle' nameButton='Sobre o Aplicativo' onPress={() => {
+                                navigation.navigate('ScreenAboutApp'); navigation.closeDrawer()
+                            }} />
+                        }
+                    </View>
+                    <View style={styles.ExitStyle}>
+                        <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={() => {
+                            this.logout(navigation)
                         }} />
-                    }
-                    {(type == 'S' || type == 'P') &&
-                        <MenuButton nameIcon='search' nameButton='Consultar Disciplinas' onPress={() => {
-                            navigation.navigate('ScreenSearchDisciplines'); navigation.closeDrawer()
-                        }} />
-                    }
-                    {type == 'P' &&
-                        <MenuButton nameIcon='list-alt' nameButton='Gerar Relatório' onPress={() => {
-                            navigation.navigate('ScreenSelectionDisciplineReport'); navigation.closeDrawer()
-                        }} />
-                    }
-                    {type == 'P' &&
-                        <MenuButton nameIcon='line-chart' nameButton='Consultar Desempenho' onPress={() => {
-                            navigation.navigate('ScreenSelectionDisciplineQuestionnaire'); navigation.closeDrawer()
-                        }} />
-                    }
-                    {(type == 'S' || type == 'P') &&
-                        <MenuButton nameIcon='file' nameButton='Sobre o Aplicativo' onPress={() => {
-                            navigation.navigate('ScreenAboutApp'); navigation.closeDrawer()
-                        }} />
-                    }
-                    <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={() => {
-                        this.logout(navigation)
-                    }} />
+                    </View>
                 </View>
             </View>
         )
@@ -86,10 +90,11 @@ export default class Menu extends Component {
 const styles = StyleSheet.create({
     topSideMenu: {
         backgroundColor: AppColors.menuColor1,
-        height: '27%',
+        height: '23%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
+        marginTop: 35,
     },
     topSideMenu2: {
         backgroundColor: AppColors.menuColor2,
@@ -123,12 +128,20 @@ const styles = StyleSheet.create({
         flexShrink: 1
     },
     imageStyle: {
-        height: 70, 
-        width: 70, 
+        height: 70,
+        width: 70,
         borderRadius: 50
     },
     ViewStyle: {
-        marginLeft: 20, 
-        marginTop: 40
+        marginLeft: 20,
+        marginTop: 40,
+    },
+    viewMenu: {
+        justifyContent: 'space-between',
+        height: '50%',
+    },
+    ExitStyle: {
+        marginLeft: 20,
+        marginTop: '90%',
     }
 })

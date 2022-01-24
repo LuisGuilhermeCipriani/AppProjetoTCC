@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, AsyncStorage } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert, AsyncStorage, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AppColors } from '../../colors/AppColors';
@@ -40,25 +40,30 @@ export default class Login extends Component {
     }
 
     help = () => {
-        const helpMessage = 'Para acessar o sistema é necessário informar o CPF e Senha cadastrados no Sistema de Apoio Integrado (SIGA).' 
-        + '\n\nCaso haja incompatibilidade nos dados, favor entrar em contato com o suporte da Universidade.'
+        const helpMessage = 'Para acessar o sistema é necessário informar o CPF/Siape e Senha cadastrados no Sistema de Apoio Integrado (SIGA).'
+            + '\n\nCaso haja incompatibilidade nos dados, favor entrar em contato com o suporte da Universidade.'
         Alert.alert('Ajuda ', helpMessage);
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <LinearGradient colors={[AppColors.backgroundColor12, AppColors.backgroundColor10, AppColors.backgroundColor11]} style={styles.header}>
+                <LinearGradient colors={[AppColors.backgroundColor12, AppColors.backgroundColor10, AppColors.backgroundColor11]}
+                    style={styles.header}>
 
                     <View style={styles.containerHeader}>
-                        <Text style={styles.textUFJF}>UFJF</Text>
-                        <Text style={styles.textHeader}>Sistema de apoio à análise de avaliações discentes</Text>
+                        <View style={styles.imageLogo}>
+                            <Image
+                                style={styles.imageStyle}
+                                source={require('../../../assets/LogoSAD.png')}
+                            />
+                        </View>
                     </View>
                 </LinearGradient>
                 <View style={styles.body}>
                     <View style={styles.containerBody}>
                         <View style={styles.contentBody}>
-                            <TextInput style={styles.inputText} onChangeText={cpf => this.setState({ cpf })} placeholder='CPF'
+                            <TextInput style={styles.inputText} onChangeText={cpf => this.setState({ cpf })} placeholder='CPF/Siape'
                                 underlineColorAndroid={AppColors.underlineColor} />
                             <TextInput secureTextEntry={true} style={styles.inputText} onChangeText={password => this.setState({ password })} placeholder='Senha'
                                 underlineColorAndroid={AppColors.underlineColor} />
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
     },
     header: {
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-start',
         height: '35%',
     },
     body: {
@@ -158,5 +163,16 @@ const styles = StyleSheet.create({
     contentBody: {
         height: 100,
         justifyContent: 'space-between'
-    }
+    },
+    imageLogo: {
+        height: 100,
+        width: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+        margin: 130,
+    },
+    imageStyle: {
+        height: 120, 
+        width: 200, 
+    },
 });

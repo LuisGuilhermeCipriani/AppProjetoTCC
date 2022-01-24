@@ -44,15 +44,15 @@ export default class PerformanceReport extends Component {
     }
 
     selectStatus = (value) => {
-        if ((value >= 1) && (value < 2)) {
+        if ((value >= 1) && (value <= 1.8)) {
             return 'Péssimo'
-        } else if (value >= 2 && value < 3) {
+        } else if (value > 1.8 && value <= 2.6) {
             return 'Ruim'
-        } else if (value >= 3 && value < 4) {
+        } else if (value > 2.6 && value <= 3.4) {
             return 'Regular'
-        } else if (value >= 4 && value < 5) {
+        } else if (value > 3.4 && value <= 4.2) {
             return 'Bom'
-        } else if (value == 5) { 
+        } else if (value > 4.2 && value <= 5)  { 
             return 'Excelente'
         }
     }
@@ -106,11 +106,13 @@ export default class PerformanceReport extends Component {
                         <Text>{this.discipline.code}</Text>
                         <Text>Período: {this.objectClass.period}</Text>
                         <Text>Docente: {this.professor.name}</Text>
+                        <Text></Text>
+                        <Text>RM - Ranking Médio</Text>
 
                         <View style={styles.viewCardStyle}>
                             <Text style={styles.fieldTable1}>Questão</Text>
                             <Text style={styles.fieldTable2}>Descrição</Text>
-                            <Text style={styles.fieldTable3}>Média</Text>
+                            <Text style={styles.fieldTable3}>RM</Text>
                             <Text style={styles.fieldTable4}>Situação</Text>
                         </View>
 

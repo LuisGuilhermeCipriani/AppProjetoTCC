@@ -53,11 +53,11 @@ export default class BarChartHorizontalWithLabels extends Component {
     }
 
     getPierChart = (data) => {
-        const amount1 = data.filter(value => (value < 1)).length;
-        const amount2 = data.filter(value => (value >= 1 && value < 2)).length;
-        const amount3 = data.filter(value => (value >= 2 && value < 3)).length;
-        const amount4 = data.filter(value => (value >= 3 && value < 4)).length;
-        const amount5 = data.filter(value => (value >= 4)).length;
+        const amount1 = data.filter(value => (value >= 1) && (value < 2)).length;
+        const amount2 = data.filter(value => (value >= 2 && value < 3)).length;
+        const amount3 = data.filter(value => (value >= 3 && value < 4)).length;
+        const amount4 = data.filter(value => (value >= 4 && value < 5)).length;
+        const amount5 = data.filter(value => (value == 5)).length;
 
         return dataPierChart = [
             {
@@ -206,15 +206,15 @@ export default class BarChartHorizontalWithLabels extends Component {
         })*/
 
         const selectStatus = (value) => {
-            if ((value >= 1) && (value < 2)) {
+            if ((value >= 1) && (value <= 1.8)) {
                 return 'Péssimo'
-            } else if (value >= 2 && value < 3) {
+            } else if (value > 1.8 && value <= 2.6) {
                 return 'Ruim'
-            } else if (value >= 3 && value < 4) {
+            } else if (value > 2.6 && value <= 3.4) {
                 return 'Regular'
-            } else if (value >= 4 && value < 5) {
+            } else if (value > 3.4 && value <= 4.2) {
                 return 'Bom'
-            } else if (value == 5) { 
+            } else if (value > 4.2 && value <= 5)  { 
                 return 'Excelente'
             }
         }
@@ -233,7 +233,8 @@ export default class BarChartHorizontalWithLabels extends Component {
                     {/*'Q' + (index+1)*/}
                     {/*'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 'Média: ' + 
                     value + ' (' + selectStatus(value) + ')'*/}
-                    {'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"'}
+                    {'Q' + (index + 1) + ': "' + this.previewQuestions(index) + '"' + ' - ' + 
+                    value + ' (' + selectStatus(value) + ')'}
                 </TextChart>
             ))
         )
@@ -338,11 +339,11 @@ export default class BarChartHorizontalWithLabels extends Component {
                     {valueCharts == 1 &&
                         <View style={styles.viewContainer}>
                             <PieChart
-                                style={styles.pieChart}
-                                valueAccessor={({ item }) => item.amount}
-                                data={dataPierChart}
-                                spacing={0}
-                                outerRadius={'95%'}
+                                //style={styles.pieChart}
+                                //valueAccessor={({ item }) => item.amount}
+                                //data={dataPierChart}
+                                //spacing={0}
+                                //outerRadius={'95%'}
                             >
                                 <LabelsPier />
                             </PieChart>

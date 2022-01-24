@@ -42,7 +42,7 @@ export default class Index extends Component {
                             <TouchableOpacity style={styles.field1} onPress={() => {
                                 navigation.navigate('ScreenSelectionDisciplineReport')
                             }}>
-                                <Icon name='list-alt' color={AppColors.iconColor1} size={40} />
+                                <Icon name='file' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Gerar Relatório</Text>
                             </TouchableOpacity>
                         }
@@ -60,7 +60,7 @@ export default class Index extends Component {
                             <TouchableOpacity style={styles.field3} onPress={() => {
                                 navigation.navigate('ScreenAboutApp')
                             }}>
-                                <Icon name='file' color={AppColors.iconColor1} size={40} />
+                                <Icon name='info-circle' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Sobre o {"\n"}Aplicativo</Text>
                             </TouchableOpacity>
                         }
@@ -68,7 +68,7 @@ export default class Index extends Component {
                             <TouchableOpacity style={styles.field4} onPress={() => {
                                 navigation.navigate('ScreenSelectionDisciplineQuestionnaire')
                             }}>
-                                <Icon name='line-chart' color={AppColors.iconColor1} size={40} />
+                                <Icon name='bar-chart' color={AppColors.iconColor1} size={40} />
                                 <Text style={styles.text}>Consultar {"\n"}Desempenho</Text>
                             </TouchableOpacity>
                         }

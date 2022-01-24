@@ -17,19 +17,21 @@ export default class AboutTheApp extends Component {
                     navigation={this.props.navigation}
                 />
                 <Card style={styles.cardStyle}>
-                    <Card.Title style={styles.title}>Sistema de apoio à avaliações discentes da UFJF</Card.Title>
+                    <Card.Title style={styles.title}>SAD-UFJF</Card.Title>
                     <ScrollView style={styles.scrollViewStyle}>
-                        <Text style={styles.textStyle}>Este projeto está sendo desenvolvido pelo aluno Luís Guilherme da Cunha Cipriani,
+                        <Text style={styles.textStyle}>É um Sistema de Avaliações Discentes da UFJF. Este projeto visa apoiar o
+                            processo avaliativo da instituição e está sendo desenvolvido pelo aluno Luís Guilherme da Cunha Cipriani,
                             graduando em Sistemas de Informação pela Universidade Federal de Juiz de Fora, sob orientação do professor
                             André Luiz de Oliveira</Text>
-                            <Text style={styles.textStyle}>Como funcionalidades o aplicativo permite ao aluno verificar as disciplinas nas quais está matriculado no
-                            período. Bem como questionários pendentes de preenchimento, questionários incompletos e questionários finalizados.
+                        <Text style={styles.textStyle}>Como funcionalidades o aplicativo permite ao aluno verificar as disciplinas
+                            nas quais está matriculado no período. Bem como questionários pendentes de preenchimento, questionários incompletos
+                            e questionários finalizados.
                         </Text>
-                        <Text style={styles.textStyle}>O discente é capaz de avaliar uma disciplina por meio de questionários com perguntas relacionadas à conduta
-                            do docente e perguntas de auto desempenho.
+                        <Text style={styles.textStyle}>O discente é capaz de avaliar uma disciplina por meio de questionários com perguntas
+                            relacionadas à conduta do docente e perguntas de auto desempenho.
                         </Text>
-                        <Text style={styles.textStyle}>O docente, por sua vez, é capaz de acompanhar as avaliações dos discentes por meio da geração de gráficos e
-                            relatórios de desempenho de disciplinas nas quais este leciona no período.
+                        <Text style={styles.textStyle}>O docente, por sua vez, é capaz de acompanhar as avaliações dos discentes por meio da geração
+                            de gráficos e relatórios de desempenho de disciplinas, nas quais este leciona no período.
                         </Text>
                     </ScrollView>
                 </Card>

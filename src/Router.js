@@ -9,6 +9,7 @@ import ChartStack from './routes/ChartStack';
 import AnsweredQuestionnairesStack from './routes/AnsweredQuestionnairesStack';
 import PerformanceReport from './routes/PerformanceReportStack';
 import AboutTheAppStack from './routes/AboutTheAppStack';
+import { LogBox } from 'react-native';
 
 const menuRoutes = {
     Home: {
@@ -55,5 +56,7 @@ const mainConfig = {
 }
 
 const MainNavigator = createSwitchNavigator(mainRoutes, mainConfig)
+
+LogBox.ignoreAllLogs();
 
 export default createAppContainer(MainNavigator);

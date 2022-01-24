@@ -66,7 +66,7 @@ const screenReports = {
             title: 'Relatório',
             header: () => false,
             tabBarIcon: ({ tintColor }) =>
-                <Icon name="list-alt" color={tintColor} size={15} />
+                <Icon name="file" color={tintColor} size={15} />
         }
     },
 }
