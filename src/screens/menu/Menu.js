@@ -77,7 +77,7 @@ export default class Menu extends Component {
                         }
                     </View>
                     <View style={styles.ExitStyle}>
-                        <MenuButton nameIcon='circle-o-notch' nameButton='Sair' onPress={() => {
+                        <MenuButton nameIcon='sign-out' nameButton='Sair' onPress={() => {
                             this.logout(navigation)
                         }} />
                     </View>
@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        marginTop: 35,
+        marginTop: 25,
     },
     topSideMenu2: {
         backgroundColor: AppColors.menuColor2,
